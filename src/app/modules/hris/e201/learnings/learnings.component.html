@@ -1,0 +1,446 @@
+<div class="flex-auto p-6 sm:p-6 overflow-y-auto ">
+    <!-- Main -->
+    <div class="flex-auto sm:p-2 h-full  w-full min-w-0 sm:absolute sm:inset-0 text-md"><br>
+
+        <mat-stepper [linear]="true" #stepper>
+            <mat-step>
+                <ng-template matStepLabel>Skills</ng-template>
+                <div class="grid grid-cols-5 gap-2">
+
+                    <mat-form-field class="w-full text-md h-10" appearance="outline">
+                        <mat-label class="label-font-size">Skills</mat-label>
+                        <mat-select [placeholder]="">
+                            <mat-option [value]="true">Yes</mat-option>
+                            <mat-option [value]="false">No</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <mat-form-field class="w-full text-md h-10" appearance="outline">
+                        <mat-label class="label-font-size">Specialized</mat-label>
+                        <mat-select [placeholder]="">
+                            <mat-option [value]="true">Yes</mat-option>
+                            <mat-option [value]="false">No</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <mat-form-field class="w-full h-10" appearance="outline">
+                        <mat-label class="label-font-size">Description</mat-label>
+                        <input matInput type="text">
+                    </mat-form-field>
+
+                    <button class="w-40 text-md mt-[3px] " mat-flat-button color="primary" aria-label="example icon">
+                        <mat-icon class="mr-1 mt-5" svgIcon="mat_outline:post_add"></mat-icon>Add
+                    </button>
+
+                </div><br>
+
+                <table mat-table [dataSource]="dataSource" class="mat-elevation-z0 border">
+
+                    <ng-container matColumnDef="skills">
+                        <th mat-header-cell *matHeaderCellDef> Skills </th>
+                        <td mat-cell *matCellDef="let element"> {{element.skills}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="specialized">
+                        <th mat-header-cell *matHeaderCellDef> Specialized </th>
+                        <td mat-cell *matCellDef="let element"> {{element.specialized}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="description">
+                        <th mat-header-cell *matHeaderCellDef> Description </th>
+                        <td mat-cell *matCellDef="let element"> {{element.description}} </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                </table>
+                <div class="grid grid-cols-2 gap-2">
+                    <mat-paginator [length]="20" #paginator0 [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons
+                        aria-label="Select page of periodic elements"> </mat-paginator>
+                    <div class="align-button mt-4">
+                        <button mat-flat-button color="primary" matStepperNext>Next</button>
+                    </div>
+                </div>
+            </mat-step>
+            <mat-step label="Licenses">
+                <form>
+                    <div class="grid grid-cols-6 gap-2">
+
+                        <mat-form-field class="w-full text-md h-10" appearance="outline">
+                            <mat-label class="label-font-size">License Type</mat-label>
+                            <mat-select [placeholder]="">
+                                <mat-option [value]="true">Yes</mat-option>
+                                <mat-option [value]="false">No</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+
+                        <mat-form-field class="w-full h-10" appearance="outline">
+                            <mat-label class="label-font-size">License No.</mat-label>
+                            <input matInput type="text">
+                        </mat-form-field>
+
+                        <mat-form-field class="w-full text-md h-10" appearance="outline">
+                            <mat-label class="label-font-size">Issue Date</mat-label>
+                            <input matInput [matDatepicker]="df1" readonly [placeholder]="'MM/DD/YYYY'"
+                                (click)="df1.open()">
+                            <mat-datepicker-toggle matSuffix [for]="df1"></mat-datepicker-toggle>
+                            <mat-datepicker #df1></mat-datepicker>
+                        </mat-form-field>
+
+                        <mat-form-field class="w-full text-md h-10" appearance="outline">
+                            <mat-label class="label-font-size">Expiration Date</mat-label>
+                            <input matInput [matDatepicker]="df2" readonly [placeholder]="'MM/DD/YYYY'"
+                                (click)="df2.open()">
+                            <mat-datepicker-toggle matSuffix [for]="df2"></mat-datepicker-toggle>
+                            <mat-datepicker #df2></mat-datepicker>
+                        </mat-form-field>
+
+                        <mat-form-field class="w-ful text-md h-10" appearance="outline">
+                            <input type="file" #fileInput2 (change)="uploadFile()"
+                                class=" absolute top-1 z-0 h-full w-full cursor-pointer opacity-0"
+                                accept=".jpeg,.jpg,.png,.doc,.docx,.pdf,.xls,.xlsx" />
+                            <input class="sample" readonly matInput id="displayCS" cdkFocusInitial />
+                            <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:upload"></mat-icon>
+                            <button class="upb" (click)="fileInput2.click($event)" matSuffix mat-button
+                                color="primary">Upload</button>
+                        </mat-form-field>
+
+                        <button class="w-40 text-md mt-[3px] " mat-flat-button color="primary"
+                            aria-label="example icon">
+                            <mat-icon class="mr-1 mt-5" svgIcon="mat_outline:post_add"></mat-icon>Add
+                        </button>
+                    </div><br>
+
+                    <table mat-table [dataSource]="dataSource1" class="mat-elevation-z0 border">
+
+                        <ng-container matColumnDef="lecensetype">
+                            <th mat-header-cell *matHeaderCellDef> License Type </th>
+                            <td mat-cell *matCellDef="let element"> {{element.lecensetype}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="lecenseno">
+                            <th mat-header-cell *matHeaderCellDef> License No. </th>
+                            <td mat-cell *matCellDef="let element"> {{element.lecenseno}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="issuedate">
+                            <th mat-header-cell *matHeaderCellDef> Issue Date </th>
+                            <td mat-cell *matCellDef="let element"> {{element.issuedate}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="expirationdate">
+                            <th mat-header-cell *matHeaderCellDef> Expiration Date </th>
+                            <td mat-cell *matCellDef="let element"> {{element.expirationdate}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="upload">
+                            <th mat-header-cell *matHeaderCellDef> Upload </th>
+                            <td mat-cell *matCellDef="let element"> {{element.upload}} </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns1"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns1;"></tr>
+                    </table>
+                    <div class="grid grid-cols-2 gap-2">
+                        <mat-paginator [length]="20" #paginator1 [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons
+                            aria-label="Select page of periodic elements"> </mat-paginator>
+                        <div class="align-button mt-4">
+                            <button mat-flat-button color="primary" matStepperPrevious>Back</button>&nbsp;
+                            <button mat-flat-button color="primary" matStepperNext>Next</button>
+                        </div>
+                    </div>
+                </form>
+            </mat-step>
+            <mat-step label="Awards & Recognition">
+                <div class="grid grid-cols-6 gap-2 h-10">
+
+                    <mat-form-field class="w-full text-md h-10" appearance="outline">
+                        <mat-label class="label-font-size">Award Title</mat-label>
+                        <mat-select [placeholder]="">
+                            <mat-option [value]="true">Yes</mat-option>
+                            <mat-option [value]="false">No</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <mat-form-field class="w-full text-md h-10" appearance="outline">
+                        <mat-label class="label-font-size">Date</mat-label>
+                        <input matInput [matDatepicker]="df3" readonly [placeholder]="'MM/DD/YYYY'"
+                            (click)="df3.open()">
+                        <mat-datepicker-toggle matSuffix [for]="df3"></mat-datepicker-toggle>
+                        <mat-datepicker #df3></mat-datepicker>
+                    </mat-form-field>
+
+                    <mat-form-field class="w-full h-10" appearance="outline">
+                        <mat-label class="label-font-size">Description</mat-label>
+                        <input matInput type="text">
+                    </mat-form-field>
+
+                    <mat-form-field class="w-ful text-md h-10" appearance="outline">
+                        <input type="file" #fileInput2 (change)="uploadFile()"
+                            class=" absolute top-1 z-0 h-full w-full cursor-pointer opacity-0"
+                            accept=".jpeg,.jpg,.png,.doc,.docx,.pdf,.xls,.xlsx" />
+                        <input class="sample" readonly matInput id="displayCS" cdkFocusInitial />
+                        <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:upload"></mat-icon>
+                        <button class="upb" (click)="fileInput2.click($event)" matSuffix mat-button
+                            color="primary">Upload</button>
+                    </mat-form-field>
+
+                    <button class="w-40 text-md mt-[3px] " mat-flat-button color="primary" aria-label="example icon">
+                        <mat-icon class="mr-1 mt-5" svgIcon="mat_outline:post_add"></mat-icon>Add
+                    </button>
+                </div><br>
+                <table mat-table [dataSource]="dataSource2" class="mat-elevation-z0 border">
+
+                    <ng-container matColumnDef="awardtitlt">
+                        <th mat-header-cell *matHeaderCellDef> Award Title </th>
+                        <td mat-cell *matCellDef="let element"> {{element.awardtitlt}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="date">
+                        <th mat-header-cell *matHeaderCellDef> Date </th>
+                        <td mat-cell *matCellDef="let element"> {{element.date}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="description">
+                        <th mat-header-cell *matHeaderCellDef> Description </th>
+                        <td mat-cell *matCellDef="let element"> {{element.description}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="upload">
+                        <th mat-header-cell *matHeaderCellDef> Upload Attachment </th>
+                        <td mat-cell *matCellDef="let element"> {{element.upload}} </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns2"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns2;"></tr>
+                </table>
+
+                <div class="grid grid-cols-2 gap-2">
+                    <mat-paginator [length]="20" #paginator2 [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons
+                        aria-label="Select page of periodic elements"> </mat-paginator>
+                    <div class="align-button mt-4">
+                        <button mat-flat-button color="primary" matStepperPrevious>Back</button>&nbsp;
+                        <button mat-flat-button color="primary" matStepperNext>Next</button>
+                    </div>
+                </div>
+            </mat-step>
+            <mat-step label="Training & Seminar">
+                <div class="grid grid-cols-8 gap-2 h-10">
+
+                    <mat-form-field class="w-full text-md h-10" appearance="outline">
+                        <mat-label class="label-font-size">Traning & Seminar</mat-label>
+                        <mat-select [placeholder]="">
+                            <mat-option [value]="true">Yes</mat-option>
+                            <mat-option [value]="false">No</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <mat-form-field class="w-full text-md h-10" appearance="outline">
+                        <mat-label class="label-font-size">Type</mat-label>
+                        <mat-select [placeholder]="">
+                            <mat-option [value]="true">Yes</mat-option>
+                            <mat-option [value]="false">No</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <mat-form-field class="w-full h-10" appearance="outline">
+                        <mat-label class="label-font-size">Location</mat-label>
+                        <input matInput type="text">
+                    </mat-form-field>
+
+                    <mat-form-field class="w-full text-md h-10" appearance="outline">
+                        <mat-label class="label-font-size">Date From</mat-label>
+                        <input matInput [matDatepicker]="df4" readonly [placeholder]="'MM/DD/YYYY'"
+                            (click)="df4.open()">
+                        <mat-datepicker-toggle matSuffix [for]="df4"></mat-datepicker-toggle>
+                        <mat-datepicker #df4></mat-datepicker>
+                    </mat-form-field>
+
+                    <mat-form-field class="w-full text-md h-10" appearance="outline">
+                        <mat-label class="label-font-size">Date To</mat-label>
+                        <input matInput [matDatepicker]="df5" readonly [placeholder]="'MM/DD/YYYY'"
+                            (click)="df5.open()">
+                        <mat-datepicker-toggle matSuffix [for]="df5"></mat-datepicker-toggle>
+                        <mat-datepicker #df5></mat-datepicker>
+                    </mat-form-field>
+
+                    <mat-form-field class="w-full h-10" appearance="outline">
+                        <mat-label class="label-font-size">Conducted By</mat-label>
+                        <input matInput type="text">
+                    </mat-form-field>
+
+                    <mat-form-field class="w-ful text-md h-10" appearance="outline">
+                        <input type="file" #fileInput2 (change)="uploadFile()"
+                            class=" absolute top-1 z-0 h-full w-full cursor-pointer opacity-0"
+                            accept=".jpeg,.jpg,.png,.doc,.docx,.pdf,.xls,.xlsx" />
+                        <input class="sample" readonly matInput id="displayCS" cdkFocusInitial />
+                        <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:upload"></mat-icon>
+                        <button class="upb" (click)="fileInput2.click($event)" matSuffix mat-button
+                            color="primary">Upload</button>
+                    </mat-form-field>
+
+                    <button class="w-40 text-md mt-[3px] " mat-flat-button color="primary" aria-label="example icon">
+                        <mat-icon class="mr-1 mt-5" svgIcon="mat_outline:post_add"></mat-icon>Add
+                    </button>
+                </div><br>
+
+                <table mat-table [dataSource]="dataSource3" class="mat-elevation-z0 border">
+
+                    <ng-container matColumnDef="traningseminar">
+                        <th mat-header-cell *matHeaderCellDef> Traning & Seminar </th>
+                        <td mat-cell *matCellDef="let element"> {{element.traningseminar}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="type">
+                        <th mat-header-cell *matHeaderCellDef> Type </th>
+                        <td mat-cell *matCellDef="let element"> {{element.type}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="location">
+                        <th mat-header-cell *matHeaderCellDef> Location </th>
+                        <td mat-cell *matCellDef="let element"> {{element.location}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="datefrom">
+                        <th mat-header-cell *matHeaderCellDef> Date From </th>
+                        <td mat-cell *matCellDef="let element"> {{element.datefrom}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="dateto">
+                        <th mat-header-cell *matHeaderCellDef> Date To </th>
+                        <td mat-cell *matCellDef="let element"> {{element.dateto}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="conductedby">
+                        <th mat-header-cell *matHeaderCellDef> Conducted By </th>
+                        <td mat-cell *matCellDef="let element"> {{element.conductedby}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="upload">
+                        <th mat-header-cell *matHeaderCellDef> Upload Attachment </th>
+                        <td mat-cell *matCellDef="let element"> {{element.upload}} </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns3"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns3;"></tr>
+                </table>
+                <div class="grid grid-cols-2 gap-2">
+                    <mat-paginator [length]="20" #paginator3 [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons
+                        aria-label="Select page of periodic elements"> </mat-paginator>
+                    <div class="align-button mt-4">
+                        <button mat-flat-button color="primary" matStepperPrevious>Back</button>&nbsp;
+                        <button mat-flat-button color="primary" matStepperNext>Next</button>
+                    </div>
+                </div>
+            </mat-step>
+            <mat-step label="Exam">
+                <div class="grid grid-cols-8 gap-2 h-10">
+
+                    <mat-form-field class="w-full text-md h-10" appearance="outline">
+                        <mat-label class="label-font-size">Exam</mat-label>
+                        <mat-select [placeholder]="">
+                            <mat-option [value]="true">Yes</mat-option>
+                            <mat-option [value]="false">No</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <mat-form-field class="w-full text-md h-10" appearance="outline">
+                        <mat-label class="label-font-size">Score</mat-label>
+                        <mat-select [placeholder]="">
+                            <mat-option [value]="true">Yes</mat-option>
+                            <mat-option [value]="false">No</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <mat-form-field class="w-full h-10" appearance="outline">
+                        <mat-label class="label-font-size">Location</mat-label>
+                        <input matInput type="text">
+                    </mat-form-field>
+
+                    <mat-form-field class="w-full text-md h-10" appearance="outline">
+                        <mat-label class="label-font-size">Date From</mat-label>
+                        <input matInput [matDatepicker]="df6" readonly [placeholder]="'MM/DD/YYYY'"
+                            (click)="df6.open()">
+                        <mat-datepicker-toggle matSuffix [for]="df6"></mat-datepicker-toggle>
+                        <mat-datepicker #df6></mat-datepicker>
+                    </mat-form-field>
+
+                    <mat-form-field class="w-full text-md h-10" appearance="outline">
+                        <mat-label class="label-font-size">Date To</mat-label>
+                        <input matInput [matDatepicker]="df7" readonly [placeholder]="'MM/DD/YYYY'"
+                            (click)="df7.open()">
+                        <mat-datepicker-toggle matSuffix [for]="df7"></mat-datepicker-toggle>
+                        <mat-datepicker #df7></mat-datepicker>
+                    </mat-form-field>
+
+                    <mat-form-field class="w-full h-10" appearance="outline">
+                        <mat-label class="label-font-size">Conducted By</mat-label>
+                        <input matInput type="text">
+                    </mat-form-field>
+
+                    <mat-form-field class="w-ful text-md h-10" appearance="outline">
+                        <input type="file" #fileInput2 (change)="uploadFile()"
+                            class=" absolute top-1 z-0 h-full w-full cursor-pointer opacity-0"
+                            accept=".jpeg,.jpg,.png,.doc,.docx,.pdf,.xls,.xlsx" />
+                        <input class="sample" readonly matInput id="displayCS" cdkFocusInitial />
+                        <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:upload"></mat-icon>
+                        <button class="upb" (click)="fileInput2.click($event)" matSuffix mat-button
+                            color="primary">Upload</button>
+                    </mat-form-field>
+
+                    <button class="w-40 text-md mt-[3px] " mat-flat-button color="primary" aria-label="example icon">
+                        <mat-icon class="mr-1 mt-5" svgIcon="mat_outline:post_add"></mat-icon>Add
+                    </button>
+                </div><br>
+
+                <table mat-table [dataSource]="dataSource3" class="mat-elevation-z0 border">
+
+                    <ng-container matColumnDef="exam">
+                        <th mat-header-cell *matHeaderCellDef> Exam </th>
+                        <td mat-cell *matCellDef="let element"> {{element.exam}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="score">
+                        <th mat-header-cell *matHeaderCellDef> Score </th>
+                        <td mat-cell *matCellDef="let element"> {{element.score}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="location">
+                        <th mat-header-cell *matHeaderCellDef> Location </th>
+                        <td mat-cell *matCellDef="let element"> {{element.location}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="datefrom">
+                        <th mat-header-cell *matHeaderCellDef> Date From </th>
+                        <td mat-cell *matCellDef="let element"> {{element.datefrom}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="dateto">
+                        <th mat-header-cell *matHeaderCellDef> Date To </th>
+                        <td mat-cell *matCellDef="let element"> {{element.dateto}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="conductedby">
+                        <th mat-header-cell *matHeaderCellDef> Conducted By </th>
+                        <td mat-cell *matCellDef="let element"> {{element.conductedby}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="upload">
+                        <th mat-header-cell *matHeaderCellDef> Upload Attachment </th>
+                        <td mat-cell *matCellDef="let element"> {{element.upload}} </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns4"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns4"></tr>
+                </table>
+                <div class="grid grid-cols-2 gap-2">
+                    <mat-paginator [length]="20" #paginator3 [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons
+                        aria-label="Select page of periodic elements"> </mat-paginator>
+                    <div class="align-button mt-4">
+                        <button mat-flat-button color="primary" matStepperPrevious>Back</button>&nbsp;
+                    </div>
+                </div>
+            </mat-step>
+        </mat-stepper>
+    </div>
+</div>

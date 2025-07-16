@@ -1,0 +1,23 @@
+.label-font-size{
+    font-size: 15px;
+}
+.icon{
+    position: relative;
+    bottom: 8px;
+}
+input{
+    position: relative;
+    bottom: 10px;
+    font-size: medium;
+}
+
+.mat-datepicker-toggle{
+    position: relative;
+    bottom: 7px;
+    font-size: medium;
+}
+.select{
+    position: relative;
+    bottom: 10px;
+    font-size: medium;
+}

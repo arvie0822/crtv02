@@ -1,0 +1,63 @@
+<div class="flex flex-col flex-auto min-w-0">
+    <!-- Main -->
+    <div class="flex-auto  sm:p-2  w-full min-w-0 sm:absolute sm:inset-0  text-md">
+        <mat-card >
+            <mat-card-title>
+                <app-card-title
+                  title=" Employee Category" [sub]="true" [back]="true" [switch]="false" (submitTap)="submit()">
+                </app-card-title>
+            </mat-card-title><br>
+            <mat-tab-group class="my-tab-group" mat-align-tabs="start">
+
+                <mat-tab label="New Hire Requirments">
+                    <div class="h-100"><br>
+                        <app-new-hire-requirments></app-new-hire-requirments>
+                    </div>
+                </mat-tab>
+
+                <mat-tab label="Work & Educational History">
+                    <div class="h-100"><br><br>
+                        <app-work-educational-history></app-work-educational-history>
+                    </div>
+                </mat-tab>
+
+                <mat-tab label="Employee Records">
+                    <div class="h-100"><br><br>
+                        <app-employee-records></app-employee-records>
+                    </div>
+                </mat-tab>
+
+                <mat-tab label="Learnings">
+                    <div class="h-100"><br><br>
+                        <app-learnings></app-learnings>
+                    </div>
+                </mat-tab>
+
+                <mat-tab label="Company Assets">
+                    <div class="h-100"><br><br>
+                        <app-company-assets></app-company-assets>
+                    </div>
+                </mat-tab>
+
+                <mat-tab label="2316 Previous Employer">
+                    <div class="h-100"><br><br>
+                        <app-previous-employer></app-previous-employer>
+                    </div>
+                </mat-tab>
+
+                <mat-tab label="Incident Report &  Memo">
+                    <div class="h-100"><br><br>
+                        <app-incident-report-memo></app-incident-report-memo>
+                    </div>
+                </mat-tab>
+
+                <mat-tab label="Employee Movement">
+                    <div class="h-100"><br><br>
+                        <app-employee-movement></app-employee-movement>
+                    </div>
+                </mat-tab>
+
+            </mat-tab-group>
+        </mat-card>
+    </div>
+</div>

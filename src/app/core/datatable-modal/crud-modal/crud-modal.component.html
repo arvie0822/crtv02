@@ -1,0 +1,40 @@
+<mat-card class="mat-elevation-z0">
+    <mat-card-title>
+        <span class="text-[15px]">{{data.data.title}}</span>
+    </mat-card-title>
+    <mat-card-content>
+        <div class="grid grid-cols-{{template.length}} gap-2">
+            <ng-container *ngFor="let filter of template">
+                <!-- Input Fields -->
+                <mat-form-field *ngIf="filter.type=='input'" class="w-full text-md" appearance="outline">
+                    <mat-label class="label-font-size">{{filter.label}}</mat-label>
+                    <mat-icon class="icon-size-5 : mr-2" matSuffix svgIcon="{{filter.icon}}"></mat-icon>
+                    <input class="input" [id]="filter.id" matInput [(ngModel)]="filter._value"/>
+                </mat-form-field>
+                <!-- Select dropdown -->
+                <mat-form-field *ngIf="filter.type=='select'" class="w-full text-md" appearance="outline">
+                    <mat-label class="label-font-size">{{filter.label}}</mat-label>
+                    <mat-select [id]="filter.id" [(ngModel)]="filter._value" [multiple]="filter.multiselect">
+                        <mat-option *ngFor="let item of filter.options">{{item.description}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <!-- Custom dropdown -->
+                <app-dropdown-custom [useControl]="false" *ngIf="filter.type=='custom'" (selected)="filter._value = $event" [id]="filter.id" [all]="filter.all" [multiple]="filter.multiselect" [type]="filter.dropdownType.uri"></app-dropdown-custom>
+                <!-- Date Picker -->
+                <div *ngIf="filter.type=='date'" class="w-full text-md">
+                    <mat-form-field class="w-full text-md" appearance="outline">
+                        <mat-label class="label-font-size"> {{filter.label}}</mat-label>
+                        <input matInput [(ngModel)]="filter._value" [matDatepicker]="picker" readonly
+                        [placeholder]="'MM/DD/YYYY'" (click)="picker.open()">
+                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
+                    </mat-form-field>
+                </div>
+            </ng-container>
+        </div>
+    </mat-card-content>
+    <mat-card-actions align="end">
+        <button mat-stroked-button (click)="close()">Cancel</button>
+        <button mat-stroked-button (click)="submit()" color="primary">Confirm</button>
+    </mat-card-actions>
+</mat-card>

@@ -1,0 +1,55 @@
+<div  mat-dialog-title class="flex justify-between ...">
+    <div class="flex shrink-0 items-center">
+        <div class="text-[15px]">{{data.data.title}}</div>
+      </div>
+    <div class="flex shrink-0 items-center mt-4 sm:mt-0 sm:ml-4">
+      <a mat-stroked-button mat-dialog-close [color]="'primary'">
+        <mat-icon [svgIcon]="'heroicons_outline:arrow-narrow-left'"></mat-icon>
+        <span class="ml-2 text-sm">Back</span>
+      </a>
+      <button type="button" class="px-6 ml-3 text-sm" mat-flat-button color="primary" (click)="submit()">Save Changes</button>
+    </div>
+  </div>
+<div mat-dialog-content>
+    <form [formGroup]="dynamicForm">
+        <div class="grid grid-cols-4 gap-x-5">
+            <div *ngFor="let form_elem of template; let i = index">
+                <div *ngIf="form_elem.type=='text'">
+                    <mat-form-field class=" w-full text-md " appearance="outline">
+                        <mat-label class="label-font-size"> {{form_elem.label}}/</mat-label>
+                        <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                        <input class="input" matInput type="text" formControlName="{{form_elem.key}}"
+                            placeholder="{{form_elem.label}}">
+                    </mat-form-field>
+                </div>
+                <div *ngIf="form_elem.type=='number'">
+                    <mat-form-field class=" w-full text-md " appearance="outline">
+                        <mat-label class="label-font-size"> {{form_elem.label}}</mat-label>
+                        <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                        <input class="input" matInput type="number" formControlName="{{form_elem.key}}"
+                            placeholder="{{form_elem.label}}">
+                    </mat-form-field>
+                </div>
+                <div *ngIf="form_elem.type=='datepicker'">
+                    <mat-form-field class="w-full text-md" appearance="outline">
+                        <mat-label class="label-font-size"> {{form_elem.label}}</mat-label>
+                        <input matInput formControlName="{{form_elem.key}}" [matDatepicker]="picker" readonly
+                            [placeholder]="'MM/DD/YYYY'" (click)="picker.open()">
+                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
+                    </mat-form-field>
+                </div>
+                <div *ngIf="form_elem.type=='datepicker-mmdd'">
+                    <app-month-date [control]="dynamicForm.get(form_elem.key)" label="{{form_elem.label}}"></app-month-date>
+                </div>
+                <div *ngIf="form_elem.type=='select'">
+                    <app-dropdown [control]="dynamicForm.get(form_elem.key)" [options]="form_elem.options"
+                        [icon]="'mat_outline:info'" [type]="form_elem.dropdown"> </app-dropdown>
+                </div>
+                <div *ngIf="form_elem.type=='switch'">
+                    <mat-slide-toggle color="primary" formControlName="{{form_elem.key}}">{{form_elem.label}}</mat-slide-toggle>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

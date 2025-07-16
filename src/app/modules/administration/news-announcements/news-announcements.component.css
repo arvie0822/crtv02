@@ -1,0 +1,52 @@
+.label-font-size{
+    font-size: 15px;
+   }
+   .mat-icon{
+       position: relative;
+       bottom: 8px;
+   }
+   input{
+     position: relative;
+     bottom: 10px;
+     font-size: medium;
+   }
+   .mat-datepicker-toggle{
+    position: relative;
+    bottom: 7px;
+    font-size: medium;
+   }
+.mat-select{
+    position: relative;
+    bottom: 7px;
+    font-size: medium;
+}
+.area {
+    height: 86px;
+    padding: 5px;
+    width: 99%;
+}
+
+.bakk {
+    background-color: white;
+    color: black;
+}
+.uploadbutton{
+    position: relative;
+    bottom: 15px;
+    right: -5px;
+    border-radius: 3px !important;
+}
+textarea:valid{
+    border-color: #C9C0C0;
+    /* -webkit-text-fill-color: #FFFFF9; */
+}
+textarea:invalid{
+    border-color: #DC2626;
+    /* -webkit-text-fill-color:#DC2626; */
+}
+.text-error.ng-invalid.ng-touched {
+    border: 1px solid #DC2626;
+}
+.text-error.ng-valid.ng-touched {
+    border: 1px solid #C9C0C0;
+}

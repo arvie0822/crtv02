@@ -1,0 +1,285 @@
+<div class="flex-auto p-6 sm:p-6 overflow-y-auto">
+    <div class="flex-auto  sm:p-2  w-full min-w-0 sm:absolute sm:inset-0 sm:overflow-auto text-md">
+    <div>
+        <!-- <form [formGroup]="officialBForm">
+            <div  class="grid grid-cols-8 gap-4 h-15">
+                <mat-form-field class="w-full text-md " appearance="outline" >
+                    <mat-label class="label-font-size">Date</mat-label>
+                    <input formControlName="date" (dateChange)="samedate()" matInput [matDatepicker]="df" readonly [placeholder]="'MM/DD/YYYY'" (click)="df.open()">
+                    <mat-datepicker-toggle matSuffix [for]="df" [disabled]="disabledbutton"></mat-datepicker-toggle>
+                    <mat-datepicker #df></mat-datepicker>
+                </mat-form-field> -->
+
+                <!-- <mat-form-field class="w-full text-md " appearance="outline">
+                    <mat-label class="label-font-size">Time From</mat-label>
+                    <mat-icon class="uploadbutton icon-size-5 : mr-2 mt-5" matPrefix svgIcon="mat_outline:access_time"></mat-icon>
+                    <input class="timeinput" (ngModelChange)="handleTimeEvent()" formControlName="timeFrom" readonly [strict]="false" mode="12h" type="text" matTimepicker #t="matTimepicker">
+                </mat-form-field> -->
+
+                <!-- <mat-form-field class="w-full text-md " appearance="outline">
+                    <input matInput [ngxMatDatetimePicker]="picker1"  (click)="picker1.open()"
+                                    placeholder="Choose a date"
+                                    (dateChange)="validation(0) ;getFormattedTimeValue()"
+                                    [format]="'MM/DD/YYYY h:mm A'"
+                                    formControlName="timeFrom"
+                                    (ngModelChange)="handleTimeEvent()"
+                                    (timeChange)="timemodal($event)">
+                    <mat-datepicker-toggle matSuffix [for]="picker1" [disabled]="disabledbutton">
+                    </mat-datepicker-toggle>
+                    <ngx-mat-datetime-picker #picker1
+                    [showSpinners]="showSpinners"
+                    [showSeconds]="showSeconds"
+                    [stepHour]="stepHour" [stepMinute]="stepMinute"
+                    [stepSecond]="false"
+                    [touchUi]="touchUi"
+                    [color]="color"
+                    [enableMeridian]="true">
+                    </ngx-mat-datetime-picker>
+                </mat-form-field>
+
+                <mat-form-field class="w-full text-md " appearance="outline">
+                    <input  matInput [ngxMatDatetimePicker]="picker2"  (click)="picker2.open()"
+                                    placeholder="Choose a date"
+                                    (dateChange)="validation(0)"
+                                    formControlName="timeTo"
+                                    (ngModelChange)="handleTimeEvent()"
+                                    (timeChange)="timemodal($event)">
+                    <mat-datepicker-toggle matSuffix [for]="picker2" >
+                    </mat-datepicker-toggle>
+                    <ngx-mat-datetime-picker #picker2
+                    [showSpinners]="showSpinners"
+                    [showSeconds]="showSeconds"
+                    [stepHour]="stepHour" [stepMinute]="stepMinute"
+                    [stepSecond]="false"
+                    [touchUi]="touchUi"
+                    [color]="color"
+                    [enableMeridian]="true">
+                    </ngx-mat-datetime-picker>
+                </mat-form-field> -->
+
+                <!-- <mat-form-field class="w-full text-md " appearance="outline">
+                    <mat-label class="label-font-size">Time To</mat-label>
+                    <mat-icon class="uploadbutton icon-size-5 : mr-2 mt-5" matPrefix svgIcon="mat_outline:access_time"></mat-icon>
+                    <input class="timeinput" (ngModelChange)="handleTimeEvent()" formControlName="timeTo" readonly [strict]="false" mode="12h" type="text" matTimepicker #t2="matTimepicker">
+                </mat-form-field> -->
+
+                    <!-- <mat-form-field class="w-full text-md" appearance="outline">
+                        <mat-label class="label-font-size">Reason</mat-label>
+                        <mat-icon class="uploadbutton icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                        <mat-select  formControlName="reasonId">
+                            <mat-option *ngFor="let item of official" [value]="item.id">{{item.description}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <mat-form-field class="w-full text-md" appearance="outline" [disable]="disabledbutton">
+                        <mat-label class="label-font-size">Location</mat-label>
+                        <mat-icon class="uploadbutton icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                        <input  class="input" formControlName="location" matInput [placeholder]="'Location'"/>
+                    </mat-form-field>
+                    <mat-form-field class="w-full text-md" appearance="outline" [disable]="disabledbutton">
+                        <mat-label class="label-font-size">Remarks</mat-label>
+                        <mat-icon class="uploadbutton icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                        <input  class="input" formControlName="reason" matInput [placeholder]="'Remarks'"/>
+                    </mat-form-field>
+                    <mat-form-field class="w-full text-md" appearance="outline">
+                        <input  type="file" formControlName="uploadPath" #fileInput2 (change)="uploadFile($event, 'displayOB')"  class=" absolute top-1 z-0 h-full w-full cursor-pointer opacity-0" accept=".jpeg,.jpg,.png,.doc,.docx,.pdf,.xls,.xlsx"/>
+                        <input class="sample" readonly matInput id="displayOB" cdkFocusInitial />
+                        <mat-icon class="uploadbutton icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:upload"></mat-icon>
+                        <button  class="upb" (click)="fileInput2.click($event)" matSuffix mat-button color="primary">Upload</button>
+                    </mat-form-field>
+                    <div class="button-margin-top">
+                        <button [disabled]="disabledbutton" (click)="addOB()" class="text-md mt-[2px]" mat-flat-button color="primary" aria-label="example icon">
+                            <mat-icon class="mr-1 mt-4" svgIcon="mat_outline:post_add"></mat-icon>{{editing? 'Edit' : 'Add'}}
+                        </button>
+                    </div>
+                </div>
+        </form> -->
+            <div>
+                <table #OBTable mat-table [dataSource]="datasource" class="mat-elevation-z0 border">
+                    <ng-container matColumnDef="action">
+                        <th class="no-wrap" mat-header-cell *matHeaderCellDef>Actions</th>
+                        <td class="pl-5" mat-cell  *matCellDef="let element; let i = index">
+                            <div class="h-13" *ngFor="let child of element.action; let x = index">
+                                <button [disabled]="disabledbutton" class="ml-5 " mat-icon-button [matMenuTriggerFor]="menu" [disabled]="editing" aria-label="">
+                                    <mat-icon class="icon-size-6 : mt-5">{{editing?"edit":"more_vert"}}</mat-icon>
+                                </button>
+                                <mat-menu #menu="matMenu">
+                                <button *ngIf="x == 0" (click)="add(element,i,x)" mat-menu-item>
+                                    <mat-icon class="icon-size-6 : mt-5" color="primary">add</mat-icon>
+                                    <span>Add</span>
+                                </button>
+                                <button mat-menu-item (click)="obDelete(i,x)">
+                                    <mat-icon class="icon-size-6 : mt-5" color="warn">delete</mat-icon>
+                                    <span>Delete</span>
+                                </button>
+                                <button mat-menu-item (click)="edit(element,i,x)"  *ngIf="element.status =='First Level Approval' || element.status[x].id =='First Level Approval'">
+                                    <mat-icon class="icon-size-6 : mt-5" color="primary">edit</mat-icon>
+                                    <span>Edit</span>
+                                </button>
+                                </mat-menu>
+                            </div>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="date" >
+                        <th class="no-wrap" mat-header-cell *matHeaderCellDef> Date </th>
+                        <td class="pl-5" mat-cell  *matCellDef="let element ; let i = index">
+                            <div class="h-13" *ngFor="let child of element.dates; let x = index">
+                                <mat-form-field class="w-40 min-w-full text-md h-5" appearance="outline">
+                                    <mat-label class="label-font-size"></mat-label>
+                                    <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                                    <input [disabled]="child.disabled" class="input" [(ngModel)]="child.id" matInput type="text" [placeholder]="" readonly>
+                                </mat-form-field>
+                            </div>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="dateTimeFrom" >
+                        <th class="no-wrap" mat-header-cell *matHeaderCellDef> Time From </th>
+                        <td class="pl-5" mat-cell  *matCellDef="let element ; let i = index">
+                            <!-- <mat-form-field class="w-40 text-md h-5" appearance="outline">
+                                <mat-label class="label-font-size"></mat-label>
+                                <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:access_time"></mat-icon>
+                                <input  [(ngModel)]="element.timeFrom"  readonly [strict]="false" mode="12h" type="text" matTimepicker #t="matTimepicker">
+                            </mat-form-field> -->
+                            <div class="h-13" *ngFor="let child of element.timeFrom; let x = index">
+                                <mat-form-field class="w-50 min-w-full text-md h-5" appearance="outline">
+                                    <input [disabled]="child.disabled" matInput [ngxMatDatetimePicker]="picker3"  (click)="picker3.open()"
+                                                    placeholder="Choose a date"
+                                                    [enableMeridian]="true"
+                                                    (dateChange)="validation($event,i,x,'datefrom')"
+                                                    [(ngModel)]="child.id"
+                                                    [meridian]="true"
+                                                    (timeChange)="timemodal($event,i,e)" [disabled]="child.disabled" [min]="date_min_max(element,x,true,'dateFrom')" [max]="date_min_max(element,x,false,'dateFrom')">
+                                    <mat-datepicker-toggle matSuffix [for]="picker3">
+                                    </mat-datepicker-toggle>
+                                    <ngx-mat-datetime-picker #picker3
+                                    [showSpinners]="showSpinners"
+                                    [showSeconds]="showSeconds"
+                                    [stepHour]="stepHour" [stepMinute]="stepMinute"
+                                    [stepSecond]="false"
+                                    [touchUi]="touchUi"
+                                    [color]="color"
+                                    [enableMeridian]="true">
+                                    </ngx-mat-datetime-picker>
+                                </mat-form-field>
+                            </div>
+
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="dateTimeTo" >
+                        <th class="no-wrap" mat-header-cell *matHeaderCellDef> Time To </th>
+                        <td class="pl-5" mat-cell  *matCellDef="let element ; let i = index">
+                            <!-- <mat-form-field class="w-40 text-md h-5 " appearance="outline">
+                                <mat-label class="label-font-size"></mat-label>
+                                <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:access_time"></mat-icon>
+                                <input  [(ngModel)]="element.timeTo"  readonly [strict]="false" mode="12h" type="text" matTimepicker #t="matTimepicker">
+                            </mat-form-field> -->
+                            <div class="h-13" *ngFor="let child of element.timeTo; let x = index">
+                                <mat-form-field class="w-50 min-w-full text-md h-5 " appearance="outline">
+                                    <input [disabled]="child.disabled" matInput [ngxMatDatetimePicker]="picker4"  (click)="picker4.open()"
+                                                    placeholder="Choose a date"
+                                                    (dateChange)="validation($event,i,x,'dateto')"
+                                                    [(ngModel)]="child.id"
+                                                    (timeChange)="timemodal($event)" [min]="date_min_max(element,x,true,'dateto')" [max]="date_min_max(element,x,false,'dateto')">
+                                    <mat-datepicker-toggle matSuffix [for]="picker4" [disabled]="child.disabled">
+                                    </mat-datepicker-toggle>
+                                    <ngx-mat-datetime-picker #picker4
+                                    [showSpinners]="showSpinners"
+                                    [showSeconds]="showSeconds"
+                                    [stepHour]="stepHour" [stepMinute]="stepMinute"
+                                    [stepSecond]="false"
+                                    [touchUi]="touchUi"
+                                    [color]="color"
+                                    [enableMeridian]="true">
+                                    </ngx-mat-datetime-picker>
+                                </mat-form-field>
+                            </div>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="reason" >
+                        <th class="no-wrap" mat-header-cell *matHeaderCellDef> Reason </th>
+                        <td class="pl-5" mat-cell  *matCellDef="let element ; let i = index">
+                            <div class="h-13" *ngFor="let child of element.reasonId; let x = index">
+                                <!-- <mat-form-field class="w-full min-w-30 text-md h-5" appearance="outline">
+                                    <mat-label class="label-font-size">Reason</mat-label>
+                                    <mat-icon class="uploadbutton icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                                    <mat-select [disabled]="child.disabled" [(ngModel)]="child.id">
+                                        <mat-option *ngFor="let item of official" [value]="item.id">{{item.description}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field> -->
+
+                                <mat-form-field class="w-full min-w-30 text-md h-5" appearance="outline" required>
+                                    <mat-label class="label-font-size">Reason</mat-label>
+                                    <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                                    <mat-select (selectionChange)="samedate($event,i,x)" [disabled]="child.disabled" [(ngModel)]="child.id"
+                                        [placeholder]="">
+                                        <mat-option *ngFor="let item of dropdownOptions.purposedef" [value]="item.dropdownID">{{item.description}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+
+                                <!-- <app-dropdown [multiple]="false" [useControl]="false" [value]="child.id" (selected)="child.id=$event" [all]="false" [options]="dropdownOptions.purposedef" [icon]="'mat_outline:info'" [type]="138"></app-dropdown> -->
+                            </div>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="location" >
+                        <th class="no-wrap"  mat-header-cell *matHeaderCellDef> Location </th>
+                        <td class="pl-5" mat-cell  *matCellDef="let element ; let i = index">
+                            <div class="h-13" *ngFor="let child of element.location; let x = index">
+                                <mat-form-field class="w-full min-w-30 text-md h-5" appearance="outline" [disabled]="child.disabled" required>
+                                    <mat-label class="label-font-size">location</mat-label>
+                                    <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                                    <input (onchange)="samedate($event,i,x)" [disabled]="child.disabled" class="input" [(ngModel)]="child.id" matInput [placeholder]="'Location'"/>
+                                </mat-form-field>
+                            </div>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="remarks" >
+                        <th class="no-wrap" mat-header-cell *matHeaderCellDef> Remarks </th>
+                        <td class="pl-5" mat-cell  *matCellDef="let element ; let i = index">
+                            <div class="h-13" *ngFor="let child of element.reason; let x = index">
+                                <mat-form-field class="w-full min-w-30 text-md h-5" appearance="outline" [disabled]="child.disabled">
+                                    <mat-label class="label-font-size">Remarks</mat-label>
+                                    <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                                    <input [disabled]="child.disabled" class="input" [(ngModel)]="child.id" matInput [placeholder]="'Remarks'"/>
+                                </mat-form-field>
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <!-- <ng-container matColumnDef="status" >
+                        <th class="body" mat-header-cell *matHeaderCellDef> Status </th>
+                        <td mat-cell class="w-40 pl-1 pr-1" *matCellDef="let element">{{element.status}}</td>
+                    </ng-container> -->
+
+                    <ng-container matColumnDef="status" >
+                        <th class="no-wrap" mat-header-cell *matHeaderCellDef> Status </th>
+                        <td class="pl-5" mat-cell *matCellDef="let element let i = index">
+                            <div class="h-13" *ngFor="let child of element.status; let x = index">
+                                <mat-form-field class="w-40 min-w-full text-md h-5" appearance="outline" [disabled]="true">
+                                    <mat-label class="label-font-size"></mat-label>
+                                    <input [disabled]="true" class="input" [(ngModel)]="child.id" matInput type="text" [placeholder]="" readonly>
+                                </mat-form-field>
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="uploadFile" >
+                        <th class="no-wrap" mat-header-cell *matHeaderCellDef> Upload </th>
+                        <td class="pl-7" mat-cell *matCellDef="let element ; let i = index">
+                            <div class="h-13" *ngFor="let child of element.uploadPath; let x = index">
+                                <mat-form-field class="w-[40px] text-md h-5" appearance="outline">
+                                    <input [disabled]="child.disabled" type="file" id="imageUpload" #fileInput4 (change)="uploadFile($event ,'displayMe'+i, 'uploadFile',i,x)"  class="absolute top-1 z-0 h-full w-full cursor-pointer opacity-0" accept=".jpeg,.jpg,.png,.doc,.docx,.pdf,.xls,.xlsx"/>
+                                    <input class="sample" readonly matInput [(ngModel)]="child.id" [id]="'displayMe'+i"  cdkFocusInitial>
+                                    <mat-icon class="icon-size-5 " matPrefix svgIcon="mat_outline:upload" (click)="fileInput4.click()" matTooltip={{child.id}}></mat-icon>
+                                    <!-- <button [disabled]="disabledbutton" class="upb" (click)="fileInput4.click()" matSuffix mat-button color="primary"></button> -->
+                                </mat-form-field>
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="obColumns ; sticky :true"></tr>
+                    <tr mat-row *matRowDef="let row; columns: obColumns;"></tr>
+                </table>
+             </div>
+
+       </div>
+    </div>
+</div>

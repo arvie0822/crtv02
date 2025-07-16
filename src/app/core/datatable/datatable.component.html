@@ -1,0 +1,258 @@
+<div class="flex flex-col flex-auto min-w-0" *ngIf="onPageLoad">
+    <div class="flex-auto  sm:p-2  w-full min-w-0 sm:absolute sm:inset-0 sm:overflow-auto text-md">
+    <mat-card class="body-card">
+      <mat-card-title class="text-[16px]" style="text-transform: capitalize;">{{title}} List</mat-card-title>
+      <mat-card-content>
+        <div  class="flex flex-wrap">
+          <ng-container *ngFor="let filter of table.filter ; let i = index">
+            <mat-form-field *ngIf="filter.type=='input'" class="w-50 text-md h-13 mr-3" appearance="outline">
+              <mat-label class="label-font-size">{{filter.label}}</mat-label>
+              <mat-icon class="uploadbutton icon-size-5" matSuffix svgIcon="{{filter.icon}}"></mat-icon>
+              <input class="input" [id]="filter.id" matInput [(ngModel)]="filter.value" (change)="handleInputEvent($event)">
+            </mat-form-field>
+
+            <mat-form-field *ngIf="filter.type=='select'" class="w-50 text-md h-13 mr-3" appearance="outline">
+                <mat-label class="label-font-size">{{filter.label}}</mat-label>
+                <mat-select [id]="filter.id" [(ngModel)]="filter.value" [multiple]="filter.multiselect">
+                    <mat-option *ngIf="filter.all" value="0" (click)="select_all(filter)">All</mat-option>
+                    <mat-option *ngFor="let item of filter.options" (click)="select(filter)" [value]="item.dropdownID">{{item.description}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <mat-form-field class="w-50 text-md h-13 mr-3" appearance="outline" *ngIf="filter.type=='date'" let i = index>
+                <mat-label class="label-font-size">{{filter.label}}</mat-label>
+                <input matInput [(ngModel)]="filter.value" [matDatepicker]="picker" readonly (dateChange)="sample(filter.label,i)" [min]="_min(filter)"
+                [placeholder]="'MM/DD/YYYY'" (click)="picker.open()" >
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+
+            <!-- dropdownfix -->
+            <div class="h-13 mr-3" *ngIf="filter.type=='select-fix'">
+              <app-dropdown [label]="filter.label" [all]="filter.all" (selected)="filter.value=$event" [reset]="resetFix" [multiple]="filter.multiselect" [value]="filter.value"  [options]="filter.options" [useControl]="false" [icon]="'mat_outline:info'" [type]="filter.dropdown"> </app-dropdown>
+            </div>
+
+            <!-- Custom dropdown -->
+            <div class="h-13 mr-3" *ngIf="filter.type=='custom'">
+              <app-dropdown-custom [label]="filter.label" [all]="filter.all" (selected)="filter.value=$event;test($event)" [dropdownValue]="filter.dvalue" [reset]="resetCustom" [multiple]="filter.multiselect" [type]="filter.dropdownType.uri" [useControl]="false"></app-dropdown-custom>
+            </div>
+
+            <!-- Employee Hierarchy -->
+            <div class="h-13 mr-3" *ngIf="filter.type=='e-hierarchy'">
+              <app-employee-hierarchy [showTag]="false" [defaultTag]="filter.tagType" [multiple]="filter.multiselect" [includeInactive]="table.includeInactive" [all]="filter.all" [reset]="resetHierarchy" [resultHierarchy]="resultHierarchy"></app-employee-hierarchy>
+            </div>
+
+          </ng-container>
+
+            <button mat-flat-button color="primary" (click)="loadData(5)" class="text-sm w-[10px] mr-3 mt-0.5"
+              matTooltip="Search">
+              <mat-icon matSuffix svgIcon="mat_outline:search"></mat-icon>
+            </button>
+
+            <button mat-flat-button color="primary" (click)="refresh()" class="text-sm w-[10px] mr-3 mt-0.5"
+                *ngIf="table.btn_reload" matTooltip="Reload">
+                <mat-icon matSuffix svgIcon="mat_outline:refresh"></mat-icon>
+            </button>
+
+            <button mat-flat-button color="primary" (click)="handleCreateEvent()" class="text-sm w-[10px] mr-3 mt-0.5"
+              matTooltip="Create" *ngIf="table.btn_create">
+              <mat-icon matSuffix svgIcon="mat_outline:playlist_add"></mat-icon>
+            </button>
+
+            <button mat-flat-button color="primary" (click)="handleExportEvent()" class="text-sm w-[10px] mr-3 mt-0.5"
+              matTooltip="Export" *ngIf="table.btn_export">
+              <mat-icon matSuffix svgIcon="mat_outline:download"></mat-icon>
+            </button>
+
+            <button mat-flat-button color="primary" (click)="handleUploadEvent()" class="text-sm w-[10px] mr-3 mt-0.5"
+              matTooltip="Upload" *ngIf="table.btn_upload">
+              <mat-icon matSuffix svgIcon="mat_outline:upload"></mat-icon>
+            </button>
+
+            <button mat-flat-button color="primary" (click)="handleDownloadEvent()" class="text-sm w-[10px] mr-3 mt-0.5"
+              matTooltip="Download" *ngIf="table.btn_download">
+              <mat-icon matSuffix svgIcon="mat_outline:file_download"></mat-icon>
+            </button>
+
+            <button mat-flat-button color="warn" (click)="handleDeleteEvent()" class="text-sm w-[10px] mr-3 mt-0.5"
+              matTooltip="Delete" *ngIf="table.btn_delete">
+              <mat-icon matSuffix svgIcon="mat_outline:delete"></mat-icon>
+            </button>
+
+            <!-- CRT Track-Completion-->
+            <button mat-flat-button color="primary" (click)="addEvent({})" class="text-sm w-[10px] mr-3 mt-0.5"
+              matTooltip="Add User" *ngIf="table.btn_addCRT">
+              <mat-icon matSuffix svgIcon="mat_outline:person_add"></mat-icon>
+            </button>
+
+            <button mat-flat-button color="primary" (click)="handleGenerateEvent(2)" class="text-sm w-[10px] mr-3 mt-0.5"
+              matTooltip="Export" *ngIf="table.btn_generate">
+              <mat-icon matSuffix svgIcon="mat_outline:file_download"></mat-icon>
+            </button>
+
+            <button mat-flat-button color="primary" (click)="handleGenerateEvent(6)" class="text-sm w-[10px] mr-3 mt-0.5"
+              matTooltip="Export Info" *ngIf="table.btn_exportInfo">
+              <mat-icon matSuffix svgIcon="mat_outline:file_download"></mat-icon>
+            </button>
+
+            <button mat-flat-button color="primary" (click)="handleGenerateEvent(1)" class="text-sm w-[10px] mr-3 mt-0.5"
+              matTooltip="Generate CRT file" *ngIf="table.btn_generate">
+              <mat-icon matSuffix svgIcon="mat_outline:sim_card_download"></mat-icon>
+            </button>
+
+            <button mat-flat-button color="primary" (click)="handleGenerateEvent(0)" class="text-sm w-[10px] mr-3 mt-0.5"
+              matTooltip="Generate All" *ngIf="table.btn_generateAll">
+              <mat-icon matSuffix svgIcon="mat_outline:download"></mat-icon>
+            </button>
+
+            <button mat-flat-button color="warn" (click)="handleResetEvent()" class="text-sm w-[10px] mr-3 mt-0.5"
+              matTooltip="Reset CRT" *ngIf="table.btn_generateAll">
+              <mat-icon svgIcon="mat_outline:undo"></mat-icon>
+            </button>
+            <!-- CRT Users-->
+            <button mat-flat-button color="primary" (click)="handleGenerateEvent(2)" class="text-sm w-[10px] mr-3 mt-0.5"
+              matTooltip="Extract" *ngIf="table.btn_extract">
+              <mat-icon matSuffix svgIcon="mat_outline:sim_card_download"></mat-icon>
+            </button>
+
+            <input type="file" id="uploadfiles" #fileInput (change)="uploadFile($event)" hidden
+                  accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" />
+
+            <button mat-flat-button color="primary" (click)="fileInput.click()" class="text-sm w-[10px] mr-3 mt-0.5"
+              matTooltip="Upload" *ngIf="table.btn_uploadCRT">
+              <mat-icon matSuffix svgIcon="mat_outline:upload"></mat-icon>
+            </button>
+
+            <button mat-flat-button color="warn" (click)="deleteEvent()" class="text-sm w-[10px] mr-3 mt-0.5"
+              matTooltip="Delete" *ngIf="table.btn_deleteCRT">
+              <mat-icon matSuffix svgIcon="mat_outline:delete"></mat-icon>
+            </button>
+
+            <button mat-flat-button color="primary" (click)="dlTemplateEvent()" class="text-sm w-[10px] mr-3 mt-0.5"
+              matTooltip="Download Template" *ngIf="table.btn_dlTemplate">
+              <mat-icon matSuffix svgIcon="mat_outline:cloud_download"></mat-icon>
+            </button>
+
+            <button mat-flat-button color="primary" (click)="handleExportAll()" class="text-sm w-[10px] mr-3 mt-0.5"
+              matTooltip="Extract All" *ngIf="table.btn_extract">
+              <mat-icon matSuffix svgIcon="mat_outline:sim_card_download"></mat-icon>
+            </button>
+
+        </div>
+
+      </mat-card-content>
+      <mat-card-content>
+        <section class="example-container mat-elevation-z0 z-10" tabindex="0" [ngStyle]="{top: top()}">
+          <table mat-table #MatTable matSort class="border" [attr.disabled]="isLoadingResults ? true : null"
+            [dataSource]="dataSource" (matSortChange)="handleSortEvent($event)">
+
+            <ng-container cdkColumnDef="checkbox">
+                <th mat-header-cell *cdkHeaderCellDef>
+                  <div>
+                    <mat-checkbox [color]="'primary'" [checked]="itemChecked(0)" (change)="selectAll($event,0)"></mat-checkbox>
+                  </div>
+                </th>
+                <td mat-cell class="w-10" *cdkCellDef="let element; let i = index">
+                    <div>
+                        <mat-checkbox [color]="'primary'" [disabled]="disableCheck(element)" [matTooltip]="disabledReason(element)"
+                          [checked]="itemChecked(element.employeeId)" (change)="selectOne(element.employeeId,false)">
+                        </mat-checkbox>
+                    </div>
+                </td>
+            </ng-container>
+
+            <ng-container cdkColumnDef="action" >
+              <th mat-header-cell *cdkHeaderCellDef></th>
+              <td mat-cell class="w-10" *cdkCellDef="let element">
+                <div *ngIf="!table.action">
+                  <button mat-icon-button disabled aria-label="Example icon-button with a menu">
+                      <mat-icon>more_vert</mat-icon>
+                  </button>
+                </div>
+                <div *ngIf="table.action && !table.tkGeneration" >
+                    <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+                        <mat-icon>more_vert</mat-icon>
+                    </button>
+                    <mat-menu #menu="matMenu">
+                        <button mat-menu-item  (click)="handleClickEvent('edit' ,element)">
+                          <mat-icon color="primary">edit</mat-icon>
+                          <span color="primary">Edit</span>
+                        </button>
+                        <button mat-menu-item  (click)="handleClickEvent('delete' ,element)">
+                          <mat-icon svgIcon="heroicons_outline:trash" color="warn"></mat-icon>
+                          <span color="primary">Delete</span>
+                        </button>
+                        <!-- <button mat-menu-item  (click)="handleClickEvent('view' ,element)">
+                            <mat-icon color="primary">open_in_new</mat-icon>
+                            <span color="primary">View</span>
+                          </button> -->
+                        <!-- <button mat-menu-item disabled>
+                          <mat-icon>voicemail</mat-icon>
+                          <span>Check voice mail</span>
+                        </button> -->
+                      </mat-menu>
+                </div>
+                <div *ngIf="table.action && table.tkGeneration" >
+                  <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+                      <mat-icon>more_vert</mat-icon>
+                  </button>
+                  <mat-menu #menu="matMenu">
+                        <button mat-menu-item  (click)="handleTKEvent('view' ,element)">
+                          <mat-icon color="primary">open_in_new</mat-icon>
+                          <span color="primary">View Generated TK</span>
+                        </button>
+                        <button mat-menu-item  (click)="handleTKEvent('reGenerate' ,element)">
+                          <mat-icon color="primary">edit</mat-icon>
+                          <span color="primary">Regenerate TK</span>
+                        </button>
+                        <button mat-menu-item  (click)="handleTKEvent('viewAdjustment' ,element)">
+                          <mat-icon color="primary">open_in_new</mat-icon>
+                          <span color="primary">View TK Adjustment</span>
+                        </button>
+                        <button mat-menu-item  (click)="handleTKEvent('adjustment' ,element)">
+                          <mat-icon color="primary">edit</mat-icon>
+                          <span color="primary">Generate TK Adjustment</span>
+                        </button>
+                      <!-- <button mat-menu-item disabled>
+                        <mat-icon>voicemail</mat-icon>
+                        <span>Check voice mail</span>
+                      </button> -->
+                    </mat-menu>
+                </div>
+              </td>
+            </ng-container>
+
+            <ng-container cdkColumnDef="isProcess">
+              <th *cdkHeaderCellDef>Processed</th>
+              <td *cdkCellDef="let element">
+
+                <span *ngIf="element.isProcess"
+                  class="inline-flex items-center font-bold text-xs px-2.5 py-0.5 rounded-full tracking-wide uppercase bg-green-200 text-green-800 dark:bg-green-600 dark:text-green-50">
+                  <span class="leading-relaxed whitespace-nowrap">Completed</span>
+                </span>
+
+                <mat-progress-spinner *ngIf="!element.isProcess" [diameter]="24" [mode]="'indeterminate'">
+                </mat-progress-spinner>
+
+              </td>
+            </ng-container>
+
+            <ng-container *ngFor="let column of columns" [matColumnDef]="column.column">
+              <th mat-header-cell class="table-header no-wrap" *cdkHeaderCellDef mat-sort-header>{{ column.title }}</th>
+              <td mat-cell *cdkCellDef="let row" class="hover-effect">
+                <div class="truncate-cell" [matTooltip]="row[column.column]">{{ row[column.column] }}</div>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="columndefs; sticky: true"></tr>
+            <tr mat-row *matRowDef="let row; columns: columndefs"></tr>
+          </table>
+        </section>
+        <mat-paginator class="paganation" [attr.disabled]="isLoadingResults ? true : null" (page)="handlePageEvent($event)"
+            [length]="totalRows" [pageSize]="request.Length" [pageIndex]="request.Start"
+            [pageSizeOptions]="[20, 50, 100]" showFirstLastButtons></mat-paginator>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+</div>

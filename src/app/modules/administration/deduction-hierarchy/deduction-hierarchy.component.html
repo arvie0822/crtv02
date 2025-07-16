@@ -1,0 +1,170 @@
+<div class="flex flex-col flex-auto min-w-0">
+    <!-- Main -->
+    <div class="flex-auto sm:p-2 w-full min-w-0 sm:absolute sm:inset-0 sm:overflow-auto text-md">
+        <mat-card>
+            <mat-card-title>
+        <app-card-title title="Deduction Hierarchy" [sub]="true" [back]="true"></app-card-title>
+            </mat-card-title>
+                <mat-card-content>
+                    <form [formGroup]="deductionHierarchyForm">
+                        <div class="grid grid-cols-7 gap-2 h-14">
+
+                            <mat-form-field class="w-full text-md" appearance="outline">
+                                <mat-label class="label-font-size">Name</mat-label>
+                                <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                                <input class="input" formControlName="name" matInput [placeholder]="'Name'"/>
+                            </mat-form-field>
+
+                            <mat-form-field class="w-full text-md" appearance="outline">
+                                <mat-label class="label-font-size">Description</mat-label>
+                                <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                                <input class="input" formControlName="description" matInput [placeholder]="'Name'"/>
+                            </mat-form-field>
+
+                            <mat-form-field class="w-full text-md" appearance="outline">
+                                <mat-label class="label-font-size">Min Net Pay</mat-label>
+                                <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                                <mat-select (selectionChange)="resetAll()" formControlName="minNetPay">
+                                  <mat-option *ngFor="let item of payOpt" [value]="item.id">{{item.description}}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+
+                            <mat-form-field *ngIf="deductionHierarchyForm.value.minNetPay == 0" class="w-full text-md" appearance="outline">
+                                <mat-label class="label-font-size">Min Net Pay Type</mat-label>
+                                <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                                <mat-select (selectionChange)="resetValue()" formControlName="amountDrop">
+                                  <mat-option *ngFor="let item of amountfixed" [value]="item.id">{{item.description}}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+
+                            <mat-form-field *ngIf="deductionHierarchyForm.value.minNetPay == 0 && deductionHierarchyForm.value.amountDrop == 0" class="w-full text-md" appearance="outline">
+                                <mat-label class="label-font-size">Min Net Amount</mat-label>
+                                <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                                <input class="input" type="number" (blur)="format($event,'minAmount')" formControlName="minAmount" matInput [placeholder]="'Min Net Amount'"/>
+                            </mat-form-field>
+
+                            <div *ngIf="deductionHierarchyForm.value.amountDrop == 1 || deductionHierarchyForm.value.amountDrop == 2">
+                                <mat-form-field class="w-full text-md" appearance="outline">
+                                    <mat-label class="label-font-size">Min Net Amount</mat-label>
+                                    <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                                    <input class="input" type="number" formControlName="minAmount1" matInput [placeholder]="'Min Net Amount'" min="1"
+                                        max="100" />
+                                    <mat-error *ngIf="deductionHierarchyForm.get('minAmount1').value > 100">
+                                        Please enter a number between 1 and 100.
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+
+
+                            <mat-form-field *ngIf="deductionHierarchyForm.value.minNetPay == 1" class="w-full text-md" appearance="outline">
+                                <mat-label class="label-font-size">Allow Company Adv</mat-label>
+                                <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                                <mat-select (selectionChange)="resetAllow()" formControlName="companyAdvance">
+                                  <mat-option *ngFor="let item of payOpt" [value]="item.id">{{item.description}}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+
+                            <mat-form-field *ngIf="deductionHierarchyForm.value.companyAdvance == 0" class="w-full text-md" appearance="outline">
+                                <mat-label class="label-font-size">Company Adv Type</mat-label>
+                                <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                                <mat-select (selectionChange)="resetValue()" formControlName="amountDropp">
+                                  <mat-option *ngFor="let item of amountfixedD" [value]="item.id">{{item.description}}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+
+                            <mat-form-field *ngIf="deductionHierarchyForm.value.minNetPay == 1 && deductionHierarchyForm.value.amountDropp == 2" class="w-full text-md" appearance="outline">
+                                <mat-label class="label-font-size">Max Loan Amount</mat-label>
+                                <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                                <input class="input" type="number" (blur)="format($event,'maxAmount')" formControlName="maxAmount" matInput [placeholder]="'Max Loan Amount'"/>
+                            </mat-form-field>
+
+                            <mat-form-field *ngIf="deductionHierarchyForm.value.minNetPay == 1 && deductionHierarchyForm.value.amountDropp == 3 || deductionHierarchyForm.value.amountDropp == 4" class="w-full text-md" appearance="outline">
+                                <mat-label class="label-font-size">Max Loan Amount</mat-label>
+                                <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                                <input class="input" type="number" formControlName="maxAmount1" matInput [placeholder]="'Max Loan Amount'"/>
+                                <mat-error *ngIf="deductionHierarchyForm.get('maxAmount1').value > 100">
+                                    Please enter a number between 1 and 100.
+                                </mat-error>
+                            </mat-form-field>
+
+                            <mat-form-field class="w-full text-md" appearance="outline">
+                                <mat-label class="label-font-size">Status</mat-label>
+                                <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                                <mat-select formControlName="status">
+                                    <mat-option *ngFor="let item of statusOpt" [value]="item.id">{{item.description}}</mat-option>
+                                  </mat-select>
+                            </mat-form-field>
+
+                        </div>
+
+                        <!-- <div *ngIf="deductionHierarchyForm.value.minNetPay == 1" class="grid grid-cols-6 gap-2 h-14">
+                            <mat-form-field *ngIf="deductionHierarchyForm.value.minNetPay == 1" class="w-full text-md" appearance="outline">
+                                <mat-label class="label-font-size">Allow Company Advance</mat-label>
+                                <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                                <mat-select formControlName="companyAdvance">
+                                  <mat-option *ngFor="let item of payOpt" [value]="item.id">{{item.description}}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+
+                            <mat-form-field *ngIf="deductionHierarchyForm.value.minNetPay == 1" class="w-full text-md" appearance="outline">
+                                <mat-label class="label-font-size">Min Net Pay Type</mat-label>
+                                <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                                <mat-select formControlName="amountDrop">
+                                  <mat-option *ngFor="let item of amountfixedD" [value]="item.id">{{item.description}}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+
+                            <mat-form-field *ngIf="deductionHierarchyForm.value.minNetPay == 1" class="w-full text-md" appearance="outline">
+                                <mat-label class="label-font-size">Max Loan Amount</mat-label>
+                                <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                                <input class="input" type="number" formControlName="maxAmount" matInput [placeholder]="'Max Loan Amount'"/>
+                            </mat-form-field>
+
+                            <mat-form-field class="w-full text-md" appearance="outline">
+                                <mat-label class="label-font-size">Status</mat-label>
+                                <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                                <mat-select formControlName="status">
+                                    <mat-option *ngFor="let item of statusOpt" [value]="item.id">{{item.description}}</mat-option>
+                                  </mat-select>
+                            </mat-form-field>
+                        </div> -->
+
+                        <mat-divider ></mat-divider>
+
+                        <div class="grid grid-cols-12 mt-5">
+                            <div class="col-span-2">
+                                <div class="border-2 p-3 ">
+                                    <h2>Level</h2>
+                                </div>
+                                <div>
+                                  <div class="p-5 border-2" *ngFor="let item of doneCount">{{item}}</div>
+                                </div>
+                            </div>
+                            <div class="col-span-3">
+                                <div class="border-2 p-3">
+                                    <h2>Loan/Deduction</h2>
+                                </div>
+                                <div
+                                  cdkDropList
+                                  [cdkDropListData]="done"
+                                  (cdkDropListDropped)="drop($event)">
+                                  <div class="p-5 border-2" *ngFor="let item of done ; let i = index" cdkDrag >{{item}}</div>
+                                  <!-- [cdkDragDisabled]="i === 0"  [ngStyle]="{'background-color': i > 0 ? disabledBackgroundColor : '#E2E8F0'}" -->
+                                </div>
+                            </div>
+                        </div>
+
+                    </form>
+
+                    <!-- <div cdkDropList class="example-list" (cdkDropListDropped)="drop($event)">
+                        <div
+                          class="example-box"
+                          *ngFor="let item of items"
+                          cdkDrag
+                          [cdkDragDisabled]="item.disabled">{{item.value}}</div>
+                      </div> -->
+
+                </mat-card-content>
+        </mat-card>
+    </div>
+    </div>

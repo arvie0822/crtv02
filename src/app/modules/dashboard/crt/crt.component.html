@@ -1,0 +1,103 @@
+
+<div class="flex flex-col flex-auto min-w-0">
+
+  <div class="flex-auto  sm:p-2 w-full min-w-0 sm:absolute sm:inset-0 sm:overflow-auto text-md"  [hidden]="isadmin">
+ 
+  <!-- Main -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 w-full min-w-0">
+      <div class="flex flex-col flex-auto p-6 bg-card shadow rounded-2xl ">
+        <div class="flex items-start justify-between">
+         <div class="text-lg font-medium tracking-tight leading-6 truncate" >Total Upload</div>
+          <div class="ml-2 -mt-2 -mr-3">
+          </div>
+       </div>
+
+        <div class="flex flex-col items-center mt-2">
+          <div class="text-7xl sm:text-8xl font-bold tracking-tight leading-none text-blue-500">{{total_up}}</div>
+        </div>
+      </div>
+      <div class="flex flex-col flex-auto p-6 bg-card shadow rounded-2xl ">
+      <div class="flex items-start justify-between">
+        <div class="text-lg font-medium tracking-tight leading-6 truncate"> Complete Data Entry <span class="text-red-500">({{C_percent}})</span></div>
+        <div class="ml-2 -mt-2 -mr-3">
+        </div>
+      </div>
+      <div class="flex flex-col items-center mt-2">
+        <div class="text-7xl sm:text-8xl font-bold tracking-tight leading-none text-red-500">{{DE_c}}</div>
+      </div>
+      </div>
+
+      <div class="flex flex-col flex-auto p-6 bg-card shadow rounded-2xl ">
+        <div class="flex items-start justify-between">
+          <div class="text-lg font-medium tracking-tight leading-6 truncate"> Incomplete Data Entry <span class="text-yellow-500">({{Inc_percent}})</span></div>
+          <div class="ml-2 -mt-2 -mr-3">
+          </div>
+        </div>
+        <div class="flex flex-col items-center mt-2">
+          <div class="text-7xl sm:text-8xl font-bold tracking-tight leading-none text-yellow-500">{{DE_inc}}</div>
+        </div>
+        </div>
+
+        <div class="flex flex-col flex-auto p-6 bg-card shadow rounded-2xl ">
+          <div class="flex items-start justify-between">
+            <div class="text-lg font-medium tracking-tight leading-6 truncate"> CRT Generated </div>
+            <div class="ml-2 -mt-2 -mr-3">
+            </div>
+          </div>
+          <div class="flex flex-col items-center mt-2">
+            <div class="text-7xl sm:text-8xl font-bold tracking-tight leading-none text-green-500">{{Crt_gen}}</div>
+          </div>
+          </div>
+
+    </div>
+    <br>
+      <table mat-table [dataSource]="dataSource">
+  
+        <!-- Branch Column -->
+        <ng-container matColumnDef="Branch" >
+          <th class="th-right" mat-header-cell *matHeaderCellDef> Site </th>
+          <td class="td-right" mat-cell *matCellDef="let element"> {{element.branch}} </td>
+        </ng-container>
+    
+        <!-- Complete Column -->
+        <ng-container matColumnDef="TotalUpload" >
+          <th mat-header-cell *matHeaderCellDef> Total Upload </th>
+          <td mat-cell *matCellDef="let element"> {{element.totalUpload}} </td>
+        </ng-container>
+
+        <!-- Complete Column -->
+        <ng-container matColumnDef="Complete" >
+            <th mat-header-cell *matHeaderCellDef> Complete </th>
+            <td mat-cell *matCellDef="let element"> {{element.complete}} </td>
+        </ng-container>
+    
+        <!-- Incomplete Column -->
+        <ng-container matColumnDef="Incomplete" >
+          <th mat-header-cell *matHeaderCellDef> Incomplete </th>
+          <td mat-cell *matCellDef="let element"> {{element.incomplete}} </td>
+        </ng-container>
+
+        <!-- CRTGenerated Column -->
+        <ng-container matColumnDef="CRTGenerated" >
+            <th mat-header-cell *matHeaderCellDef> CRT Generated </th>
+            <td mat-cell *matCellDef="let element"> {{element.crtGenerated}} </td>
+          </ng-container>
+    
+        <tr class="head" mat-header-row *matHeaderRowDef="displayedColumns; sticky:true"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+      
+      </table>
+      <mat-paginator [pageSizeOptions]="[10, 20]" (page)="handlePageEvent($event)"
+      [length]="totalRows" [pageSize]="request.Length" [pageIndex]="request.Start"
+      showFirstLastButtons 
+      aria-label="Select page of periodic elements">
+      </mat-paginator>
+
+  </div>
+</div>
+
+
+
+
+

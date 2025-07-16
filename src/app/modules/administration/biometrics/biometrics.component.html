@@ -1,0 +1,93 @@
+<div class="flex flex-col flex-auto min-w-0">
+  <!-- Main -->
+  <div class="flex-auto p-2 sm:p-4">
+    <!-- Content -->
+    <mat-card>
+      <mat-card-title>
+        <app-card-title title="Biometrics" [sub]="true" (submitTap)="submit()"></app-card-title>
+      </mat-card-title>
+      <mat-card-content>
+        <form [formGroup]="detailForm">
+          <div class="grid grid-cols-4 gap-5 h-14">
+            <app-dropdown class="col-span-2" [control]="detailForm.get('employee')"  [options]="[]" [icon]="'mat_outline:info'" [type]="10"> </app-dropdown>
+            
+            <mat-form-field class="w-full text-md" appearance="outline">
+              <mat-label class="label-font-size">Date From</mat-label>
+              <input matInput [matDatepicker]="df" formControlName="dateFrom" readonly [placeholder]="'MM/DD/YYYY'" (click)="df.open()">
+              <mat-datepicker-toggle matSuffix [for]="df"></mat-datepicker-toggle>
+              <mat-datepicker #df></mat-datepicker>
+            </mat-form-field>
+            <mat-form-field class="w-full text-md" appearance="outline">
+              <mat-label class="label-font-size">Date To</mat-label>
+              <input matInput [matDatepicker]="dt" formControlName="dateTo" readonly [placeholder]="'MM/DD/YYYY'" (click)="dt.open()">
+              <mat-datepicker-toggle matSuffix [for]="dt"></mat-datepicker-toggle>
+              <mat-datepicker #dt></mat-datepicker>
+            </mat-form-field>
+          </div>
+
+
+        <mat-divider class="mb-3"></mat-divider>
+
+          <div class="grid grid-cols-7 gap-4">
+            <mat-form-field class="w-full text-md" appearance="outline">
+              <mat-label class="label-font-size">Serial Number</mat-label>
+              <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+              <input matInput type="text" formControlName="serial_number" [placeholder]="'Serial Number'">
+            </mat-form-field>
+            <mat-form-field class="w-full text-md" appearance="outline">
+              <mat-label class="label-font-size">Device ID</mat-label>
+              <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+              <input matInput type="number" min="0" formControlName="device_id" [placeholder]="'Device ID'">
+            </mat-form-field>
+            <mat-form-field class="w-full text-md" appearance="outline">
+              <mat-label class="label-font-size">Model</mat-label>
+              <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+              <input matInput type="text" formControlName="model" [placeholder]="'Model'">
+            </mat-form-field>
+            <mat-form-field class="w-full text-md" appearance="outline">
+              <mat-label class="label-font-size">Location</mat-label>
+              <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+              <input matInput type="text" formControlName="location" [placeholder]="'Location'">
+            </mat-form-field>
+            <mat-form-field class="w-full text-md" appearance="outline">
+              <mat-label class="label-font-size">Biometric Type</mat-label>
+              <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+              <input matInput type="text" formControlName="biometric_type" [placeholder]="'Biometric Type'">
+            </mat-form-field>
+            <mat-form-field class="w-full text-md" appearance="outline">
+              <mat-label class="label-font-size">Group</mat-label>
+              <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+              <input matInput type="number" min="0" formControlName="group" [placeholder]="'Group'">
+            </mat-form-field>
+            <div class="button-margin-top">
+              <mat-label class="">&nbsp;</mat-label>
+              <button class="text-md" mat-flat-button color="primary" aria-label="example icon">
+                <mat-icon class="mr-1 mt-3" svgIcon="mat_outline:post_add"></mat-icon>Add Biometrics
+              </button>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2">
+            <div>
+                <!-- <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+                    <ng-container matColumnDef="roles">
+                        <th mat-header-cell> Roles </th>
+                        <td mat-cell > Supervisor </td>
+                      </ng-container>
+                      <ng-container matColumnDef="approver_name">
+                        <th mat-header-cell > Approver name </th>
+                        <td mat-cell> approver 1 </td>
+                      </ng-container>
+                      <ng-container matColumnDef="notification">
+                        <th mat-header-cell > Receive notification </th>
+                        <td mat-cell > email </td>
+                      </ng-container>
+                </table> -->
+            </div>
+
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

@@ -1,0 +1,176 @@
+<div class="flex flex-col flex-auto min-w-0">
+  <!-- Main -->
+  <div class="flex-auto p-2 sm:p-4">
+    <!-- Content -->
+    <mat-card>
+      <mat-card-title>
+        <app-card-title title="News-Announcements" [sub]="true" [back]="true" (submitTap)="submit()"></app-card-title>
+      </mat-card-title>
+      <mat-card-content>
+        <form [formGroup]="NewsForm">
+            <div class="grid grid-cols-12 gap-2">
+                <div class="col-span-9">
+                    <mat-card class="mat-elevation-z0">
+                        <div class="grid grid-cols-5 gap-2 h-13 ">
+                            <!-- <app-employee-hierarchy class="col-span-5" [multiple]="false" [showTag]="false" [defaultTag]="[-1,-2,38,1007]"></app-employee-hierarchy> -->
+                            <!-- <app-employee-hierarchy class="col-span-{{field_count+1}}" [multiple]="true" (selected)="field_count = $event" [notincludetag]="[37,38,-3,-4]" [resultHierarchy]="resultHierarchy"></app-employee-hierarchy> -->
+                            <app-dropdown-custom [control]="NewsForm.get('category')" [icon]="'mat_outline:info'"  [multiple]="true" [all]="true" [type]="1007" [value]="this.naf.category" [options]="dropdownOptions.categoryDef" [useControl]="true" ></app-dropdown-custom>
+                            <!-- <app-dropdown-custom [control]="NewsForm.get('category')" [multiple]="true" [all]="true" [value]="this.naf.category" [options]="dropdownOptions.categoryDef" [icon]="'mat_outline:info'" [type]="1007"> </app-dropdown-custom> -->
+                            <app-dropdown [control]="NewsForm.get('departmentId')" [multiple]="true" [all]="true" [options]="dropdownOptions.departmentDef" [icon]="'mat_outline:info'" [type]="38"> </app-dropdown>
+                            <app-employee-hierarchy class="col-span-{{field_count+1}}" [multiple]="true"  [all]="true" (selected)="field_count = $event" [notincludetag]="[37,38,-3,-4]" [showTag]="false" [defaultTag]="defaultTag" [resultHierarchy]="resultHierarchy"></app-employee-hierarchy>
+
+                            <!-- <app-dropdown-custom [control]="NewsForm.get('company')" [multiple]="true" [all]="true" [options]="dropdownOptions.subCompanyDef" [icon]="'mat_outline:info'" [type]="1001"> </app-dropdown-custom> -->
+                            <!-- <mat-form-field class="w-full text-md" appearance="outline">
+                                <mat-label class="label-font-size">Company</mat-label>
+                                <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                                <mat-select formControlName="Company" multiple>
+                                    <mat-option #allSelected (click)="toggleAllSelection()" [value]="0">All</mat-option> (click)="tosslePerOne(allSelected.viewValue)"
+                                    <mat-option *ngFor="let item of Company" [value]="item.id">{{item.description}}</mat-option>
+                                </mat-select>
+                            </mat-form-field> -->
+                            <!-- <app-dropdown-custom [control]="NewsForm.get('branch')" [multiple]="true" [all]="true" [options]="dropdownOptions.branchDef" [icon]="'mat_outline:info'" [type]="1002"> </app-dropdown-custom> -->
+                            <!-- <mat-form-field class="w-full text-md" appearance="outline">
+                                <app-dropdown  [options]="Branch" multiple [icon]="'mat_outline:info'" placeholder="'Branch'"> </app-dropdown>
+                                <mat-label class="label-font-size">Branch</mat-label>
+                                <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                                <mat-select formControlName="Branch" multiple>
+                                    <mat-option *ngFor="let item of Branch" [value]="item.id">{{item.description}}</mat-option>
+                                </mat-select>
+                            </mat-form-field> -->
+
+                            <!-- <mat-form-field class="w-full text-md" appearance="outline">
+                                <app-dropdown  [options]="Category" multiple [icon]="'mat_outline:info'" placeholder="'Category'"> </app-dropdown>
+                                <mat-label class="label-font-size">Category</mat-label>
+                                <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                                <mat-select formControlName="Category" multiple>
+                                    <mat-option *ngFor="let item of Category" [value]="item.id">{{item.description}}</mat-option>
+                                </mat-select>
+                            </mat-form-field> -->
+                            <!-- <mat-form-field class="w-full text-md" appearance="outline">
+                                 <app-dropdown  [options]="Department" multiple [icon]="'mat_outline:info'" placeholder="'Department'"> </app-dropdown>
+                                <mat-label class="label-font-size">Department</mat-label>
+                                <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                                <mat-select formControlName="Department" multiple>
+                                    <mat-option *ngFor="let item of Department" [value]="item.id">{{item.description}}</mat-option>
+                                </mat-select>
+                            </mat-form-field> -->
+                        </div>
+                        <div class="grid grid-cols-5 gap-2 h-13">
+                            <mat-form-field class="w-full text-md" appearance="outline">
+                                <mat-label class="label-font-size">Title</mat-label>
+                                <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                                <input matInput type="text" formControlName="title" [placeholder]="'Title'">
+                                <button *ngIf="naf.title" matSuffix mat-icon-button aria-label="Clear" (click)="NewsAnnouncementForm.get('title').reset()">
+                                <mat-icon>close</mat-icon>
+                                </button>
+                            </mat-form-field>
+                            <mat-form-field class="w-70 xxl:w-100 text-md h-15" appearance="outline">
+                                <mat-label class="label-font-size">Date from</mat-label>
+                                <input readonly matInput [ngxMatDatetimePicker]="dtfob" (click)="dtfob.open()"
+                                    placeholder="Choose a date"
+                                    formControlName="dateFrom"
+                                    [max]="NewsForm.controls['dateTo'].value"
+                                    [disabled]="false">
+                                <mat-datepicker-toggle matSuffix [for]="dtfob">
+                                </mat-datepicker-toggle>
+                                <ngx-mat-datetime-picker #dtfob
+                                    [showSpinners]="showSpinners"
+                                    [showSeconds]="showSeconds"
+                                    [touchUi]="touchUi"
+                                    [color]="color"
+                                    [enableMeridian]="true">
+                                </ngx-mat-datetime-picker>
+                            </mat-form-field>
+                            <mat-form-field class="w-70 xxl:w-100 text-md h-15" appearance="outline">
+                                <mat-label class="label-font-size">Date to</mat-label>
+                                <input readonly matInput [ngxMatDatetimePicker]="dto" (click)="dto.open()"
+                                    placeholder="Choose a date"
+                                    formControlName="dateTo"
+                                    [min]="NewsForm.controls['dateFrom'].value"
+                                    [disabled]="false">
+                                <mat-datepicker-toggle matSuffix [for]="dto">
+                                </mat-datepicker-toggle>
+                                <ngx-mat-datetime-picker #dto
+                                    [showSpinners]="showSpinners"
+                                    [showSeconds]="showSeconds"
+                                    [touchUi]="touchUi"
+                                    [color]="color"
+                                    [enableMeridian]="true">
+                                </ngx-mat-datetime-picker>
+                            </mat-form-field>
+                            <!-- <mat-form-field class="w-full text-md" appearance="outline">
+                                <mat-label class="label-font-size">Date From</mat-label>
+                                <input matInput [matDatepicker]="df" formControlName="dateFrom"  readonly [placeholder]="'MM/DD/YYYY'" (click)="df.open()">
+                                <mat-datepicker-toggle matSuffix [for]="df"></mat-datepicker-toggle>
+                                <mat-datepicker #df></mat-datepicker>
+                            </mat-form-field>
+                            <mat-form-field class="w-full text-md" appearance="outline">
+                                <mat-label class="label-font-size">Date To</mat-label>
+                                <input matInput [matDatepicker]="dt" formControlName="dateTo" readonly [placeholder]="'MM/DD/YYYY'" (click)="dt.open()">
+                                <mat-datepicker-toggle matSuffix [for]="dt"></mat-datepicker-toggle>
+                                <mat-datepicker #dt></mat-datepicker>
+                            </mat-form-field> -->
+                            <mat-form-field class="w-full" appearance="outline">
+                                <mat-label class="label-font-size"></mat-label>
+                                  <input type="file"  id="imageUpload" #fileInput (change)="uploadFile($event,'displayMe','uploadFile1','uploadFile')"  class="absolute top-1 z-10 h-full w-full cursor-pointer opacity-0"/>
+                                  <input readonly matInput id="displayMe" formControlName="uploadFile" cdkFocusInitial class="z-0" />
+                                  <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:upload"></mat-icon>
+                                  <button  class="uploadbutton" (click)="fileInput.click()" matSuffix mat-button color="primary">Upload</button>
+                            </mat-form-field>
+                            <!-- <mat-form-field class="w-full text-md" appearance="outline">
+                                <mat-label class="label-font-size">Upload file</mat-label>
+                                <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                                <input formControlName="uploadFile" matInput type="text" [placeholder]="'Upload file'" readonly>
+                                <button type="button" matSuffix mat-button color="primary">
+                                <mat-icon class="icon-size-5" matPrefix svgIcon="mat_outline:upload"></mat-icon>
+                                </button>
+                            </mat-form-field> -->
+                            <mat-form-field class="w-full text-md" appearance="outline">
+                                <mat-label class="label-font-size">Status</mat-label>
+                                <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                                <mat-select formControlName="active">
+                                <mat-option [value]="true">Active</mat-option>
+                                <mat-option [value]="false">Inactive</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                    </mat-card>
+
+            </div>
+            <div class="col-span-3">
+                <mat-card class="mat-elevation-z0">
+                    <div>
+                        <textarea style="border-width: 1px; margin-top: 2px; border-radius: 3px;"  class="text-error area" name="questionText" cols="35" rows="8" placeholder="Description"
+                        formControlName="description" required></textarea>
+                      </div>
+
+                <!-- <mat-form-field  class="w-full text-md col-span-2" appearance="outline">
+                        <mat-label class="label-font-size">Description</mat-label>
+                        <textarea matInput formControlName="description" placeholder="Description"></textarea>
+                    </mat-form-field> -->
+                </mat-card>
+            </div>
+           <!-- <div class="bakk">lorem lorem</div>
+           <div class="bakk">lorem lorem</div>
+           <div class="bakk">lorem lorem</div>
+           <div class="bakk">lorem lorem</div>
+           <div class="bakk">lorem lorem</div>
+           <div class="bakk">lorem lorem</div> -->
+        </div>
+
+
+
+              <!-- <mat-grid-list cols="4" rowHeight="100px">
+                <mat-grid-tile
+                    *ngFor="let tile of tiles"
+                    colspan="2"
+                    rowspan="1">
+                  <mat-card class="w-full m-5">{{tile.text}}</mat-card>
+                </mat-grid-tile>
+              </mat-grid-list> -->
+
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

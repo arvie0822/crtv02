@@ -1,0 +1,219 @@
+<form [formGroup]="scheduleDayForm">
+
+    <div class="grid grid-cols-8 gap-x-3">
+
+          <mat-form-field class="w-full text-md" appearance="outline">
+            <mat-label class="label-font-size">Date From</mat-label>
+            <input formControlName="dateFrom" matInput [matDatepicker]="df" readonly [placeholder]="'MM/DD/YYYY'"
+                (click)="df.open()">
+            <mat-datepicker-toggle matSuffix [for]="df"></mat-datepicker-toggle>
+            <mat-datepicker #df></mat-datepicker>
+        </mat-form-field>
+
+          <mat-form-field class="w-full text-md" appearance="outline">
+            <mat-label class="label-font-size">Date To</mat-label>
+            <input formControlName="dateTo" matInput [matDatepicker]="df2" readonly [placeholder]="'MM/DD/YYYY'"
+                (click)="df2.open()">
+            <mat-datepicker-toggle matSuffix [for]="df2"></mat-datepicker-toggle>
+            <mat-datepicker #df2></mat-datepicker>
+        </mat-form-field>
+
+         <mat-form-field class="w-full text-md" appearance="outline">
+            <mat-label class="label-font-size">Tag Type</mat-label>
+            <mat-icon class="icon icon-size-5 mr-2" matPrefix [svgIcon]="'mat_outline:info'"></mat-icon>
+            <mat-select class="select" formControlName="tagType" [placeholder]="'Tag Type'" (ngModelChange)="handlerChange()">
+                <mat-option *ngFor="let option of dropdownOptions.tagTypeDef" [value]="option.dropdownID">
+                    {{option.description}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+
+         <mat-form-field class="w-full text-md" appearance="outline">
+            <mat-label class="label-font-size">{{placeholder}}</mat-label>
+            <mat-icon class="icon icon-size-5 mr-2" matPrefix [svgIcon]="'mat_outline:info'"></mat-icon>
+            <mat-select class="select" formControlName="tagTypeId" [placeholder]="placeholder" (infiniteScroll)="getNextBatch()"
+                msInfiniteScroll [complete]="complete" threshold="{{systemSettings.infinitScrollThreshold}}">
+                <mat-option>
+                    <ngx-mat-select-search [formControl]="inputChange"
+                        [placeholderLabel]="'Find ' + placeholder + ' ..'"
+                        [noEntriesFoundLabel]="'No ' + placeholder + ' found'"></ngx-mat-select-search>
+                </mat-option>
+                <mat-option *ngFor="let option of data | async" [value]="option.dropdownID">
+                    {{option.description}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+
+        <div>
+            <mat-label class="w-full" >&nbsp;</mat-label>
+            <button *ngIf="!hideSubmit" type="button" style="margin-top: 1.5%;" mat-flat-button color="primary"
+                (click)="handleAddSearch()" aria-label="example icon">
+                <mat-icon svgIcon="mat_outline:post_add"></mat-icon>Add
+            </button>
+        </div>
+
+    </div>
+
+</form>
+<mat-divider class="mb-3"></mat-divider>
+
+<table style="width: 100%;">
+    <tr>
+        <th>Sunday</th>
+        <th>Monday</th>
+        <th>Tuesday</th>
+        <th>Wednesday</th>
+        <th>Thursday</th>
+        <th>Friday</th>
+        <th>Saturday</th>
+    </tr>
+    <tr>
+        <td>
+            <mat-form-field class="w-full text-md hover:text-base">
+                <mat-icon class="icon-size-5" matPrefix [svgIcon]="'mat_outline:info'"></mat-icon>
+                <mat-select [(ngModel)]="dataDays.sunday" [placeholder]="'Sunday'">
+                    <mat-option *ngFor="let option of dropdownOptions.shiftCodeDef" [value]="option.dropdownID">
+                        {{option.description}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </td>
+        <td>
+            <mat-form-field class="w-full text-md hover:text-base">
+                <mat-icon class="icon-size-5" matPrefix [svgIcon]="'mat_outline:info'"></mat-icon>
+                <mat-select [(ngModel)]="dataDays.monday" [placeholder]="'Monday'">
+                    <mat-option *ngFor="let option of dropdownOptions.shiftCodeDef" [value]="option.dropdownID">
+                        {{option.description}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </td>
+        <td>
+            <mat-form-field class="w-full text-md hover:text-base">
+                <mat-icon class="icon-size-5" matPrefix [svgIcon]="'mat_outline:info'"></mat-icon>
+                <mat-select [(ngModel)]="dataDays.tuesday" [placeholder]="'Tuesday'">
+                    <mat-option *ngFor="let option of dropdownOptions.shiftCodeDef" [value]="option.dropdownID">
+                        {{option.description}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </td>
+        <td>
+            <mat-form-field class="w-full text-md hover:text-base">
+                <mat-icon class="icon-size-5" matPrefix [svgIcon]="'mat_outline:info'"></mat-icon>
+                <mat-select [(ngModel)]="dataDays.wednesday" [placeholder]="'Wednesday'">
+                    <mat-option *ngFor="let option of dropdownOptions.shiftCodeDef" [value]="option.dropdownID">
+                        {{option.description}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </td>
+        <td>
+            <mat-form-field class="w-full text-md hover:text-base">
+                <mat-icon class="icon-size-5" matPrefix [svgIcon]="'mat_outline:info'"></mat-icon>
+                <mat-select [(ngModel)]="dataDays.thursday" [placeholder]="'Thursday'">
+                    <mat-option *ngFor="let option of dropdownOptions.shiftCodeDef" [value]="option.dropdownID">
+                        {{option.description}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </td>
+        <td>
+            <mat-form-field class="w-full text-md hover:text-base">
+                <mat-icon class="icon-size-5" matPrefix [svgIcon]="'mat_outline:info'"></mat-icon>
+                <mat-select [(ngModel)]="dataDays.friday" [placeholder]="'Friday'">
+                    <mat-option *ngFor="let option of dropdownOptions.shiftCodeDef" [value]="option.dropdownID">
+                        {{option.description}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </td>
+        <td>
+            <mat-form-field class="w-full text-md hover:text-base">
+                <mat-icon class="icon-size-5" matPrefix [svgIcon]="'mat_outline:info'"></mat-icon>
+                <mat-select [(ngModel)]="dataDays.saturday" [placeholder]="'Saturday'">
+                    <mat-option *ngFor="let option of dropdownOptions.shiftCodeDef" [value]="option.dropdownID">
+                        {{option.description}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </td>
+    </tr>
+</table>
+<mat-divider class="mb-3"></mat-divider>
+<mat-tab-group>
+    <mat-tab label="Employee">
+
+        <table #TableEmployee mat-table [dataSource]="dataEmployee" style="width: 100%;" class="mat-elevation-z0 ">
+            <ng-container matColumnDef="employeeCode">
+                <th mat-header-cell *matHeaderCellDef> Employee Code </th>
+                <td mat-cell *matCellDef="let element"> {{element.employeeCode}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="displayName">
+                <th mat-header-cell *matHeaderCellDef> Employee Name</th>
+                <td mat-cell *matCellDef="let element"> {{element.displayName}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="action">
+                <th mat-header-cell *matHeaderCellDef> Action </th>
+                <td mat-cell *matCellDef="let element; let i = index">
+                    <button type="button" (click)="handleEmployeeRemove(i)" color="warn" mat-button>
+                        <mat-icon svgIcon="heroicons_outline:trash"></mat-icon>
+                    </button>
+                </td>
+            </ng-container>
+
+
+            <tr mat-header-row *matHeaderRowDef="emplopyeeColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: emplopyeeColumns;"></tr>
+        </table>
+    </mat-tab>
+    <mat-tab label="Date">
+        <table #TableDate mat-table [dataSource]="dataDate" style="width: 100%;" class="mat-elevation-z0 ">
+            <ng-container matColumnDef="date">
+                <th mat-header-cell *matHeaderCellDef> Date </th>
+                <td mat-cell *matCellDef="let element"> {{element.date | date:'d-MMM'}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="day">
+                <th mat-header-cell *matHeaderCellDef> Day</th>
+                <td mat-cell *matCellDef="let element"> {{element.day}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="shift">
+                <th mat-header-cell *matHeaderCellDef> Shift</th>
+                <td mat-cell *matCellDef="let element; let i = index">
+                    <div *ngIf="hideSubmit">
+                        {{element.shiftName}}
+                    </div>
+                    <div *ngIf="!hideSubmit">
+                        <mat-label class="mb-2 w-full" style="display: block;">&nbsp;</mat-label>
+                        <mat-form-field class="w-full text-md hover:text-base">
+                            <mat-icon class="icon-size-5" matPrefix [svgIcon]="'mat_outline:info'"></mat-icon>
+                            <mat-select [(ngModel)]="element.shiftId" [placeholder]="'Sunday'">
+                                <mat-option *ngFor="let option of dropdownOptions.shiftCodeDef" [value]="option.dropdownID">
+                                    {{option.description}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                 </td>
+            </ng-container>
+
+            <ng-container matColumnDef="action">
+                <th mat-header-cell *matHeaderCellDef> Action </th>
+                <td mat-cell *matCellDef="let element; let i = index">
+                    <button type="button" (click)="handleDayRemove(i)" color="warn" mat-button>
+                        <mat-icon svgIcon="heroicons_outline:trash"></mat-icon>
+                    </button>
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="dateColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: dateColumns;"></tr>
+        </table>
+    </mat-tab>
+</mat-tab-group>

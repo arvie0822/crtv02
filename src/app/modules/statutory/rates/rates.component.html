@@ -1,0 +1,428 @@
+<div class="flex flex-col flex-auto min-w-0">
+        <!-- Main -->
+        <div class="flex-auto sm:p-2 w-full min-w-0 sm:absolute sm:inset-0 sm:overflow-auto text-md">
+            <mat-card>
+                <mat-card-title>
+                        <app-card-title title="Rates" [sub]="false" [back]="true"></app-card-title>
+                    </mat-card-title>
+                    <mat-card-content>
+                            <form [formGroup]="rateForm">
+                                <div class="grid grid-cols-8 gap-2 h-14">
+
+                                    <!-- <mat-form-field appearance="outline">
+                                        <mat-label class="label-font-size">Day</mat-label>
+                                        <mat-icon class="uploadbutton icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                                        <mat-select formControlName="day">
+                                            <mat-option *ngFor="let item of day" [value]="item.id">{{item.description}}</mat-option>
+                                        </mat-select>
+                                    </mat-form-field> -->
+                                    <mat-form-field appearance="outline">
+                                        <mat-label class="label-font-size">Statutory</mat-label>
+                                        <mat-icon class="uploadbutton icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                                        <mat-select formControlName="statutory">
+                                            <mat-option *ngFor="let item of statutory" [value]="item.id">{{item.description}}</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+
+
+                                    <mat-form-field appearance="outline">
+                                        <mat-label class="label-font-size">Month</mat-label>
+                                        <mat-icon class="uploadbutton icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                                        <mat-select formControlName="month">
+                                            <mat-option *ngFor="let item of month" [value]="item.id">{{item.description}}</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+
+                                    <mat-form-field appearance="outline">
+                                        <mat-label class="label-font-size">Year</mat-label>
+                                        <mat-icon class="uploadbutton icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                                        <mat-select formControlName="year">
+                                            <mat-option *ngFor="let item of year" [value]="item.id">{{item.description}}</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+
+                                    <div class="mt-1">
+                                        <button class="ml-2 px-1 sm:px-4 min-w-10" mat-flat-button [color]="'primary'">
+                                            <mat-icon class="icon-size-5 mt-4" [svgIcon]="'heroicons_outline:search'"></mat-icon>
+                                            <span class="hidden sm:inline-block ml-2">Search</span>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                 <!-- HDMF TABLE -->
+
+                    <!-- <form [formGroup]="hdmfForm"> -->
+                        <div *ngIf="rateForm.value.statutory == 2 || rateForm.value.statutory == 3 " class="scroll-container h-40" >
+                            <table #LVTable mat-table [dataSource]="hdmfSource" class="mat-elevation-z0 border w-full mt-5">
+
+                                <ng-container matColumnDef="monthlySalary" >
+                                    <th class="head text-center" mat-header-cell *matHeaderCellDef> Monthly Salary </th>
+                                    <td mat-cell class="leavecell text-center w-9" *matCellDef="let element">{{element.monthlySalary}}</td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="empeeShare" >
+                                    <th class="head text-center" mat-header-cell *matHeaderCellDef> Employee's Share </th>
+                                    <td mat-cell class="leavecell text-center w-9"  *matCellDef="let element">{{element.empeeShare}}</td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="empersShare" >
+                                    <th class="head text-center" mat-header-cell *matHeaderCellDef> Employer's Share </th>
+                                    <td mat-cell class="leavecell text-center w-9" *matCellDef="let element">{{element.empersShare}}</td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="total" >
+                                    <th class="head text-center" mat-header-cell *matHeaderCellDef> Total Contributions </th>
+                                    <td mat-cell class="leavecell text-center w-9 " *matCellDef="let element">{{element.total}}</td>
+                                </ng-container>
+
+                                <tr mat-header-row *matHeaderRowDef="hdmfColumns"></tr>
+                                <tr mat-row *matRowDef="let row; columns: hdmfColumns;"></tr>
+                            </table>
+                            </div>
+                        <!-- </form> -->
+
+                        <!-- SSS VIEW TABLE -->
+                        <div *ngIf="rateForm.value.statutory == 0">
+                        <table mat-table [dataSource]="sssSource" class="mat-elevation-z0 h-[90%] border">
+
+                            <ng-container matColumnDef="range">
+                                <th mat-header-cell class="sssheader"  *matHeaderCellDef> </th>
+                                <td mat-cell class="sssheader" *matCellDef="let element"> {{element.range}} </td>
+                              </ng-container>
+
+                            <ng-container matColumnDef="emp_comp">
+                              <th mat-header-cell class="sssheader" *matHeaderCellDef> Employees Compensation </th>
+                              <td mat-cell class="sssheader" *matCellDef="let element"> {{element.emp_comp}} </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="mandatory">
+                              <th mat-header-cell class="sssheader" *matHeaderCellDef> Mandatory Provident Fund </th>
+                              <td mat-cell class="sssheader" *matCellDef="let element"> {{element.mandatory}} </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="total">
+                                <th mat-header-cell class="sssheader" *matHeaderCellDef> Total </th>
+                                <td mat-cell class="sssheader" *matCellDef="let element"> {{element.total}} </td>
+                              </ng-container>
+
+                            <ng-container matColumnDef="reg1">
+                              <th mat-header-cell class="sssheader" *matHeaderCellDef> ER </th>
+                              <td mat-cell class="sssheader" *matCellDef="let element"> {{element.reg1}} </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="reg2">
+                                <th mat-header-cell class="sssheader" *matHeaderCellDef> EE </th>
+                                <td mat-cell class="sssheader" *matCellDef="let element"> {{element.reg2}} </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="reg3">
+                                <th mat-header-cell class="sssheader" *matHeaderCellDef> Total </th>
+                                <td mat-cell class="sssheader" *matCellDef="let element"> {{element.reg3}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="emp1">
+                              <th mat-header-cell class="sssheader" *matHeaderCellDef> ER </th>
+                              <td mat-cell class="sssheader" *matCellDef="let element"> {{element.emp1}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="emp2">
+                                <th mat-header-cell class="sssheader" *matHeaderCellDef> EE </th>
+                                <td mat-cell class="sssheader" *matCellDef="let element"> {{element.emp2}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="emp3">
+                                <th mat-header-cell class="sssheader" *matHeaderCellDef> Total </th>
+                                <td mat-cell class="sssheader" *matCellDef="let element"> {{element.emp3}} </td>
+                            </ng-container>
+
+                             <ng-container matColumnDef="mandatory1">
+                                <th mat-header-cell class="sssheader" *matHeaderCellDef> ER </th>
+                                <td mat-cell class="sssheader" *matCellDef="let element"> {{element.mandatory1}} </td>
+                              </ng-container>
+
+                              <ng-container matColumnDef="mandatory2">
+                                  <th mat-header-cell class="sssheader" *matHeaderCellDef> EE </th>
+                                  <td mat-cell class="sssheader" *matCellDef="let element"> {{element.mandatory2}} </td>
+                              </ng-container>
+
+                              <ng-container matColumnDef="mandatory3">
+                                  <th mat-header-cell class="sssheader" *matHeaderCellDef> Total </th>
+                                  <td mat-cell class="sssheader" *matCellDef="let element"> {{element.mandatory3}} </td>
+                              </ng-container>
+
+                            <ng-container matColumnDef="total1">
+                                <th mat-header-cell class="sssheader" *matHeaderCellDef> ER </th>
+                                <td mat-cell class="sssheader" *matCellDef="let element"> {{element.total1}} </td>
+                              </ng-container>
+
+                              <ng-container matColumnDef="total2">
+                                  <th mat-header-cell class="sssheader" *matHeaderCellDef> EE </th>
+                                  <td mat-cell class="sssheader" *matCellDef="let element"> {{element.total2}} </td>
+                              </ng-container>
+
+                              <ng-container matColumnDef="total3">
+                                  <th mat-header-cell class="sssheader" *matHeaderCellDef> Total </th>
+                                  <td mat-cell class="sssheader" *matCellDef="let element"> {{element.total3}} </td>
+                              </ng-container>
+
+                            <!-- Header row first group -->
+                            <ng-container matColumnDef="header-row-range-group">
+                                <th mat-header-cell class="sssheader" *matHeaderCellDef
+                                [style.text-align]="center"
+                                [attr.colspan]="1">
+                                  Range of Compensation
+                                </th>
+                              </ng-container>
+
+                            <!-- Header row first group -->
+                            <ng-container matColumnDef="header-row-first-group">
+                              <th mat-header-cell class="sssheader" *matHeaderCellDef
+                                  [style.text-align]="center"
+                                  [attr.colspan]="3">
+                                Monthly Salary Credit
+                              </th>
+                            </ng-container>
+
+                            <!-- Header row second group -->
+                            <ng-container matColumnDef="header-row-second-group">
+                              <th mat-header-cell class="sssheader" *matHeaderCellDef [attr.colspan]="12"> Amount of Contributions </th>
+                            </ng-container>
+
+                            <!-- Header row first group -->
+                            <ng-container matColumnDef="header">
+                                <th mat-header-cell class="sssheader" *matHeaderCellDef
+                                    [style.text-align]="start"
+                                    [attr.colspan]="4">
+                                </th>
+                              </ng-container>
+
+                            <!-- Header row first group -->
+                            <ng-container matColumnDef="header1">
+                                <th mat-header-cell class="sssheader" *matHeaderCellDef
+                                    [style.text-align]="end"
+                                    [attr.colspan]="3">
+                                Regular Social Security
+                                </th>
+                              </ng-container>
+
+                            <ng-container matColumnDef="header2">
+                              <th mat-header-cell class="sssheader" *matHeaderCellDef
+                                  [style.text-align]="end"
+                                  [attr.colspan]="3">
+                                Employees Compensation
+                              </th>
+                            </ng-container>
+
+                            <ng-container matColumnDef="header3">
+                                <th mat-header-cell class="sssheader" *matHeaderCellDef
+                                    [style.text-align]="end"
+                                    [attr.colspan]="3">
+                                Mandatory Provident Fund
+                                </th>
+                            </ng-container>
+
+                            <ng-container matColumnDef="header4">
+                                <th mat-header-cell class="sssheader" *matHeaderCellDef
+                                    [style.text-align]="end"
+                                    [attr.colspan]="3">
+                                Total
+                                </th>
+                            </ng-container>
+
+                            <tr mat-header-row *matHeaderRowDef="['header','header-row-second-group']"></tr>
+                            <tr mat-header-row *matHeaderRowDef="['header-row-range-group','header-row-first-group', 'header1', 'header2', 'header3', 'header4']"></tr>
+                            <tr mat-header-row *matHeaderRowDef="sssColumns"></tr>
+                            <tr mat-row *matRowDef="let row; columns: sssColumns;"></tr>
+                          </table>
+                        </div>
+
+                        <!-- TAX VIEW TABLE -->
+                        <div *ngIf="rateForm.value.statutory == 1">
+                             <!-- DAILY -->
+                            <table mat-table [dataSource]="taxSource" class="mat-elevation-z0 h-[90%] border">
+
+                                <ng-container matColumnDef="daily">
+                                    <th mat-header-cell class="sssheader"  *matHeaderCellDef>Daily</th>
+                                    <td mat-cell class="sssheader" *matCellDef="let element"> {{element.daily}} </td>
+                                  </ng-container>
+
+                                <ng-container matColumnDef="d1">
+                                  <th mat-header-cell class="sssheader" *matHeaderCellDef> 1 </th>
+                                  <td mat-cell class="sssheader" *matCellDef="let element"> {{element.d1}} </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="d2">
+                                  <th mat-header-cell class="sssheader" *matHeaderCellDef> 2 </th>
+                                  <td mat-cell class="sssheader" *matCellDef="let element"> {{element.d2}} </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="d3">
+                                    <th mat-header-cell class="sssheader" *matHeaderCellDef> 3 </th>
+                                    <td mat-cell class="sssheader" *matCellDef="let element"> {{element.d3}} </td>
+                                  </ng-container>
+
+                                <ng-container matColumnDef="d4">
+                                  <th mat-header-cell class="sssheader" *matHeaderCellDef> 4 </th>
+                                  <td mat-cell class="sssheader" *matCellDef="let element"> {{element.d4}} </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="d5">
+                                    <th mat-header-cell class="sssheader" *matHeaderCellDef> 5 </th>
+                                    <td mat-cell class="sssheader" *matCellDef="let element"> {{element.d5}} </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="d6">
+                                    <th mat-header-cell class="sssheader" *matHeaderCellDef> 6 </th>
+                                    <td mat-cell class="sssheader" *matCellDef="let element"> {{element.d6}} </td>
+                                </ng-container>
+
+                                <!-- Header row second group -->
+                                <ng-container matColumnDef="header-row-second-group">
+                                  <th mat-header-cell class="sssheader" *matHeaderCellDef [attr.colspan]="7"> Revised Witholding Tax Table </th>
+                                </ng-container>
+
+                                 <!-- Header row second group -->
+                                 <ng-container matColumnDef="header-row-third-group">
+                                    <th mat-header-cell class="sssheader" *matHeaderCellDef [attr.colspan]="7"> Effective January 1, 2023 and onwards </th>
+                                  </ng-container>
+
+                                <tr mat-header-row *matHeaderRowDef="['header-row-second-group']"></tr>
+                                <tr mat-header-row *matHeaderRowDef="['header-row-third-group']"></tr>
+                                <tr mat-header-row *matHeaderRowDef="taxColumns"></tr>
+                                <tr mat-row *matRowDef="let row; columns: taxColumns;"></tr>
+
+                            </table>
+
+                            <!-- WEEK -->
+                            <table mat-table [dataSource]="taxASource" class="mat-elevation-z0 h-[90%] border">
+
+                                <ng-container matColumnDef="week">
+                                    <th mat-header-cell class="sssheader"  *matHeaderCellDef>Week</th>
+                                    <td mat-cell class="sssheader" *matCellDef="let element"> {{element.week}} </td>
+                                  </ng-container>
+
+                                <ng-container matColumnDef="w1">
+                                  <th mat-header-cell class="sssheader" *matHeaderCellDef> 1 </th>
+                                  <td mat-cell class="sssheader" *matCellDef="let element"> {{element.w1}} </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="w2">
+                                  <th mat-header-cell class="sssheader" *matHeaderCellDef> 2 </th>
+                                  <td mat-cell class="sssheader" *matCellDef="let element"> {{element.w2}} </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="w3">
+                                    <th mat-header-cell class="sssheader" *matHeaderCellDef> 3 </th>
+                                    <td mat-cell class="sssheader" *matCellDef="let element"> {{element.w3}} </td>
+                                  </ng-container>
+
+                                <ng-container matColumnDef="w4">
+                                  <th mat-header-cell class="sssheader" *matHeaderCellDef> 4 </th>
+                                  <td mat-cell class="sssheader" *matCellDef="let element"> {{element.w4}} </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="w5">
+                                    <th mat-header-cell class="sssheader" *matHeaderCellDef> 5 </th>
+                                    <td mat-cell class="sssheader" *matCellDef="let element"> {{element.w5}} </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="w6">
+                                    <th mat-header-cell class="sssheader" *matHeaderCellDef> 6 </th>
+                                    <td mat-cell class="sssheader" *matCellDef="let element"> {{element.w6}} </td>
+                                </ng-container>
+
+                                <tr mat-header-row *matHeaderRowDef="taxAColumns"></tr>
+                                <tr mat-row *matRowDef="let row; columns: taxAColumns;"></tr>
+
+                            </table>
+
+                             <!-- Semi monthly -->
+                             <table mat-table [dataSource]="taxBSource" class="mat-elevation-z0 h-[90%] border">
+
+                                <ng-container matColumnDef="semiMonth">
+                                    <th mat-header-cell class="sssheader"  *matHeaderCellDef>Semi-Monthly</th>
+                                    <td mat-cell class="sssheader" *matCellDef="let element"> {{element.semiMonth}} </td>
+                                  </ng-container>
+
+                                <ng-container matColumnDef="sm1">
+                                  <th mat-header-cell class="sssheader" *matHeaderCellDef> 1 </th>
+                                  <td mat-cell class="sssheader" *matCellDef="let element"> {{element.sm1}} </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sm2">
+                                  <th mat-header-cell class="sssheader" *matHeaderCellDef> 2 </th>
+                                  <td mat-cell class="sssheader" *matCellDef="let element"> {{element.sm2}} </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sm3">
+                                    <th mat-header-cell class="sssheader" *matHeaderCellDef> 3 </th>
+                                    <td mat-cell class="sssheader" *matCellDef="let element"> {{element.sm3}} </td>
+                                  </ng-container>
+
+                                <ng-container matColumnDef="sm4">
+                                  <th mat-header-cell class="sssheader" *matHeaderCellDef> 4 </th>
+                                  <td mat-cell class="sssheader" *matCellDef="let element"> {{element.sm4}} </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sm5">
+                                    <th mat-header-cell class="sssheader" *matHeaderCellDef> 5 </th>
+                                    <td mat-cell class="sssheader" *matCellDef="let element"> {{element.sm5}} </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="sm6">
+                                    <th mat-header-cell class="sssheader" *matHeaderCellDef> 6 </th>
+                                    <td mat-cell class="sssheader" *matCellDef="let element"> {{element.sm6}} </td>
+                                </ng-container>
+
+                                <tr mat-header-row *matHeaderRowDef="taxBColumns"></tr>
+                                <tr mat-row *matRowDef="let row; columns: taxBColumns;"></tr>
+
+                            </table>
+
+                            <!-- Monthly -->
+                            <table mat-table [dataSource]="taxCSource" class="mat-elevation-z0 h-[90%] border">
+
+                                <ng-container matColumnDef="monthly">
+                                    <th mat-header-cell class="sssheader"  *matHeaderCellDef>Monthly</th>
+                                    <td mat-cell class="sssheader" *matCellDef="let element"> {{element.monthly}} </td>
+                                  </ng-container>
+
+                                <ng-container matColumnDef="m1">
+                                  <th mat-header-cell class="sssheader" *matHeaderCellDef> 1 </th>
+                                  <td mat-cell class="sssheader" *matCellDef="let element"> {{element.m1}} </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="m2">
+                                  <th mat-header-cell class="sssheader" *matHeaderCellDef> 2 </th>
+                                  <td mat-cell class="sssheader" *matCellDef="let element"> {{element.m2}} </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="m3">
+                                    <th mat-header-cell class="sssheader" *matHeaderCellDef> 3 </th>
+                                    <td mat-cell class="sssheader" *matCellDef="let element"> {{element.m3}} </td>
+                                  </ng-container>
+
+                                <ng-container matColumnDef="m4">
+                                  <th mat-header-cell class="sssheader" *matHeaderCellDef> 4 </th>
+                                  <td mat-cell class="sssheader" *matCellDef="let element"> {{element.m4}} </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="m5">
+                                    <th mat-header-cell class="sssheader" *matHeaderCellDef> 5 </th>
+                                    <td mat-cell class="sssheader" *matCellDef="let element"> {{element.m5}} </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="m6">
+                                    <th mat-header-cell class="sssheader" *matHeaderCellDef> 6 </th>
+                                    <td mat-cell class="sssheader" *matCellDef="let element"> {{element.m6}} </td>
+                                </ng-container>
+
+                                <tr mat-header-row *matHeaderRowDef="taxCColumns"></tr>
+                                <tr mat-row *matRowDef="let row; columns: taxCColumns;"></tr>
+
+                            </table>
+
+                        </div>
+                            </form>
+                </mat-card-content>
+            </mat-card>
+        </div>
+    </div>
+

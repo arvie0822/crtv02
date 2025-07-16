@@ -1,0 +1,20 @@
+<button  mat-icon-button [matMenuTriggerFor]="menu">
+    <mat-icon class="icon-size-7 text-dark mt-1 mr-2 ml-2 h-13" [ngClass]="{'icon-green': bundyy === 'Clock In'}">
+         access_time_filled
+    </mat-icon>
+</button>
+
+<mat-menu #menu="matMenu">
+    <div (click)="bundy(0)">
+        <button mat-menu-item>
+            <mat-icon>timer</mat-icon>
+            <span>In</span>
+        </button>
+    </div>
+    <div (click)="bundy(1)">
+        <button mat-menu-item>
+            <mat-icon>timer_off</mat-icon>
+            <span>Out</span>
+        </button>
+    </div>
+</mat-menu>

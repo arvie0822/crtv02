@@ -1,0 +1,81 @@
+input{
+    position: relative;
+    bottom: 10px;
+    font-size: medium;
+}
+.icon-size-5{
+    position: relative;
+    bottom: 10px;
+    border-radius: 3px !important;
+}
+
+.label-font-size{
+    font-size: 15px;
+}
+
+/* table {
+    width: 100%;
+} */
+
+.mat-column-action {
+    width: 50px;
+}
+
+/* .scroll-container {
+    display: flex;
+    align-items: center;
+    overflow: auto;
+} */
+
+.Bborder {
+    border-radius: 5px;
+}
+
+/*  new css for table */
+.example-container {
+    max-height: 350px;
+    width: 100%;
+    max-width: 100%;
+    overflow: auto;
+  }
+
+  table {
+    width: 100%;
+  }
+
+  .mat-mdc-table-sticky-border-elem-right {
+    border-left: 1px solid #e0e0e0;
+  }
+
+  .mat-mdc-table-sticky-border-elem-left {
+    border-right: 1px solid #e0e0e0;
+  }
+
+  .mat-datepicker-toggle{
+    position: relative;
+    bottom: 8px;
+    font-size: medium;
+}
+
+.time-picker {
+    position: relative;
+}
+
+.time-picker {
+    position: relative;
+}
+
+.time-picker::-webkit-calendar-picker-indicator {
+    background: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"%3E%3Ccircle cx="12" cy="12" r="10" stroke="black" fill="none" /%3E%3Cpath d="M12,2C6.5,2,2,6.5,2,12s4.5,10,10,10s10-4.5,10-10S17.5,2,12,2z M16.2,16.2L11,13V7h1.5v5.2l4.5,2.7L16.2,16.2z" style="fill: black;" /%3E%3C/svg%3E');
+    /* background: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="20" %3E%3Cpath d="M12,2C6.5,2,2,6.5,2,12s4.5,10,10,10s10-4.5,10-10S17.5,2,12,2z M16.2,16.2L11,13V7h1.5v5.2l4.5,2.7L16.2,16.2z"/%3E%3C/svg%3E'); */
+    background-repeat: no-repeat;
+    display: inline-block;
+    height: 24px;
+    width: 24px;
+    cursor: pointer;
+}
+
+:host ::ng-deep .mat-form-field-infix {
+    display: flex;
+}
+

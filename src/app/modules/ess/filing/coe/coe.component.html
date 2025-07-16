@@ -1,0 +1,31 @@
+<!-- Main -->
+<div class="flex-auto p-6 sm:p-6 overflow-y-auto">
+    <!-- Main -->
+    <div class="flex-auto  sm:p-2  w-full min-w-0 sm:absolute sm:inset-0 sm:overflow-auto text-md">
+        <form [formGroup]="coeForm">
+            <div class="grid grid-cols-5 gap-4 h-5">
+
+                <app-dropdown [useControl]="true" [control]="coeForm.get('purposeId')" [all]="false" [options]="dropdownOptions.purposedef" [icon]="'mat_outline:info'" [type]="63"></app-dropdown>
+
+
+                <mat-form-field appearance="outline">
+                    <mat-label class="label-font-size">With Salary</mat-label>
+                    <mat-icon class="uploadbutton icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                    <mat-select [disabled]="disabledbutton" formControlName="withSalary">
+                    <mat-option *ngFor="let item of application"  [value]="item.id">{{item.description}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <mat-form-field class="w-full text-md" appearance="outline" [disabled]="disabledbutton">
+                    <mat-label class="label-font-size">Remarks</mat-label>
+                    <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                    <input [disabled]="disabledbutton" class="input" formControlName="reason" matInput [placeholder]="'Remarks'"/>
+                </mat-form-field>
+
+                <!-- <button mat-flat-button class="text-md mt-[3px] w-[15px] btn-Export" color="primary" matTooltip="Export">
+                    <mat-icon matSuffix class="mt-5" svgIcon="mat_outline:download"></mat-icon>
+                </button> -->
+            </div>
+        </form>
+    </div>
+</div>

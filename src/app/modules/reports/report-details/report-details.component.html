@@ -1,0 +1,64 @@
+<mat-card class="h-full">
+  <mat-card-title>
+    <app-card-title title="Reports" [sub]="false" [back]="true" [switch]="false"></app-card-title>
+  </mat-card-title>
+
+  <div class="flex flex-wrap space-x-3">
+
+    <ng-container *ngFor="let filter of table.fields ; let i = index">
+      
+      <mat-form-field *ngIf="filter.type=='input'" class="w-50 text-md h-13 mr-1" appearance="outline">
+        <mat-label class="label-font-size">{{filter.label}}</mat-label>
+        <mat-icon class="uploadbutton icon-size-5" matSuffix svgIcon="{{filter.icon}}"></mat-icon>
+        <input class="input" [id]="filter.id" matInput [(ngModel)]="filter.value" (change)="handleInputEvent($event)">
+      </mat-form-field>
+
+      <mat-form-field *ngIf="filter.type=='select'" class="w-50 text-md h-13 mr-1" appearance="outline">
+          <mat-label class="label-font-size">{{filter.label}}</mat-label>
+          <mat-select [id]="filter.id" [(ngModel)]="filter.value" [multiple]="filter.multiselect">
+              <mat-option *ngFor="let item of filter.options" [value]="item.dropdownID">{{item.description}}</mat-option>
+          </mat-select>
+      </mat-form-field>
+
+      <mat-form-field class="w-50 text-md h-13 mr-1" appearance="outline" *ngIf="filter.type=='date'" let i = index>
+          <mat-label class="label-font-size">{{filter.label}}</mat-label>
+          <input matInput [(ngModel)]="filter.value" [matDatepicker]="picker" readonly (dateChange)="sample(filter.label,i)" [min]="_min(filter)"
+          [placeholder]="'MM/DD/YYYY'" (click)="picker.open()" >
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+
+      <!-- dropdownfix -->
+      <div class="h-13 mr-1" *ngIf="filter.type=='select-fix'">
+        <app-dropdown [label]="filter.label" [all]="filter.all" (selected)="filter.value=$event" [reset]="resetFix" [multiple]="filter.multiselect" [value]="filter.value"  [options]="filter.options" [useControl]="false" [icon]="'mat_outline:info'" [type]="filter.dropdown"> </app-dropdown>
+      </div>
+
+      <!-- Custom dropdown -->
+      <div class="h-13 mr-1" *ngIf="filter.type=='custom'">
+        <app-dropdown-custom [all]="filter.all" (selected)="filter.value=$event;" [reset]="resetCustom" [multiple]="filter.multiselect" [type]="filter.dropdown" [useControl]="false"></app-dropdown-custom>
+      </div>
+
+      <!-- Employee Hierarchy -->
+      <div class="h-13" *ngIf="filter.type=='e-hierarchy'">
+        <app-employee-hierarchy [showTag]="false" [defaultTag]="filter.tagType" [multiple]="filter.multiselect" [includeInactive]="table.includeInactive" [all]="filter.all" [reset]="resetHierarchy" [resultHierarchy]="resultHierarchy"></app-employee-hierarchy>
+      </div>
+
+      <!-- Dropdown Hierarchy -->
+      <div class="w-50 h-13 mr-3" *ngIf="filter.type=='d-hierarchy'">
+        <app-dropdown-hierarchy [useControl]="false" [multiple]="filter.multiselect" [isReports]="true"  [all]="filter.all" [customRequest]="customRequest(filter.id)" [objectValue]="false" (selected)="filter.value = $event" [type]="filter.tagType.type"  [type_id]="filter.tagType.type_id" [id]="getIds(filter.tagType.id)"></app-dropdown-hierarchy>
+      </div>
+              
+
+    </ng-container>
+
+    <button mat-flat-button color="primary" [disabled]="downloading" (click)="exportNow()" class="text-sm w-[10px] mr-3 mt-0.5" matTooltip="Export">
+      <mat-icon matSuffix *ngIf="!downloading" svgIcon="mat_outline:download"></mat-icon>
+      <mat-icon matSuffix *ngIf="downloading"  svgIcon="mat_outline:downloading"></mat-icon>
+    </button>
+    
+    <button mat-flat-button color="primary" *ngIf="table.isPublish" [disabled]="saving" (click)="publish()" class="text-sm w-[10px] mr-3 mt-0.5" matTooltip="Publish">
+      <mat-icon matSuffix svgIcon="mat_outline:save"></mat-icon>
+    </button>
+    
+  </div>
+</mat-card>

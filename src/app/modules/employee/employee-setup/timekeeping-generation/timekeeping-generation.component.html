@@ -1,0 +1,334 @@
+<div class="flex flex-col flex-auto min-w-0">
+    <!-- Main -->
+    <div class="flex-auto  sm:p-2  w-full min-w-0 sm:absolute sm:inset-0 sm:overflow-auto text-md">
+        <!-- Content -->
+
+        <mat-card class="sample">
+            <mat-card-title>
+                <app-card-title title="Timekeeping Generation" [sub]="false" [switch]="false"
+                    [back]="true"></app-card-title>
+                <div class="grid place-items-end">
+
+                </div>
+            </mat-card-title>
+            <!-- <form [formGroup]="tkgenerationform"> -->
+            <form [formGroup]="tkForm">
+                <div class="grid grid-cols-8 gap-2 h-16 ">
+                    <mat-form-field class="w-full text-md" appearance="outline">
+                        <mat-label class="label-font-size">TK-Generation Type</mat-label>
+                        <mat-icon class="icon icon-size-5 mr-2" matPrefix [svgIcon]="'mat_outline:info'"></mat-icon>
+                        <mat-select formControlName="type" [placeholder]="''" (ngModelChange)="typeHandler()">
+                            <mat-option [value]="1">Regular</mat-option>
+                            <mat-option [value]="2">Off-Cycle</mat-option>
+                            <mat-option [value]="3">Final</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <mat-form-field *ngIf="tkForm.value.type == 1" class="w-full h-10 text-md" appearance="outline">
+                        <mat-label class="label-font-size">Payroll Cutoff</mat-label>
+                        <mat-icon class="icon icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                        <mat-select [placeholder]="'Payroll Cutoff'" formControlName="payrollId"
+                            (ngModelChange)="cutoffHandler($event)">
+                            <mat-option *ngFor="let item of payrollCutoff"
+                                [value]="item">{{item.description}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <mat-form-field *ngIf="tkForm.value.type == 1" class="w-full h-10 text-md" appearance="outline">
+                        <mat-label class="label-font-size">Year</mat-label>
+                        <mat-icon class="icon icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                        <mat-select [placeholder]="'Year'" formControlName="payrollYear"
+                            (ngModelChange)="cutoffSelectionHandler()">
+                            <mat-option *ngFor="let item of payrollYear"
+                                [value]="item.id">{{item.description}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <mat-form-field *ngIf="tkForm.value.type == 1" class="w-full h-10 text-md" appearance="outline">
+                        <mat-label class="label-font-size">Month</mat-label>
+                        <mat-icon class="icon icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                        <mat-select [placeholder]="'Month'" formControlName="payrollMonth"
+                            (ngModelChange)="cutoffSelectionHandler()">
+                            <mat-option *ngFor="let item of payrollMonth"
+                                [value]="item.monthId">{{item.month}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <mat-form-field *ngIf="tkForm.value.type == 1" class="w-full h-10 text-md" appearance="outline">
+                        <mat-label class="label-font-size">Cut Off</mat-label>
+                        <mat-select [placeholder]="'Cut Off'" formControlName="payrollCutoff"
+                            (ngModelChange)="setCutoffHandler()">
+                            <mat-option *ngFor="let item of cutoffs" [value]="item">{{item.description}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <mat-form-field *ngIf="tkForm.value.type == 1 || tkForm.value.type == 3" class="w-full h-10 text-md"
+                        appearance="outline">
+                        <mat-label class="label-font-size">Sub Company</mat-label>
+                        <mat-icon class="icon icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                        <mat-select [multiple]="true" [placeholder]="'Sub Company'" formControlName="subCompany"
+                            (ngModelChange)="branchHandler()">
+                            <mat-option [value]="0" (click)="selectAllHandler(allSubCompany,'subCompany', subCompany)"
+                                #allSubCompany>Select All</mat-option>
+                            <mat-option *ngFor="let item of subCompany"
+                                [value]="item.dropdownID">{{item.description}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <mat-form-field *ngIf="tkForm.value.type == 1 || tkForm.value.type == 3" class="w-full h-10 text-md"
+                        appearance="outline">
+                        <mat-label class="label-font-size">Branch</mat-label>
+                        <mat-icon class="icon icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                        <mat-select [multiple]="true" [placeholder]="'Branch'" formControlName="branch"
+                            (ngModelChange)="employeeHandler()">
+                            <mat-option [value]="0" *ngIf="branch.length  > 0"
+                                (click)="selectAllHandler(allBranch,'branch', branch)" #allBranch>Select
+                                All</mat-option>
+                            <mat-option *ngFor="let item of branch"
+                                [value]="item.dropdownID">{{item.description}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <mat-form-field *ngIf="tkForm.value.type == 1 || tkForm.value.type == 3" class="w-full h-10 text-md"
+                        appearance="outline">
+                        <mat-label class="label-font-size">Employee Category</mat-label>
+                        <mat-icon class="icon icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                        <mat-select [multiple]="true" [placeholder]="'Employee Category'" formControlName="category"
+                            (ngModelChange)="employeeHandler()">
+                            <mat-option [value]="0" (click)="selectAllHandler(allCategory,'category', category)"
+                                #allCategory>Select All</mat-option>
+                            <mat-option *ngFor="let item of category"
+                                [value]="item.dropdownID">{{item.description}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <mat-form-field *ngIf="tkForm.value.type == 3" class="w-full h-10 text-md" appearance="outline">
+                        <mat-label class="label-font-size">Department</mat-label>
+                        <mat-icon class="icon icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                        <mat-select [multiple]="true" [placeholder]="'Department'" formControlName="department"
+                            (ngModelChange)="employeeHandler()">
+                            <mat-option [value]="0" (click)="selectAllHandler(allDepartment,'department', department)"
+                                #allDepartment>Select All</mat-option>
+                            <mat-option *ngFor="let item of department"
+                                [value]="item.dropdownID">{{item.description}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <mat-form-field *ngIf="tkForm.value.type == 3" class="w-full h-10 text-md" appearance="outline">
+                        <mat-label class="label-font-size">Confidential</mat-label>
+                        <mat-icon class="icon icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                        <mat-select [multiple]="true" [placeholder]="'Confidential'" formControlName="confidential"
+                            (ngModelChange)="employeeHandler()">
+                            <mat-option [value]="0"
+                                (click)="selectAllHandler(allConfidential,'confidential', confidential)"
+                                #allConfidential>Select All</mat-option>
+                            <mat-option *ngFor="let item of confidential"
+                                [value]="item.dropdownID">{{item.description}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <mat-form-field *ngIf="tkForm.value.type == 3" class="w-full h-10 text-md" appearance="outline">
+                        <mat-label class="label-font-size">Employee Status</mat-label>
+                        <mat-icon class="icon icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                        <mat-select [multiple]="true" [placeholder]="'Employee Status'" formControlName="status"
+                            (ngModelChange)="employeeHandler()">
+                            <mat-option [value]="0" (click)="selectAllHandler(allStatus,'status', status)"
+                                #allStatus>Select All</mat-option>
+                            <mat-option *ngFor="let item of status"
+                                [value]="item.dropdownID">{{item.description}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <mat-form-field *ngIf="tkForm.value.type == 3" class="w-full h-10 text-md" appearance="outline">
+                        <mat-label class="label-font-size">Employee</mat-label>
+                        <mat-icon class="icon icon-size-5 mr-2" matPrefix [svgIcon]="'mat_outline:info'"></mat-icon>
+                        <mat-select formControlName="employee" [multiple]="true" [placeholder]="'Employee'"
+                            (infiniteScroll)="getNextBatch()" msInfiniteScroll [complete]="complete"
+                            [threshold]="'20%'">
+                            <mat-option class="select">
+                                <ngx-mat-select-search [formControl]="inputChange"
+                                    [placeholderLabel]="'Find Employee..'"
+                                    [noEntriesFoundLabel]="'No ' + placeholder + ' found'"></ngx-mat-select-search>
+                            </mat-option>
+                            <mat-option *ngIf="employee.length > 0" [value]="0"
+                                (click)="selectAllHandler(allEmployee,'employee', employee)" #allEmployee>Select
+                                All</mat-option>
+                            <mat-option *ngFor="let option of employee" [value]="option.dropdownID">
+                                {{option.description}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+
+
+
+                </div>
+
+                <div class="grid grid-cols-8 gap-2" *ngIf="tkForm.value.type == 3">
+                    <button class="w-full mt-[3px]" *ngIf="tkForm.value.type == 3" mat-flat-button color="primary"
+                        (click)="generate()">
+                        <mat-icon class="icon-size-5 mr-2" [svgIcon]="'heroicons_solid:clock'"></mat-icon>
+                        Generate
+                    </button>
+
+                    <button class="w-full mt-[3px]" *ngIf="tkForm.value.type == 3" mat-flat-button color="primary"
+                        (click)="search()">
+                        <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:clock'"></mat-icon>
+                        Search
+                    </button>
+                </div>
+
+
+                <div class="grid grid-cols-8 gap-2" *ngIf="tkForm.value.type == 1">
+
+                    <mat-form-field class="w-full h-10 text-md" appearance="outline">
+                        <mat-label class="label-font-size">Department</mat-label>
+                        <mat-icon class="icon icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                        <mat-select [multiple]="true" [placeholder]="'Department'" formControlName="department"
+                            (ngModelChange)="employeeHandler()">
+                            <mat-option [value]="0" (click)="selectAllHandler(allDepartment,'department', department)"
+                                #allDepartment>Select All</mat-option>
+                            <mat-option *ngFor="let item of department"
+                                [value]="item.dropdownID">{{item.description}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <mat-form-field class="w-full h-10 text-md" appearance="outline">
+                        <mat-label class="label-font-size">Confidential</mat-label>
+                        <mat-icon class="icon icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                        <mat-select [multiple]="true" [placeholder]="'Confidential'" formControlName="confidential"
+                            (ngModelChange)="employeeHandler()">
+                            <mat-option [value]="0"
+                                (click)="selectAllHandler(allConfidential,'confidential', confidential)"
+                                #allConfidential>Select All</mat-option>
+                            <mat-option *ngFor="let item of confidential"
+                                [value]="item.dropdownID">{{item.description}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <mat-form-field class="w-full h-10 text-md" appearance="outline">
+                        <mat-label class="label-font-size">Employee Status</mat-label>
+                        <mat-icon class="icon icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                        <mat-select [multiple]="true" [placeholder]="'Employee Status'" formControlName="status"
+                            (ngModelChange)="employeeHandler()">
+                            <mat-option [value]="0" (click)="selectAllHandler(allStatus,'status', status)"
+                                #allStatus>Select All</mat-option>
+                            <mat-option *ngFor="let item of status"
+                                [value]="item.dropdownID">{{item.description}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <mat-form-field class="w-full h-10 text-md" appearance="outline">
+                        <mat-label class="label-font-size">Employee</mat-label>
+                        <mat-icon class="icon icon-size-5 mr-2" matPrefix [svgIcon]="'mat_outline:info'"></mat-icon>
+                        <mat-select formControlName="employee" [multiple]="true" [placeholder]="'Employee'"
+                            (infiniteScroll)="getNextBatch()" msInfiniteScroll [complete]="complete"
+                            [threshold]="'20%'">
+                            <mat-option class="select">
+                                <ngx-mat-select-search [formControl]="inputChange"
+                                    [placeholderLabel]="'Find Employee..'"
+                                    [noEntriesFoundLabel]="'No ' + placeholder + ' found'"></ngx-mat-select-search>
+                            </mat-option>
+                            <mat-option *ngIf="employee.length > 0" [value]="0"
+                                (click)="selectAllHandler(allEmployee,'employee', employee)" #allEmployee>Select
+                                All</mat-option>
+                            <mat-option *ngFor="let option of employee" [value]="option.dropdownID">
+                                {{option.description}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+
+                    <button class="w-full mt-[3px]" mat-flat-button color="primary" (click)="generate()">
+                        <mat-icon class="icon-size-5 mr-2" [svgIcon]="'heroicons_solid:clock'"></mat-icon>
+                        Generate
+                    </button>
+
+                    <button class="w-full mt-[3px]" *ngIf="tkForm.value.type == 3" mat-flat-button color="primary"
+                        (click)="search()">
+                        <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:clock'"></mat-icon>
+                        Search
+                    </button>
+
+                </div>
+                <!-- <div class="grid grid-cols-6 gap-2 h-16" *ngIf="tkForm.value.type == 1 || tkForm.value.type == 3">
+
+            </div> -->
+
+
+                <!-- <div *ngIf="tkForm.value.type == 3" class="grid grid-cols-9 gap-2 h-13" >
+                <div class="col-span-7"></div> -->
+
+                <!-- <button *ngIf="tkForm.value.type == 1 || tkForm.value.type == 3" mat-flat-button color="primary" (click)="generate()">
+                    <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:clock'"></mat-icon>
+                    Generate
+                </button> -->
+                <!-- </div> -->
+
+            </form><br>
+
+            <mat-card class="scroll-container mat-elevation-z0">
+                <div *ngIf="generates && tkForm.value.type == 1 || generates && tkForm.value.type == 3 ">
+                <app-generate-detailed [closebutton]="showbutton" [data]="object"></app-generate-detailed>
+                </div>
+                <div *ngIf="searchgen && tkForm.value.type == 3" class="scroll mat-elevation-z0">
+                    <table mat-table [dataSource]="dataSource"
+                        class="scroll mat-elevation-z0">
+
+                        <ng-container matColumnDef="employeeCode">
+                            <th mat-header-cell *matHeaderCellDef> Emp ID </th>
+                            <td mat-cell *matCellDef="let element"> {{element.employeeCode}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="displayName">
+                            <th class="pl-10" mat-header-cell *matHeaderCellDef> Emp Name </th>
+                            <td class="pl-10" mat-cell *matCellDef="let element"> {{element.displayName}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="effectiveDate">
+                            <th class="pl-10" mat-header-cell *matHeaderCellDef> Effective Date </th>
+                            <td class="pl-10" mat-cell *matCellDef="let element"> {{element.effectiveDate}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="separationDate">
+                            <th class="pl-10" mat-header-cell *matHeaderCellDef> Separation Date </th>
+                            <td class="pl-10" mat-cell *matCellDef="let element"> {{element.separationDate}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="dateFrom">
+                            <th class="head pl-5" mat-header-cell *matHeaderCellDef> TK End </th>
+                            <td mat-cell *matCellDef="let element; let i = index">
+                                <mat-form-field class="text-md h-13 mt-1" appearance="outline">
+                                    <input [(ngModel)]="element.dateFrom" (ngModelChange)="dateHandler('dateFrom', $event, i)"
+                                        matInput [matDatepicker]="df1" readonly [placeholder]="'MM/DD/YYYY'"
+                                        (click)="df1.open()">
+                                    <mat-datepicker-toggle matSuffix [for]="df1"></mat-datepicker-toggle>
+                                    <mat-datepicker #df1></mat-datepicker>
+                                </mat-form-field>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="dateTo">
+                            <th class="head pl-5" mat-header-cell *matHeaderCellDef> TK End </th>
+                            <td mat-cell *matCellDef="let element; let i = index">
+                                <mat-form-field class="text-md h-13 mt-1" appearance="outline">
+                                    <input [(ngModel)]="element.dateTo" (ngModelChange)="dateHandler('dateTo', $event, i)"
+                                        matInput [matDatepicker]="df2" readonly [placeholder]="'MM/DD/YYYY'"
+                                        (click)="df2.open()">
+                                    <mat-datepicker-toggle matSuffix [for]="df2"></mat-datepicker-toggle>
+                                    <mat-datepicker #df2></mat-datepicker>
+                                </mat-form-field>
+                            </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                    </table>
+                </div>
+
+            </mat-card>
+
+
+        </mat-card>
+    </div>
+</div>

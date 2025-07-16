@@ -1,0 +1,50 @@
+table {
+width: 100%;
+}
+.label-font-size{
+font-size: 15px;
+}
+input{
+    position: relative;
+    bottom: 9px;
+    font-size: medium;
+}
+
+::ng-deep .tab-hide .mat-tab-list .mat-tab-labels {
+display: none;
+}
+.mat-datepicker-toggle{
+position: relative;
+bottom: 7px;
+font-size: medium;
+}
+.button-margin-top{
+padding-top: 1%;
+}
+table{
+width: 86%;
+}
+.uploadbutton{
+position: relative;
+bottom: 4px;
+border-radius: 3px !important;
+}
+.mat-icon{
+position: relative;
+bottom: 9px;
+}
+.mat-select{
+position: relative;
+bottom: 10px;
+font-size: medium;
+}
+.mat-header-cell{
+text-align: center;
+}
+.mat-cell{
+text-align: center;
+}
+
+.mat-cell-edl {
+    text-align: left;
+}

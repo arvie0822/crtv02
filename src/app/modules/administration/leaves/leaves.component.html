@@ -1,0 +1,429 @@
+<div class="flex flex-col flex-auto min-w-0">
+    <!-- Main -->
+    <div class="flex-auto  sm:p-2  w-full min-w-0 sm:absolute sm:inset-0 sm:overflow-auto text-md">
+        <!-- Content -->
+        <mat-card>
+            <mat-card-title>
+                <app-card-title title="Leaves" [sub]="true" [back]="true" (submitTap)="submit()"></app-card-title>
+            </mat-card-title>
+            <mat-card-content> </mat-card-content>
+            <!-- Leave Form -->
+            <form [formGroup]="leaveForm">
+                <div class="grid grid-cols-5 gap-x-2 h-13">
+                    <mat-form-field class="w-full text-md" appearance="outline">
+                        <mat-label class="label-font-size">Name</mat-label>
+                        <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                        <input matInput type="text" formControlName="name" [placeholder]="'Name'"/>
+                    </mat-form-field>
+                    <mat-form-field class="w-full text-md" appearance="outline">
+                        <mat-label class="label-font-size">Description</mat-label>
+                        <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                        <input matInput type="text" formControlName="description" [placeholder]="'Description'"/>
+                    </mat-form-field>
+                    <mat-form-field class="w-full text-md" appearance="outline">
+                        <mat-label class="label-font-size">Max Leave Per Month</mat-label>
+                        <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                        <input matInput type="number" min="0" formControlName="maxLeaves" [placeholder]="'Max leave per month'"/>
+                    </mat-form-field>
+                    <app-dropdown  [control]="leaveForm.get('leaveCategoryId')"  [options]="dropdownOptions.Leavecategory" [icon]="'mat_outline:info'" [type]="90"> </app-dropdown>
+                    <mat-form-field class="w-full text-md" appearance="outline">
+                        <mat-label class="label-font-size"> Allow Filing If Balance Reached (0)</mat-label>
+                        <mat-icon class="uploadbutton icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                        <mat-select formControlName="allowFilingIfZero" [placeholder]="'Status'">
+                            <mat-option *ngFor="let item of option" [value]="item.id">{{ item.description }}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="grid grid-cols-5 gap-x-2 h-13">
+                    <mat-form-field class="w-full text-md" appearance="outline">
+                        <mat-label class="label-font-size"> Allow Filing LWOP Even If Balance Is Not Yet (0)</mat-label>
+                        <mat-icon class="uploadbutton icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                        <mat-select formControlName="allowFilingLWOP" [placeholder]="'Status'">
+                            <mat-option *ngFor="let item of optionlwop" [value]="item.id">{{ item.description }}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <app-dropdown  [control]="leaveForm.get('leaveGenderId')"  [options]="dropdownOptions.genderDef" [icon]="'mat_outline:info'" [type]="43"> </app-dropdown>
+                    <!-- <mat-form-field class="w-full text-md" appearance="outline">
+                        <mat-label class="label-font-size">Require Attachment</mat-label>
+                        <mat-icon class="uploadbutton icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                        <mat-select formControlName="requiredAttachment" [placeholder]="'Require attachment'">
+                            <mat-option *ngFor="let item of optionlwop" [value]="item.id">{{ item.description }}</mat-option>
+                        </mat-select>
+                    </mat-form-field> -->
+                    <app-dropdown   [control]="leaveForm.get('filedById')" [all]="false" [multiple]="false"  [options]="dropdownOptions.leaveTypeDef" [icon]="'mat_outline:info'" [type]="44"> </app-dropdown>
+                    <app-dropdown  [control]="leaveForm.get('filingTypeId')" [all]="true" [multiple]="true"  [options]="dropdownOptions.Leavefilingdef" [icon]="'mat_outline:info'" [type]="79"> </app-dropdown>
+                </div>
+                <div class="grid grid-cols-5 gap-x-2 h-13">
+                    <app-dropdown (selected)="clearleavestart($event)" [control]="leaveForm.get('leaveStartId')"  [options]="dropdownOptions.empcatleaveremoveonhold" [icon]="'mat_outline:info'" [type]="36" label="Leave Start"> </app-dropdown>
+                    <div *ngIf="leaveForm.value.leaveStartId==30383">
+                        <mat-form-field class="w-full text-md" appearance="outline">
+                            <mat-label class="label-font-size">No. Based On Frequency</mat-label>
+                            <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                            <input matInput formControlName="leaveStartBasedOnFrequency" type="number" min="0"
+                                [placeholder]="'No. Based On Frequency'"/>
+                        </mat-form-field>
+                    </div>
+                        <app-dropdown [hidden]="showhide(leaveForm. value.leaveStartId)"  [control]="leaveForm.get('leaveStartFrequencyId')" [all]="false" [multiple]="false"  [options]="dropdownOptions.tenuredef" [icon]="'mat_outline:info'" [type]="46"> </app-dropdown>
+                        <app-dropdown [hidden]="showhide(leaveForm. value.leaveStartId)" [control]="leaveForm.get('leaveStartAfterId')" [all]="false" [multiple]="false"  [options]="dropdownOptions.employeeStatusDef" [icon]="'mat_outline:info'" [type]="36" label="After"> </app-dropdown>
+                    <mat-form-field class="w-full text-md" appearance="outline">
+                        <mat-label class="label-font-size">Status</mat-label>
+                        <mat-icon class="uploadbutton icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                        <mat-select formControlName="active" [placeholder]="'active'">
+                            <mat-option *ngFor="let item of status" [value]="item.id">{{ item.description }}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </form>
+            <!-- End Leave Form -->
+            <div>
+                <mat-divider class="mb-2"></mat-divider>
+            </div>
+            <mat-card-content></mat-card-content>
+            <!-- Accrual Form -->
+            <mat-tab-group class="mt-4">
+                <mat-tab label="Accrual">
+                    <form [formGroup]="accrualForm">
+                        <div class="grid grid-cols-5 gap-x-2 h-13">
+                            <app-dropdown  [control]="accrualForm.get('accrualStartId')" (selected)="clearaccrualform($event)"  [options]="dropdownOptions.employeeStatusDef" [icon]="'mat_outline:info'" [type]="36" label="Start"> </app-dropdown>
+                            <div *ngIf="accrualForm.value.accrualStartId==30383">
+                                <mat-form-field class="w-full text-md" appearance="outline">
+                                    <mat-label class="label-font-size">No. Based On Frequency</mat-label>
+                                    <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                                    <input matInput formControlName="accrualStartBasedOnFrequency" type="number" min="0"
+                                        [placeholder]="'No. based on frequency'"/>
+                                </mat-form-field>
+                            </div>
+                                <app-dropdown [hidden]="showhide(accrualForm. value.accrualStartId)"  [control]="accrualForm.get('accrualStartFrequencyId')"  [options]="dropdownOptions.leavestartfreqdef" [icon]="'mat_outline:info'" [type]="46"> </app-dropdown>
+                                <app-dropdown [hidden]="showhide(accrualForm. value.accrualStartId)" [control]="accrualForm.get('accrualStartAfterId')"  [options]="dropdownOptions.employeeStatusDef" [icon]="'mat_outline:info'" [type]="36" label="After"> </app-dropdown>
+                        </div>
+                        <div class="grid grid-cols-5 gap-x-2 h-15" >
+                            <mat-form-field class="w-full text-md" appearance="outline">
+                                <mat-label class="label-font-size">Credit No. Of Leaves</mat-label>
+                                <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                                <input matInput type="number" min="0" formControlName="leaveCount" [placeholder]="'Credit No. of leaves'"/>
+                            </mat-form-field>
+                            <app-dropdown *ngIf="accrualForm.value.leaveCount !==null" (selected)="clearcredit($event)" [control]="accrualForm.get('frequencyId')"  [options]="dropdownOptions.leavestartfreqdef" [icon]="'mat_outline:info'" [type]="46"> </app-dropdown>
+                            <app-dropdown [hidden]="showhideaccrual(accrualForm.value.frequencyId)" [control]="accrualForm.get('month')"  [options]="dropdownOptions.monthlydef" [icon]="'mat_outline:info'" [type]="54"> </app-dropdown>
+                            <div *ngIf="accrualForm.value.frequencyId==30386">
+                                <mat-form-field class="w-full text-md" appearance="outline">
+                                    <mat-label class="label-font-size">Day</mat-label>
+                                    <mat-icon class="uploadbutton icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                                    <input matInput type="number" max="31" formControlName="day" [placeholder]="''"/>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </form>
+                </mat-tab>
+                <mat-tab label="Increase Accrual">
+                    <form [formGroup]="accrualForm">
+                        <div class="grid grid-cols-5 gap-2 h-16">
+                            <mat-form-field class="w-full text-md" appearance="outline">
+                                <mat-label class="label-font-size">Increase Leave Accrual</mat-label>
+                                <mat-icon class="uploadbutton icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                                <mat-select (selectionChange)="clearRowAccrual()" formControlName="isIncreaseAccrual" [placeholder]="'Increase leave accrual'">
+                                    <mat-option *ngFor="let item of optionlwop" [value]="item.id" >{{ item.description }}</mat-option>
+                                </mat-select>`
+                            </mat-form-field>
+                        </div>
+                    </form>
+                    <form [formGroup]="detailAccrual">
+                        <div *ngIf="accrualForm.value.isIncreaseAccrual == true" class="scroll-container gap-2 h-11" >
+                            <mat-form-field class="w-60 text-md" appearance="outline">
+                                <mat-label class="label-font-size">No. Of Additional Leave</mat-label>
+                                <mat-icon class="uploadbutton icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                                <input [readonly]="accrualForm.value.isIncreaseAccrual == false" matInput type="number" min="0"
+                                formControlName="accruedLeave" [placeholder]="'No. of additional leave'"/>
+                            </mat-form-field>
+                            <app-dropdown  [control]="detailAccrual.get('frequencyId')" [options]="dropdownOptions.leavestartfreqdef" [icon]="'mat_outline:info'" [type]="46" label="Frequency"> </app-dropdown>
+                            <app-dropdown *ngIf="detailAccrual.value.frequencyId == 30386"  [control]="detailAccrual.get('frequncyMonthId')"  [options]="dropdownOptions.monthlydef" [icon]="'mat_outline:info'" [type]="54"> </app-dropdown>
+                            <mat-form-field *ngIf="detailAccrual.value.frequencyId == 30386" class="w-30 text-md mt-[1px]" appearance="outline">
+                                <mat-label class="label-font-size">Day</mat-label>
+                                <mat-icon class="uploadbutton icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                                <input matInput type="number" max="31" formControlName="frequencyDays" [placeholder]="''"/>
+                            </mat-form-field>
+                            <app-dropdown  [control]="detailAccrual.get('tenureId')"  [options]="dropdownOptions.tenuredef" [icon]="'mat_outline:info'" [type]="115"  label="Tenure"> </app-dropdown>
+                            <mat-form-field class="w-40 text-md" appearance="outline">
+                                <mat-label class="label-font-size">After</mat-label>
+                                <mat-icon class="uploadbutton icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                                <input [readonly]="accrualForm.value.isIncreaseAccrual == false" matInput type="number" min="0" formControlName="after"
+                                    [placeholder]="'After'"/>
+                            </mat-form-field>
+                            <app-dropdown  [control]="detailAccrual.get('accrualEmployeeStatusId')"  [options]="dropdownOptions.employeeStatusDef" [icon]="'mat_outline:info'" [type]="36"> </app-dropdown>
+                            <button (click)="addRow()" class="text-md mb-9" mat-flat-button color="primary" aria-label="example icon">
+                                <mat-icon class="mr-1 mt-3" svgIcon="mat_outline:post_add"></mat-icon>Add
+                            </button>
+                        </div>
+                    </form>
+
+                    <!--increase table -->
+
+                    <div>
+                        <div *ngIf="accrualForm.value.isIncreaseAccrual == true" >
+                            <table #Table mat-table [dataSource]="dataSource" class="table1  mat-elevation-z2 mb-5 h-13">
+                                <ng-container matColumnDef="accruedLeave">
+                                    <th mat-header-cell *matHeaderCellDef>Additional Leave</th>
+                                    <td mat-cell *matCellDef="let element">
+                                        {{element.accruedLeave}}
+                                    </td>
+                                </ng-container>
+                                <ng-container matColumnDef="frequencyId">
+                                    <th mat-header-cell *matHeaderCellDef>Frequency</th>
+                                    <td mat-cell *matCellDef="let element">
+                                        {{element.frequencydescrip}}
+                                    </td>
+                                </ng-container>
+                                <ng-container matColumnDef="frequncyMonthId">
+                                    <th mat-header-cell *matHeaderCellDef>Month</th>
+                                    <td mat-cell *matCellDef="let element">
+                                        {{element.increasemonth}}
+                                    </td>
+                                </ng-container>
+                                <ng-container matColumnDef="frequencyDays">
+                                    <th mat-header-cell *matHeaderCellDef>Day</th>
+                                    <td mat-cell *matCellDef="let element">
+                                        {{element.frequencyDays}}
+                                    </td>
+                                </ng-container>
+                                <ng-container matColumnDef="after">
+                                    <th mat-header-cell *matHeaderCellDef>After</th>
+                                    <td mat-cell *matCellDef="let element">
+                                        {{element.after}}
+                                    </td>
+                                </ng-container>
+                                <ng-container matColumnDef="tenureId">
+                                    <th mat-header-cell *matHeaderCellDef>Tenure</th>
+                                    <td mat-cell *matCellDef="let element">
+                                        {{element.tenuredescrip}}
+                                    </td>
+                                </ng-container>
+                                <ng-container matColumnDef="accrualEmployeeStatusId">
+                                    <th mat-header-cell *matHeaderCellDef>Employee Status</th>
+                                    <td mat-cell *matCellDef="let element">
+                                        {{element.employeestatus}}
+                                    </td>
+                                </ng-container>
+                                <!-- Delete Column -->
+                                <ng-container matColumnDef="action">
+                                    <th mat-header-cell *matHeaderCellDef>Action</th>
+                                    <td mat-cell *matCellDef="let element; let i = index">
+                                        <button class="mt-2" type="button" mat-icon-button color="warn" (click)="handleDelete(i)">
+                                            <mat-icon class="mt-4" svgIcon="mat_outline:delete"></mat-icon>
+                                        </button>
+                                    </td>
+                                </ng-container>
+                                <tr mat-header-row *matHeaderRowDef="displayedColumns ; sticky: true"></tr>
+                                <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+                            </table>
+                            <div></div>
+                        </div>
+                    </div>
+                </mat-tab>
+
+                <mat-tab label="Prorate">
+                    <form [formGroup]="accrualForm">
+                        <div class="grid grid-cols-5 gap-x-2 h-13">
+                            <mat-form-field class="w-full text-md" appearance="outline">
+                                <mat-label class="label-font-size">Prorate</mat-label>
+                                <mat-icon class="uploadbutton icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                                <mat-select (selectionChange)="clearRowProrate()" formControlName="isProrate" [placeholder]="'Prorate'">
+                                    <mat-option *ngFor="let item of optionlwop" [value]="item.id">{{ item.description }}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                    </form>
+                    <form [formGroup]="detailProrateForm">
+                        <div *ngIf="accrualForm.value.isProrate == true" class="grid grid-cols-5 gap-x-2 h-13">
+                            <mat-form-field class="w-full text-md" appearance="outline">
+                                <mat-label class="label-font-size">Date From</mat-label>
+                                <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                                <input matInput type="number" min="0" formControlName="from" [placeholder]="'Date from'"/>
+                            </mat-form-field>
+                            <mat-form-field class="w-full text-md" appearance="outline">
+                                <mat-label class="label-font-size">Date To</mat-label>
+                                <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                                <input matInput type="number" min="0" formControlName="to" [placeholder]="'Date to'"/>
+                            </mat-form-field>
+                            <mat-form-field class="w-full text-md" appearance="outline">
+                                <mat-label class="label-font-size">No. Of Leave</mat-label>
+                                <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                                <input matInput type="number" min="0" formControlName="prorateLeave" [placeholder]="'No. of leave'"/>
+                            </mat-form-field>
+                            <div class="button-margin-top" *ngIf="accrualForm.value.isProrate == true">
+                                <mat-label class="">&nbsp;</mat-label>
+                                <button (click)="addRow2()" class="text-md mt-1" mat-flat-button color="primary" aria-label="example icon">
+                                    <mat-icon class="mr-1 mt-3" svgIcon="mat_outline:post_add" ></mat-icon>Add
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                    <div>
+                        <div *ngIf="accrualForm.value.isProrate == true">
+                            <table #Table2 mat-table [dataSource]="dataSource2" class="table2 mat-elevation-z2 mb-5">
+                                <!-- Role Column -->
+                                <ng-container matColumnDef="from">
+                                    <th mat-header-cell *matHeaderCellDef>
+                                        Date From
+                                    </th>
+                                    <td mat-cell *matCellDef="let element">
+                                        {{ element.from }}
+                                    </td>
+                                </ng-container>
+
+                                <!-- Approver Column -->
+                                <ng-container matColumnDef="to">
+                                    <th mat-header-cell *matHeaderCellDef>
+                                        Date To
+                                    </th>
+                                    <td mat-cell *matCellDef="let element">
+                                        {{ element.to}}
+                                    </td>
+                                </ng-container>
+
+                                <!-- Notification Column -->
+                                <ng-container matColumnDef="prorateLeave">
+                                    <th mat-header-cell *matHeaderCellDef>
+                                        No. Of Leave
+                                    </th>
+                                    <td mat-cell *matCellDef="let element">
+                                        {{ element.prorateLeave }}
+                                    </td>
+                                </ng-container>
+
+                                <!-- Delete Column -->
+                                <ng-container matColumnDef="action2">
+                                    <th mat-header-cell *matHeaderCellDef>
+                                        Action
+                                    </th>
+                                    <td mat-cell *matCellDef="let element; let i = index">
+                                        <button class="mt-2" type="button" mat-icon-button color="warn" (click)="handleDelete2(i)">
+                                            <mat-icon class="mt-4" svgIcon="mat_outline:delete"></mat-icon>
+                                        </button>
+                                    </td>
+                                </ng-container>
+
+                                <tr mat-header-row *matHeaderRowDef="displayedColumns2"></tr>
+                                <tr mat-row *matRowDef="let row; columns: displayedColumns2"></tr>
+                            </table>
+                        </div>
+                        <div></div>
+                    </div>
+                </mat-tab>
+
+                <mat-tab label="Carry Forward">
+                    <form [formGroup]="accrualForm">
+                        <div class="grid grid-cols-6 gap-x-2 h-13">
+                            <mat-form-field class="w-full text-md" appearance="outline">
+                                <mat-label class="label-font-size">Carry Forward</mat-label>
+                                <mat-icon class="uploadbutton icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                                <mat-select  formControlName="isCarryForward" [placeholder]="'Carry Forward'" (selectionChange)="reset($event)">
+                                    <mat-option *ngFor="let item of optionlwop" [value]="item.id" >{{ item.description }}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                    </form>
+                    <form [formGroup]="carryform">
+                        <div class="grid grid-cols-6 gap-x-2 h-13">
+                            <div *ngIf="accrualForm.value.isCarryForward == true">
+                                <mat-form-field class="w-full text-md" appearance="outline">
+                                    <mat-label class="label-font-size">Max No. Of Leave</mat-label>
+                                    <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                                    <input matInput type="number" min="0" formControlName="carryMaxLeave" [placeholder]="'Max no. of leave'"/>
+                                </mat-form-field>
+                            </div>
+                            <div [hidden]="carryforward(accrualForm.value.isCarryForward)">
+                                <app-dropdown  [control]="carryform.get('carryStartMonthId')"  [options]="dropdownOptions.monthlydef" [icon]="'mat_outline:info'" [type]="54"> </app-dropdown>
+                            </div>
+                            <div *ngIf="accrualForm.value.isCarryForward == true">
+                                <mat-form-field class="w-full text-md" appearance="outline">
+                                    <mat-label class="label-font-size">Dates</mat-label>
+                                    <mat-icon class="uploadbutton icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                                    <input matInput type="number" max="31" formControlName="carryStartDay" [placeholder]="''"/>
+                                </mat-form-field>
+                            </div>
+                            <div *ngIf="accrualForm.value.isCarryForward == true">
+                                <mat-form-field class="w-full text-md" appearance="outline">
+                                    <mat-label class="label-font-size">Carry Forward Expiry</mat-label>
+                                    <mat-icon class="uploadbutton icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                                    <mat-select formControlName="isCarryExpirable" [placeholder]="'Carry forward expiry'" (selectionChange)="resetexpiry($event)">
+                                        <mat-option *ngFor="let item of option" [value]="item.id">{{ item.description }}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <div [hidden]="carryforward(carryform.value.isCarryExpirable)">
+                                <app-dropdown  [control]="carryform.get('carryExpireMonthId')"  [options]="dropdownOptions.monthlydef" [icon]="'mat_outline:info'" [type]="54"> </app-dropdown>
+                            </div>
+                            <div [hidden]="carryforward(carryform.value.isCarryExpirable)">
+                                <mat-form-field class="w-full text-md" appearance="outline">
+                                    <mat-label class="label-font-size">Dates</mat-label>
+                                    <mat-icon class="uploadbutton icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                                    <input matInput type="number" max="31" formControlName="carryExpireDay" [placeholder]="''"/>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </form>
+                </mat-tab>
+                <mat-tab label="Convert To Cash">
+                <form [formGroup]="accrualForm">
+                    <div class="grid grid-cols-6 gap-x-2 h-13">
+                        <mat-form-field class="w-full text-md" appearance="outline">
+                            <mat-label class="label-font-size">Convert To Cash</mat-label>
+                            <mat-icon class="uploadbutton icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                            <mat-select  formControlName="isConvertToCash" [placeholder]="'Convert to Cash'">
+                                <mat-option *ngFor="let item of option" [value]="item.id">{{ item.description }}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </form>
+                <form [formGroup]="convertForm">
+                    <div class="grid grid-cols-4 gap-x-2 h-13">
+                        <div *ngIf="accrualForm.value.isConvertToCash == true">
+                        <mat-form-field class="w-full text-md" appearance="outline">
+                            <mat-label class="label-font-size">Annual Conversion</mat-label>
+                            <mat-icon class="uploadbutton icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                            <mat-select formControlName="annualConversionType" [placeholder]="'Annual Conversion'">
+                                <mat-option *ngFor="let item of annualUpon" [value]="item.id">{{ item.description }}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        </div>
+                        <div *ngIf="convertForm.value.annualConversionType > 1" >
+                        <mat-form-field class="w-full text-md" appearance="outline">
+                            <mat-label class="label-font-size">Max No. Of Leave</mat-label>
+                            <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                            <input matInput type="number" min="0" formControlName="annualConversionCount" [placeholder]="'Max no. of leave'"/>
+                        </mat-form-field>
+                        </div>
+                        <div *ngIf="accrualForm.value.isConvertToCash == true">
+                        <mat-form-field class="w-full text-md" appearance="outline">
+                            <mat-label class="label-font-size">No. Of Non Taxable</mat-label>
+                            <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                            <input matInput type="number" min="0" formControlName="annualConversionNonTaxable" [placeholder]="'No. of non taxable'"/>
+                        </mat-form-field>
+                        </div>
+                    </div>
+                    <div *ngIf="accrualForm.value.isConvertToCash == true" class="grid grid-cols-4 gap-x-2 h-13">
+                        <mat-form-field class="w-full text-md" appearance="outline">
+                            <mat-label class="label-font-size">Upon Resignation</mat-label>
+                            <mat-icon class="uploadbutton icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info" ></mat-icon>
+                            <mat-select formControlName="uponResignationType" [placeholder]="'Upon Resignation'">
+                                <mat-option *ngFor="let item of annualUpon" [value]="item.id">{{ item.description }}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <div *ngIf="convertForm.value.uponResignationType > 1">
+                        <mat-form-field class="w-full text-md" appearance="outline">
+                            <mat-label class="label-font-size">Max No. Of Leave</mat-label>
+                            <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info" ></mat-icon>
+                            <input matInput type="number" min="0" formControlName="uponResignationCount" [placeholder]="'Max no. of leave'"/>
+                        </mat-form-field>
+                        </div>
+                        <mat-form-field class="w-full text-md" appearance="outline">
+                            <mat-label class="label-font-size" >No. Of Non Taxable</mat-label>
+                            <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info" ></mat-icon>
+                            <input matInput type="number" min="0" formControlName="uponResignationNonTaxable" [placeholder]="'No. of non taxable'"/>
+                        </mat-form-field>
+                    </div>
+                </form>
+                </mat-tab>
+            </mat-tab-group>
+        </mat-card>
+    </div>
+</div>

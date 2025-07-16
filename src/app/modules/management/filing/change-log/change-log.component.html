@@ -1,0 +1,145 @@
+<!-- Main -->
+<div class="flex-auto p-6 sm:p-6 overflow-y-auto">
+    <!-- Main -->
+    <div class="flex-auto  sm:p-2  w-full min-w-0 sm:absolute sm:inset-0 sm:overflow-auto text-md">
+
+
+        <div>
+            <table #CLTable mat-table [dataSource]="datasource" class="mat-elevation-z0 border">
+
+                <ng-container matColumnDef="actioncl">
+                    <th class=" pl-5" mat-header-cell *matHeaderCellDef>Actions</th>
+                    <td class="pt-[0.8%] pl-1" mat-cell  *matCellDef="let element; let i = index">
+                        <!-- <button type="button" class="pl-5" (click)="handleDeleteBreak(i)" mat-button [color]="'warn'">
+                            <mat-icon class="icon-size-6 : mt-5" matSuffix svgIcon="mat_outline:delete"></mat-icon>
+                        </button> -->
+                        <button class="ml-4" mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+                            <mat-icon class="icon-size-6 : mt-5">more_vert</mat-icon>
+                        </button>
+                        <mat-menu #menu="matMenu">
+                        <button mat-menu-item (click)="handleDeleteBreak(i)">
+                            <mat-icon class="icon-size-6 : mt-5" color="warn">delete</mat-icon>
+                            <span>Delete</span>
+                        </button>
+                        <button mat-menu-item>
+                            <mat-icon class="icon-size-6 : mt-5" color="primary">edit</mat-icon>
+                            <span>Edit</span>
+                        </button>
+                        </mat-menu>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="datecl" class="mat-column">
+                    <th class="pl-[4%]" mat-header-cell *matHeaderCellDef> Date </th>
+                    <td mat-cell class="" *matCellDef="let element">
+                        <mat-form-field class="w-40 text-md h-5" appearance="outline">
+                            <mat-label class="label-font-size"></mat-label>
+                            <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                            <input class="input" [(ngModel)]="element.datecl" matInput type="text" [placeholder]="" readonly>
+                        </mat-form-field>
+                    </td>
+                </ng-container>
+
+                <!-- <ng-container matColumnDef="shift_type" class="mat-column">
+                    <th class="pl-[7%]" mat-header-cell *matHeaderCellDef>Shift Type </th>
+                    <td mat-cell class="pl-2" *matCellDef="let element">
+                        <mat-form-field class=" text-md h-5 date" appearance="outline">
+                            <mat-label class="label-font-size"></mat-label>
+                            <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                            <input class="input" [(ngModel)]="element.shift_type" matInput type="text" [placeholder]="" readonly>
+                        </mat-form-field>
+                    </td>
+                </ng-container> -->
+
+                <ng-container matColumnDef="shift_codecl" class="mat-column">
+                    <th class="pl-[3.5%]" mat-header-cell *matHeaderCellDef>Shift Code </th>
+                    <td mat-cell class="pl-2" *matCellDef="let element">
+                        <mat-form-field class="w-40 text-md h-5 date" appearance="outline">
+                            <mat-label class="label-font-size"></mat-label>
+                            <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                            <input class="input" [(ngModel)]="element.shift_codecl" matInput type="text" [placeholder]="" readonly>
+                        </mat-form-field>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="sched_incl">
+                    <th class="pl-[3.5%]" mat-header-cell *matHeaderCellDef> Sched In </th>
+                    <td mat-cell class="body" *matCellDef="let element">
+                        <mat-form-field class="w-40 text-md h-13" appearance="outline">
+                            <mat-label class="label-font-size"></mat-label>
+                            <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                            <input class="input" [(ngModel)]="element.sched_incl" matInput type="text" [placeholder]="" readonly>
+                        </mat-form-field>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="sched_outcl" class="w-50 mr-2 text-md h-13">
+                    <th class="pl-[3%]" mat-header-cell *matHeaderCellDef> Sched Out </th>
+                    <td mat-cell class="body" *matCellDef="let element">
+                        <mat-form-field class=" w-40 text-md h-13" appearance="outline">
+                            <mat-label class="label-font-size"></mat-label>
+                            <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                        <input class="input" [(ngModel)]="element.sched_outcl" matInput type="text" [placeholder]="" readonly>
+                        </mat-form-field>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="time_incl">
+                    <th class="pl-[3.5%]" mat-header-cell *matHeaderCellDef> Time In </th>
+                    <td mat-cell class="pl-2" *matCellDef="let element ; let i =index">
+                        <mat-form-field class="w-40 text-md h-5" appearance="outline">
+                            <mat-label class="label-font-size"></mat-label>
+                            <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:access_time"></mat-icon>
+                            <input (timeChange)="timemodal($event,i)" (ngModelChange)="handleTimeEvent()" [(ngModel)]="element.time_incl"  readonly [strict]="false" mode="12h" matTimepicker #t="matTimepicker">
+                        </mat-form-field>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="time_outcl">
+                    <th class="pl-[3%]" mat-header-cell *matHeaderCellDef> Time Out </th>
+                    <td mat-cell class="pl-2" *matCellDef="let element ; let i =index">
+                        <mat-form-field class="w-40 text-md h-5" appearance="outline">
+                            <mat-label class="label-font-size"></mat-label>
+                            <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:access_time"></mat-icon>
+                            <input (timeChange)="timeoutmodal($event,i)" class="timeout" [(ngModel)]="element.time_outcl"  readonly [strict]="false" mode="12h" matTimepicker #t="matTimepicker">
+                        </mat-form-field>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="reasoncl">
+                    <th class="pl-[5%]" mat-header-cell *matHeaderCellDef> Reason </th>
+                    <td mat-cell class="pl-2" *matCellDef="let element ; let i =index">
+                        <div class="dark:hidden" style=" border-style: solid; border-color: rgb(189, 187, 187); border-width: 1px; margin-top: 3px; border-radius: 3px; height: 39px;">
+                            <textarea class="area w-full mt-3" matInput [(ngModel)]="element.reasoncl" (blur)="reasonmodal($event,i)"></textarea>
+                        </div>
+                        <div class="hidden dark:flex" style=" border-style: solid; border-color: rgb(231, 231, 231); border-width: 1px; margin-top: 3px; border-radius: 3px; height: 39px;">
+                            <textarea class="area w-full mt-3" matInput [(ngModel)]="element.reasoncl" (blur)="reasonmodal($event,i)"></textarea>
+                        </div>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="upload_filecl">
+                    <th class="pl-[3%]" mat-header-cell *matHeaderCellDef> Upload File </th>
+                    <td mat-cell class="pl-2" *matCellDef="let element">
+                        <mat-form-field class="w-40 text-md h-5" appearance="outline">
+                            <input type="file" [(ngModel)]="element.upload_filecl" #fileInput2 (change)="uploadFile($event, 'displayCS')"  class=" absolute top-1 z-0 h-full w-full cursor-pointer opacity-0" accept=".jpeg,.jpg,.png,.doc,.docx,.pdf,.xls,.xlsx"/>
+                            <input class="sample" readonly matInput id="displayCS" cdkFocusInitial />
+                            <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:upload"></mat-icon>
+                            <button  class="upb" (click)="fileInput2.click($event)" matSuffix mat-button color="primary">Upload</button>
+                        </mat-form-field>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="clstatus" >
+                    <th class="body" mat-header-cell *matHeaderCellDef> Status </th>
+                    <td mat-cell class="w-40 pl-3 pr-1" *matCellDef="let element">{{element.clstatus}}</td>
+                </ng-container>
+
+
+
+                <tr mat-header-row *matHeaderRowDef="clColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: clColumns;"></tr>
+            </table>
+        </div>
+    </div>
+</div>

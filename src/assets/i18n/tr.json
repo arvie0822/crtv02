@@ -1,0 +1,19 @@
+{
+    "hi": "Hi",
+    "hello": "Kamusta",
+    "message-task": "Mayroon kang {{msg}} bagong mensahe at {{task}} bagong gawain" ,
+
+    "welcome-back": "Maligayang pagbabalik",
+    "Project": "Project",
+    "Analytics": "Analytics",
+
+    "emp-pei": {
+        "pei": "Personal na impormasyon",
+        "ci":   "Impormasyon sa Pakikipag-ugnayan",
+        "ad":   "Address"
+    },
+    "emp-woi": "Impormasyon sa Trabaho",
+    "emp-pai": "Impormasyon sa Payroll",
+    "emp-s":   "Shift",
+    "emp-l":   "Leave"
+}

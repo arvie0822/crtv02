@@ -1,0 +1,249 @@
+<!-- Main -->
+<div class="flex-auto p-6 sm:p-6 overflow-y-auto">
+    <!-- Main -->
+    <div class="flex-auto  sm:p-2  w-full min-w-0 sm:absolute sm:inset-0 sm:overflow-auto text-md">
+        <div>
+            <table  #LMTable mat-table [dataSource]="LMSource" class="mat-elevation-z0 border w-full">
+                <ng-container matColumnDef="leave_type" >
+                    <th class="head text-center " mat-header-cell *matHeaderCellDef> Leave Type </th>
+                    <td mat-cell class="leavecell text-center w-15" *matCellDef="let element">{{element.leave_type}}</td>
+                </ng-container>
+                <ng-container matColumnDef="total_leave" >
+                    <th class="head text-center" mat-header-cell *matHeaderCellDef> Total Leave </th>
+                    <td mat-cell class="leavecell text-center w-15"  *matCellDef="let element">{{element.total_leave}}</td>
+                </ng-container>
+                <ng-container matColumnDef="used_leave" >
+                    <th class="head text-center" mat-header-cell *matHeaderCellDef> Used Leave </th>
+                    <td mat-cell class="leavecell text-center w-15" *matCellDef="let element">{{element.used_leave}}</td>
+                </ng-container>
+                <ng-container matColumnDef="pending_approval" >
+                    <th class="head text-center" mat-header-cell *matHeaderCellDef> Pending Approval </th>
+                    <td mat-cell class="leavecell text-center w-15" *matCellDef="let element">{{element.pending_approval}}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="pending_schedule" >
+                    <th class="head text-center" mat-header-cell *matHeaderCellDef> Pending Schedule </th>
+                    <td mat-cell class="leavecell text-center w-15" *matCellDef="let element">{{element.pending_schedule}}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="available_leave" >
+                    <th class="head text-center" mat-header-cell *matHeaderCellDef> Available Leave </th>
+                    <td mat-cell class="leavecell text-center w-15" *matCellDef="let element">{{element.available_leave}}</td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="lmColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: lmColumns;"></tr>
+            </table>
+        </div>
+        <div class="m-10">
+
+        </div>
+        <form [formGroup]="leaveForm">
+            <div class="grid grid-cols-9 gap-2 h-13">
+                <mat-form-field class="w-full text-md" appearance="outline">
+                    <mat-label class="label-font-size">Dt From</mat-label>
+                    <input formControlName="dateFromlv" [max]="leaveForm.controls['dateTolv'].value" matInput [matDatepicker]="df" readonly [placeholder]="'MM/DD/YYYY'" (click)="df.open()">
+                    <mat-datepicker-toggle matSuffix [for]="df"></mat-datepicker-toggle>
+                    <mat-datepicker #df></mat-datepicker>
+                </mat-form-field>
+                <mat-form-field class="w-full text-md" appearance="outline">
+                    <mat-label class="label-font-size">Dt To</mat-label>
+                    <input formControlName="dateTolv" [min]="leaveForm.controls['dateFromlv'].value" matInput [matDatepicker]="dt" readonly [placeholder]="'MM/DD/YYYY'" (click)="dt.open()">
+                    <mat-datepicker-toggle matSuffix [for]="dt"></mat-datepicker-toggle>
+                    <mat-datepicker #dt></mat-datepicker>
+                </mat-form-field>
+                <mat-form-field class="w-full text-md" appearance="outline">
+                    <mat-label class="label-font-size">Leave Type</mat-label>
+                    <mat-icon class="uploadbutton icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                    <mat-select formControlName="typelv">
+                    <mat-option *ngFor="let item of leave" [value]="item.id">{{item.description}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field class="w-full text-md" appearance="outline">
+                    <mat-label class="label-font-size">Filling Type</mat-label>
+                    <mat-icon class="uploadbutton icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                    <mat-select formControlName="hourlylv">
+                    <mat-option *ngFor="let item of hour" [value]="item.id">{{item.description}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <!-- <mat-form-field *ngIf="leaveForm.value.hourlylv == 2"  class="w-full text-md" appearance="outline">
+                    <mat-label class="label-font-size">Start Tm</mat-label>
+                    <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:access_time"></mat-icon>
+                    <input formControlName="leaveStartlv" readonly [strict]="false" mode="12h" type="text" matTimepicker #t="matTimepicker">
+                </mat-form-field> -->
+
+                <mat-form-field *ngIf="leaveForm.value.hourlylv == 2"  class="w-full text-md" appearance="outline">
+                    <mat-label class="label-font-size">Date And Time From</mat-label>
+                    <input matInput [ngxMatDatetimePicker]="dtf"  (click)="dtf.open()"
+                                    placeholder="Choose a date"
+                                    formControlName="leaveStartlv"
+                                    [max]="leaveForm.controls['leaveEndlv'].value"
+                                    [disabled]="false">
+                    <mat-datepicker-toggle matSuffix [for]="dtf">
+                    </mat-datepicker-toggle>
+                    <ngx-mat-datetime-picker #dtf
+                    [showSpinners]="showSpinners"
+                    [showSeconds]="showSeconds"
+                    [touchUi]="touchUi"
+                    [color]="color"
+                    [enableMeridian]="true">
+                    </ngx-mat-datetime-picker>
+                </mat-form-field>
+
+            <!-- <mat-form-field *ngIf="leaveForm.value.hourlylv == 2" class="w-full text-md" appearance="outline" >
+                <mat-label class="label-font-size">End Tm</mat-label>
+                <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:access_time"></mat-icon>
+                <input (timeChange)="timevalidators()"  formControlName="leaveEndlv" [strict]="false" mode="12h" type="text" matTimepicker #t="matTimepicker">
+                (timeChange)="timevalidators()"
+            </mat-form-field> -->
+
+            <mat-form-field *ngIf="leaveForm.value.hourlylv == 2" class="w-full text-md" appearance="outline" >
+                <mat-label class="label-font-size">Date And Time To</mat-label>
+                <input matInput [ngxMatDatetimePicker]="dtt"  (click)="dtt.open()"
+                                placeholder="Choose a date"
+                                formControlName="leaveEndlv"
+                                [min]="leaveForm.controls['leaveStartlv'].value"
+                                [disabled]="false">
+                <mat-datepicker-toggle matSuffix [for]="dtt">
+                </mat-datepicker-toggle>
+                <ngx-mat-datetime-picker #dtt
+                [showSpinners]="showSpinners"
+                [showSeconds]="showSeconds"
+                [touchUi]="touchUi"
+                [color]="color"
+                [enableMeridian]="true">
+                </ngx-mat-datetime-picker>
+            </mat-form-field>
+
+            <mat-form-field *ngIf="leaveForm.value.hourlylv == 1" class="w-full text-md" appearance="outline">
+                <mat-label class="label-font-size">Options</mat-label>
+                <mat-icon class="uploadbutton icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                <mat-select formControlName="optlv">
+                <mat-option *ngFor="let item of half" [value]="item.id">{{item.description}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <!-- <mat-form-field class="w-full text-md" appearance="outline">
+                <mat-label class="label-font-size">Paid</mat-label>
+                <mat-icon class="uploadbutton icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                <mat-select formControlName="withPaylv">
+                <mat-option *ngFor="let item of application" [value]="item.id">{{item.description}}</mat-option>
+                </mat-select>
+            </mat-form-field> -->
+            <!-- <div class="">
+                <textarea (invalid)="false" class="area mb-2 mt-1 pl-1 text"  matInput formControlName="reasonlv" placeholder="Reason"></textarea>
+            </div> -->
+
+            <div class="dark:hidden" style=" border-style: solid; border-color: rgb(189, 187, 187); border-width: 1px; margin-top: 3px; border-radius: 3px; height: 40px; width:100%;">
+                <textarea class="area mt-2" formControlName="reasonlv"  matInput ></textarea>
+            </div>
+            <div class="hidden dark:flex" style=" border-style: solid; border-color: rgb(231, 231, 231); border-width: 1px; margin-top: 3px; border-radius: 3px; height: 40px; width:100%;">
+                <textarea class="area mt-2" formControlName="reasonlv"  matInput ></textarea>
+            </div>
+            <!-- <mat-form-field class="w-60 text-md" appearance="outline">
+                <mat-label class="label-font-size">Reason</mat-label>
+                <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                <input class="input" formControlName="reasonlv" matInput [placeholder]="'Reason'"/>
+            </mat-form-field> -->
+            <mat-form-field class="w-full text-md upload" appearance="outline">
+                <input (invalid)="true"  type="file" formControlName="upload_filelv" #fileInput2 (change)="uploadFile($event, 'displayLeave')"  class=" absolute top-1 z-0 h-full w-full cursor-pointer opacity-0 upload" accept=".jpeg,.jpg,.png,.doc,.docx,.pdf,.xls,.xlsx"/>
+                <input class="sample upload" readonly matInput id="displayLeave" cdkFocusInitial/>
+                <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:upload"></mat-icon>
+                <button (invalid)="true"  class="upb" (click)="fileInput2.click($event)" matSuffix mat-button color="primary">Upload</button>
+            </mat-form-field>
+            <!-- <mat-form-field class="w-36 text-md" appearance="outline">
+                <mat-label class="label-font-size">Upload File</mat-label>
+                <mat-icon  class="icon-size-5 : mr-2" matSuffix  svgIcon="mat_outline:upload"></mat-icon>
+                <input (click)="leaveFileUpload()" formControlName="upload_filelv" matInput type="text" [placeholder]="'Upload File'" readonly>
+            </mat-form-field> -->
+            <!-- <div class="button-margin-top"> -->
+                <!-- <mat-label class="mt-20">&nbsp;</mat-label> -->
+                <button (click)="addLV()" class="text-md mt-1 " mat-flat-button color="primary" aria-label="example icon">
+                    <mat-icon class="mr-1 mt-4" svgIcon="mat_outline:post_add"></mat-icon>Add
+                </button>
+            <!-- </div> -->
+
+            </div>
+            <!-- <div *ngIf="filingForm.value.filingTypes == 2" class="grid grid-cols-6 gap-2 ">
+
+            </div> -->
+            <table #LVTable mat-table [dataSource]="LVSource" class="mat-elevation-z0 border w-full mt-1">
+
+                <!-- <ng-container matColumnDef="lvAction" >
+                    <th class="head text-center" mat-header-cell *matHeaderCellDef> Action </th>
+                    <td mat-cell class="leavecell text-center w-9" *matCellDef="let element; ; let i = index">
+                        <button type="button" class="" (click)="lvDelete(i)" mat-icon-button color="warn">
+                            <mat-icon matSuffix svgIcon="mat_outline:delete"></mat-icon>
+                        </button>
+                    </td>
+                </ng-container> -->
+
+                <ng-container matColumnDef="lvAction">
+                    <th class="pl-6" mat-header-cell *matHeaderCellDef>Actions</th>
+                    <td class="pt-1 pl-2" mat-cell  *matCellDef="let element; let i = index">
+                        <!-- <button type="button" class="pl-5" (click)="handleDeleteBreak(i)" mat-button [color]="'warn'">
+                            <mat-icon class="icon-size-6 : mt-5" matSuffix svgIcon="mat_outline:delete"></mat-icon>
+                        </button> -->
+                        <button class="ml-5" mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+                            <mat-icon class="icon-size-6 : mt-5">more_vert</mat-icon>
+                        </button>
+                        <mat-menu #menu="matMenu">
+                        <button mat-menu-item (click)="lvDelete(i)">
+                            <mat-icon class="icon-size-6 : mt-5" color="warn" >delete</mat-icon>
+                            <span>Delete</span>
+                        </button>
+                        <button mat-menu-item>
+                            <mat-icon class="icon-size-6 : mt-5" color="primary">edit</mat-icon>
+                            <span>Edit</span>
+                        </button>
+                        </mat-menu>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="lvDateFrom" >
+                    <th mat-header-cell *matHeaderCellDef> Date From </th>
+                    <td mat-cell *matCellDef="let element">{{element.lvDateFrom | date: 'MM-dd-yy'}}</td>
+                </ng-container>
+                <ng-container matColumnDef="lvDateTo" >
+                    <th class="" mat-header-cell *matHeaderCellDef>  Date To </th>
+                    <td mat-cell class=""  *matCellDef="let element">{{element.lvDateTo | date: 'MM-dd-yy'}}</td>
+                </ng-container>
+                <ng-container matColumnDef="lvType" >
+                    <th class= "" mat-header-cell *matHeaderCellDef> Leave Type </th>
+                    <td mat-cell class="" *matCellDef="let element">{{element.lvType}}</td>
+                </ng-container>
+                <ng-container matColumnDef="lvhourly" >
+                    <th class= "" mat-header-cell *matHeaderCellDef> Filing Type </th>
+                    <td mat-cell class=" " *matCellDef="let element">{{element.lvhourly}}</td>
+                </ng-container>
+                <ng-container matColumnDef="lvoptions" >
+                    <th class= "" mat-header-cell *matHeaderCellDef> Options </th>
+                    <td mat-cell class=" " *matCellDef="let element">{{element.lvoptions}}</td>
+                </ng-container>
+                <ng-container matColumnDef="lvstart" >
+                    <th class= "" mat-header-cell *matHeaderCellDef> Start Time </th>
+                    <td mat-cell class=" " *matCellDef="let element">{{element.lvstart | date: 'yyyy/MM/dd HH:mm a'}}</td>
+                </ng-container>
+                <ng-container matColumnDef="lvend" >
+                    <th class= "" mat-header-cell *matHeaderCellDef> End Time </th>
+                    <td mat-cell class=" " *matCellDef="let element">{{element.lvend | date: 'yyyy/MM/dd HH:mm a'}}</td>
+                </ng-container>
+                <!-- <ng-container matColumnDef="lvpay" >
+                    <th class= "" mat-header-cell *matHeaderCellDef> Paid </th>
+                    <td mat-cell class=" " *matCellDef="let element">{{element.lvpay}}</td>
+                </ng-container> -->
+                <ng-container matColumnDef="lvreason" >
+                    <th class= "" mat-header-cell *matHeaderCellDef> Reason </th>
+                    <td mat-cell class="" *matCellDef="let element">{{element.lvreason}}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="lvUpload_File" >
+                    <th class= "" mat-header-cell *matHeaderCellDef> Uploaded File </th>
+                    <td mat-cell class="" *matCellDef="let element">{{element.lvUpload_File}}</td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="lvColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: lvColumns;"></tr>
+            </table>
+        </form>
+    </div>
+</div>

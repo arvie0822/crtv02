@@ -1,0 +1,127 @@
+<div class="flex flex-col flex-auto min-w-0">
+
+  <div class="flex-auto  sm:p-2  w-full min-w-0 sm:absolute sm:inset-0 sm:overflow-auto text-md">
+    <mat-card class="body-card">
+
+      <div mat-dialog-title class="flex justify-between">
+        <mat-card-title class="text-[16px]" style="text-transform: capitalize;">{{table.title}} List</mat-card-title>
+
+        <div class="flex space-x-4" *ngIf="isSAve">
+          <a (click)="isSAve = false;back()" mat-stroked-button [color]="'primary'" matTooltip="Back">
+            <mat-icon [svgIcon]="'heroicons_outline:arrow-narrow-left'"></mat-icon>
+            <span class="ml-2 text-sm"></span>
+          </a>
+          <button (click)="submit()" mat-flat-button color="primary" matTooltip="Save Changes">
+            <mat-icon svgIcon="mat_outline:save"></mat-icon>
+          </button>
+        </div>
+      </div>
+
+      <mat-card-content>
+        <div class="flex space-x-4">
+          <ng-container *ngFor="let filter of table.filter">
+            <!-- Input dropdown -->
+            <mat-form-field *ngIf="filter.type=='input'" class="w-50 text-md" appearance="outline">
+              <mat-label class="label-font-size">{{filter.label}}</mat-label>
+              <mat-icon class="icon-size-5 : mr-2" matSuffix svgIcon="{{filter.icon}}"></mat-icon>
+              <input class="input" [id]="filter.id" matInput [(ngModel)]="filter._value" />
+            </mat-form-field>
+            <!-- Select dropdown -->
+            <mat-form-field *ngIf="filter.type=='select'" class="w-50 text-md" appearance="outline">
+              <mat-label class="label-font-size">{{filter.label}}</mat-label>
+              <mat-select [id]="filter.id" [(ngModel)]="filter._value" [multiple]="filter.multiselect">
+                <mat-option *ngFor="let item of filter.options">{{item.description}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+            <!-- Custom dropdown -->
+            <app-dropdown-custom *ngIf="filter.type=='custom'" (selected)="filter._value = $event" [id]="filter.id"
+              [multiple]="filter.multiselect" [useControl]="false"  [all]="filter.all" [type]="filter.dropdownType.uri"></app-dropdown-custom>
+            <!-- Dropdown Hierarchy -->
+            <app-dropdown-hierarchy *ngIf="filter.type=='d-hierarchy'" (selected)="filter._value=$event"
+              [multiple]="filter.multiselect" [value]="filter._value" [useControl]="false" [all]="filter.all" [id]="isNumber(filter.dropdownType.id)"
+              [icon]="'mat_outline:info'" [type_id]="filter.dropdownType.type_id" [type]="filter.dropdownType.uri">
+            </app-dropdown-hierarchy>
+
+            <!-- <div *ngIf="column.type=='d-hierarchy'" class="h-13 mt-1">
+                <app-dropdown-hierarchy [useControl]="false" (selected)="element[column.key]=$event"
+                  [value]="element[column.key]" [multiple]="column.multiselect"
+                  [type]="column.dropdownType.uri" [type_id]="column.dropdownType.type_id" [id]="isNumber(element,column.dropdownType.id)">
+                </app-dropdown-hierarchy>
+            </div> -->
+          </ng-container>
+
+          <div class="flex space-x-4 mt-1">
+            <button mat-flat-button color="primary" (click)="loadData(false)" class="text-md" matTooltip="Search">
+              <mat-icon matSuffix svgIcon="mat_outline:search" (click)="loadData(false)"></mat-icon>
+            </button>
+
+            <button *ngIf="!isSAve" mat-flat-button color="primary" (click)="handleCreateEvent()" class="text-md" matTooltip="Create">
+              <mat-icon matSuffix svgIcon="mat_outline:playlist_add"></mat-icon>
+            </button>
+
+            <button *ngIf="!isSAve" mat-flat-button color="primary" (click)="handleExportEvent()" class="text-md" matTooltip="Export">
+              <mat-icon matSuffix svgIcon="mat_outline:download"></mat-icon>
+            </button>
+          </div>
+        </div>
+
+      </mat-card-content>
+      <mat-card-content>
+        <div class="example-table-container">
+          <!-- create fields -->
+          <app-crud-table *ngIf="isSAve" [isAdd]="isAdd" (pushEvent)="reloadData($event)"
+            (deleteEvent)="removehighlight($event)" [crudtable]="crudtable"></app-crud-table>
+          <br>
+          <!-- table -->
+          <section class="example-container mat-elevation-z0 z-10" [ngStyle]="isSAve ? {top: '300px'} : {}">
+            <table mat-table #MatTable matSort class="example-table border" [attr.disabled]="isLoadingResults ? true : null"
+            [dataSource]="dataSource" (matSortChange)="handleSortEvent($event)">
+
+            <ng-container *ngFor="let column of table.rows" [matColumnDef]="column.column">
+              <th mat-header-cell *cdkHeaderCellDef mat-sort-header>{{ column.title }}</th>
+              <td mat-cell *cdkCellDef="let row">
+                <!-- text -->
+                <span *ngIf="column.type=='none'">{{row[column.column]}}</span>
+                <div *ngIf="column.type=='check'">
+                  <mat-slide-toggle color="primary" [(ngModel)]="row[column.column]"></mat-slide-toggle>
+                </div>
+                <!-- badge -->
+                <div *ngIf="column.type=='badge'">
+                  <span *ngIf="row[column.column]=='Online'" class="badge-on"> Online</span>
+                  <span *ngIf="row[column.column]=='Offline'" class="badge-off">Offline</span>
+                </div>
+                <!-- menu -->
+                <button *ngIf="column.type=='action'&&column.modal" mat-icon-button [matMenuTriggerFor]="menu"
+                  aria-label="Example icon-button with a menu">
+                  <mat-icon>more_vert</mat-icon>
+                </button>
+                <mat-menu #menu="matMenu">
+                  <button *ngFor="let item of column.menu" mat-menu-item
+                    (click)="handleOpenEvent(row,column,item._value)">
+                    <span>{{item.name}}</span>
+                  </button>
+                </mat-menu>
+                <!-- action -->
+                <button *ngIf="column.type=='action'&&!column.modal" mat-button color="primary"
+                  (click)="handleOpenEvent(row,column,0);">
+                  <mat-icon matSuffix svgIcon="open_in_new"></mat-icon>
+                </button>
+
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="columndefs; sticky: true"></tr>
+            <tr mat-row *matRowDef="let row; columns: columndefs"
+              [ngClass]="{'edited': highligthselected(row.encryptId)}"></tr>
+          </table>
+          </section>
+
+          <mat-paginator class="paganation" [attr.disabled]="isLoadingResults ? true : null" (page)="handlePageEvent($event)"
+            [length]="totalRows" [pageSize]="request.Length" [pageIndex]="request.Start"
+            [pageSizeOptions]="[10, 20, 50]" showFirstLastButtons></mat-paginator>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+</div>

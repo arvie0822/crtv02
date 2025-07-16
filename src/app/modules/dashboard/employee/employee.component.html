@@ -1,0 +1,166 @@
+<div class="flex flex-col flex-auto min-w-0 p-2">
+
+  <!-- Main -->
+  <div class="flex flex-row flex-auto min-w-0 grid grid-cols-3 gap-2 mt-1 mb-1 sm:absolute sm:inset-0 sm:overflow-auto">
+    <div class="container border-3">
+
+      <div class="div-bg box border-2 rounded-md relative hovers"
+        (mouseenter)="onMouseEnter()" 
+        (mouseleave)="onMouseLeave()">
+        <div class="flex justify-between">
+          <mat-icon></mat-icon>
+          <h1 class="text-center font-semibold">Announcement</h1>
+          <mat-icon></mat-icon>
+        </div>
+
+        <div *ngIf="announcements.length>0">
+          <div class="image-container" (click)="download(news)" [matTooltip]="'Click to Download '+news.name">
+            <img *ngIf="!isImage(news.type)" class="img image-fade" [src]="news.image" alt="Slide 1">
+          </div>
+
+            <ng-container *ngIf="isImage(news.type)">
+              <a
+                  class="flex flex-col w-40 h-40 m-2 p-4 shadow drop-shadow-xl rounded-2xl cursor-pointer bg-card border" (click)="download(news)">
+                  <div class="aspect-[9/6]">
+                      <div class="flex items-center justify-center h-full">
+                          <!-- Icons -->
+                          <div class="relative">
+                              <mat-icon
+                                  class="icon-size-14 text-hint opacity-50"
+                                  [svgIcon]="'heroicons_solid:document-text'"></mat-icon>
+                              <div
+                                  class="absolute left-0 bottom-0 px-1.5 rounded text-sm font-semibold leading-5 text-white"
+                                  [class.bg-red-600]="news.type === 'PDF'"
+                                  [class.bg-blue-600]="news.type === 'DOC'"
+                                  [class.bg-blue-600]="news.type === 'DOCX'"
+                                  [class.bg-green-600]="news.type === 'XLS'"
+                                  [class.bg-green-600]="news.type === 'XLSX'"
+                                  [class.bg-gray-600]="news.type === 'TXT'">
+                                  {{news.type.toUpperCase()}}
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="flex flex-col flex-auto justify-center text-center text-sm font-medium">
+                      <div class="truncate" [matTooltip]="'Click to Download '+news.name">{{news.name}}</div>
+                  </div>
+              </a>
+          </ng-container>
+          
+          <div class="content">
+            <h2>{{news.title}}</h2>
+            <p>{{news.description}}</p>
+          </div>
+
+          <button class="prev" (click)="controls('prev')">&#10094;</button>
+          <button class="next" (click)="controls('next')">&#10095;</button>
+        
+        </div>
+      </div>
+
+      <div class="div-bg box AS border-2 rounded-md p-1 h-[50px]">
+        <div class="flex justify-between p-2 border-b-1">
+          <div class="flex">
+            <mat-icon svgIcon="feather:filter" class="icon-AS mr-2" color="secondary" [matMenuTriggerFor]="menu" (click)="activate('AS')"></mat-icon>
+            <p>{{getCF()}}</p>
+          </div>
+          <h1 class="text-center mr-2">Application Status</h1>
+          <mat-icon></mat-icon>
+        </div>
+        <div class="mat-elevation-z0">
+          <table mat-table [dataSource]="dataSource">
+
+            <ng-container matColumnDef="code">
+              <th mat-header-cell *matHeaderCellDef> Code </th>
+              <td mat-cell *matCellDef="let element"> <p class="text-sm">{{element.title}}</p> </td>
+            </ng-container>
+        
+            <ng-container matColumnDef="status">
+              <th mat-header-cell *matHeaderCellDef> Status </th>
+              <td mat-cell *matCellDef="let element">
+                <p class="text-sm" [ngClass]="element.status == 'Approved'  ? 'text-lime-500' 
+                      : element.status == 'Pending'   ? 'text-yellow-400' 
+                      : element.status == 'Cancelled' ? 'text-red-500' 
+                      : ''">{{element.status}}</p>
+              </td>
+            </ng-container>
+        
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          </table>
+        
+          <mat-paginator [pageSizeOptions]="[5]"
+                         showFirstLastButtons
+                         aria-label="Select page of periodic elements">
+          </mat-paginator>
+        </div>
+      </div>
+
+      <!-- <div class="div-bg box AS border-2 rounded-md p-1 h-[50px] relative">
+        <h1 class="widget-label">Application Status</h1>
+        <app-report-view [parentDetails]="parentDetails" [reportPath]="application"></app-report-view>
+      </div>
+
+      <div class="div-bg box AS border-2 rounded-md p-1 h-[50px] relative">
+        <h1 class="widget-label">Employee Alerts</h1>
+        <app-report-view [parentDetails]="parentDetails" [reportPath]="employeeAlert"></app-report-view>
+      </div> -->
+
+    </div>
+
+    <div class="flex flex-row flex-auto col-span-2 grid grid-rows-6 gap-2">
+      <div class="div-bg flex flex-row flex-auto drop-shadow-lg rounded-md row-span-5 p-2">
+        <!-- Calendar GOES HERE -->
+        <full-calendar #calendar class="dashboard" [options]='calendarOptions'>
+          <ng-template #eventContent let-arg>
+            <b>{{ arg.timeText }}</b>
+            <i>{{ arg.event.title }}</i>
+          </ng-template>
+        </full-calendar>
+
+
+      </div>
+
+      <div class="div-bg flex flex-row flex-auto drop-shadow-lg rounded-md p-1">
+        <div class="flex flex-auto justify-evenly items-center border">
+          <button [matMenuTriggerFor]="menu" (click)="activate('CTK')" matSuffix mat-button color="primary" class="mr-2" mat-flat-button>Current TK</button>
+          <button [matMenuTriggerFor]="menu" (click)="activate('ATK')" matSuffix mat-button color="primary" class="mr-2" mat-flat-button>Adjustment TK</button>
+          <button [matMenuTriggerFor]="menu" (click)="activate('PAY')" matSuffix mat-button color="primary" class="mr-2" mat-flat-button>Payslip</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<mat-menu #menu="matMenu" (closed)="activate(class)">
+  <div class="flex text-sm">
+    <div class="border-r-2 w-[5rem]">
+      <div *ngFor="let item of _presets()">
+        <button class="text-sm" *ngIf="item.key !== 'custom'" mat-menu-item (click)="filter(item.key,class);" [disabled]="isDisabled(item.key,class)">{{item.type}}</button>
+        <button class="text-sm" *ngIf="item.key === 'custom'" mat-menu-item (click)="filter('custom',class); $event.stopPropagation();" [disabled]="isDisabled('custom',class)">Custom</button>
+      </div>
+    </div>
+    <div class="w-[40rem] pr-2 pl-2 pb-2 text-sm" *ngIf="showCustom('custom',class)" (click)="$event.stopPropagation()">
+
+      <div *ngFor="let item of _custom()">
+        
+        <span *ngIf="item.type=='date-range'" class="border-b-2 m-0 p-0">{{selectedDateRange}}</span>
+        <date-range-picker *ngIf="item.type=='date-range'" (filter)="setDateRange($event,class)"></date-range-picker>
+      
+        <mat-form-field *ngIf="item.type=='select'" class="w-full text-sm h-select" appearance="fill">
+          <mat-label>{{item.label}}</mat-label>
+          <mat-select [(value)]="item._value" (selectionChange)="setDropdown(class,item)">
+            <!-- <mat-option [value]="0">All</mat-option> -->
+            <mat-option *ngFor="let item of item.option" [value]="item.dropdownID">{{item.description}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      
+      <button mat-flat-button color="primary" (click)="search(class)">
+        <mat-icon svgIcon="feather:check" class="icon-TR" color="secondary"></mat-icon>
+      </button>
+    </div>
+  </div>
+ 
+</mat-menu>

@@ -1,0 +1,65 @@
+table {
+    width: 100%;
+}
+
+.mat-column-Employee_Code {
+    width: 20%;
+    overflow: auto;
+}
+
+.put-border {
+    border: 1px solid rgb(217, 223, 208);
+    padding: 8px;
+    width: 70%;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+.label-font-size{
+    font-size: 120% ;
+}
+.mat-cell {
+    vertical-align: top;
+    padding-right: 5px;
+}
+
+
+input{
+    position: relative;
+    bottom: 7px;
+    font-size: medium;
+}
+.mat-option{
+    position: relative;
+    bottom: 7px;
+    font-size: medium;
+}
+.mat-datepicker-toggle{
+    position: relative;
+    bottom: 7px;
+    font-size: medium;
+}
+.icon {
+    position: relative;
+    bottom: 10px;
+}
+.mat-select{
+    position: relative;
+    /* bottom: 7px; */
+    font-size: medium;
+}
+.select{
+    position: relative;
+    bottom: 9px;
+    font-size: medium;
+}
+.scroll-container {
+    display: flex;
+    align-items: center;
+    overflow: auto;
+}
+th.mat-header-cell {
+    text-align: center;
+}
+.header {
+    text-align: end;
+}

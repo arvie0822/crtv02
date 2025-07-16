@@ -1,0 +1,25 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.div-bg {
+    background-color: var(--fuse-bg-card);
+}
+
+.box {
+    flex: 1;
+    overflow: hidden;
+    transition: 0.5s;
+    margin: 0 .5%;
+    box-shadow: 0px 0px 0px #ccc;
+}
+
+.widget-label {
+    position: absolute;
+    z-index: 99;
+    top: 20px;
+    left: 250px;
+    font-weight: 600;
+  }

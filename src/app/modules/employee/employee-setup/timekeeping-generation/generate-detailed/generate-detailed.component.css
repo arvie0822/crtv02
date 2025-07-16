@@ -1,0 +1,20 @@
+table{
+    width: 100%;
+}
+th.mat-header-cell {
+    white-space: nowrap;
+    padding-right: 20px;
+}
+.mat-cell{
+    /* padding-left: 6px; */
+    white-space: nowrap;
+}
+.scroll{
+    overflow-x: scroll;
+
+}
+mat-paginator {
+    display: flex;
+    justify-content: start;
+  }
+

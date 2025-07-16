@@ -1,0 +1,26 @@
+<div class="flex justify-between">
+  <div class="flex shrink-0 items-center">
+    <div class="text-[16px]">{{title}}</div>
+    <button *ngIf="switch" class="px-4 ml-3" mat-button color="primary" (click)="changeOrient()">
+      <mat-icon class="mr-2" [svgIcon]="'heroicons_outline:switch-vertical'"></mat-icon>
+    </button>
+  </div>
+  <div class="flex shrink-0 items-center sm:mt-0 sm:ml-4">
+    <a *ngIf="back" mat-stroked-button (click)="backClicked()" [color]="'primary'" matTooltip="Back">
+        <mat-icon [svgIcon]="'heroicons_outline:arrow-narrow-left'"></mat-icon>
+    </a>
+    <a *ngIf="return" mat-stroked-button (click)="returnClicked()" [color]="'primary'" matTooltip="Back">
+        <mat-icon [svgIcon]="'heroicons_outline:arrow-narrow-left'"></mat-icon>
+    </a>
+    <a class="ml-4" *ngIf="prev" mat-stroked-button (click)="prevClicked()" [color]="'primary'" matTooltip="Previous">
+        <mat-icon [svgIcon]="'heroicons_outline:chevron-left'"></mat-icon>
+    </a>
+    <a class="ml-4" *ngIf="next" mat-stroked-button (click)="nextClicked()" [color]="'primary'" matTooltip="Next">
+        <mat-icon [svgIcon]="'heroicons_outline:chevron-right'"></mat-icon>
+    </a>
+    <button *ngIf="sub" class="px-6 ml-3 text-sm" mat-flat-button color="primary" (click)="submit()"
+        matTooltip="Save Changes">
+        <mat-icon svgIcon="mat_outline:save"></mat-icon>
+    </button>
+  </div>
+</div>

@@ -1,0 +1,39 @@
+.mat-datepicker-toggle{
+    position: relative;
+    bottom: 7px;
+    font-size: medium;
+}
+
+.mat-icon {
+    position: relative;
+    bottom: 10px;
+}
+
+.select{
+    position: relative;
+    bottom: 9px;
+    font-size: medium;
+}
+table{
+    width: 100%;
+}
+
+.search-field {
+    background-color: white;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+}
+
+.first-option {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background: #fff;
+    /* Optional: Set the background color to match the dropdown */
+}
+
+.label-font-size{
+    font-size: 120% ;
+}

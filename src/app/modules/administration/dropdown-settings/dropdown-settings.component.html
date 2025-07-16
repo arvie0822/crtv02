@@ -1,0 +1,60 @@
+<div class="flex flex-col flex-auto min-w-0">
+  <!-- Main -->
+  <div class="flex-auto p-2 sm:p-4">
+    <!-- Content -->
+    <mat-card>
+      <mat-card-title>
+        <app-card-title title="Dropdown Settings" [sub]="true" (submitTap)="submit()"></app-card-title>
+      </mat-card-title>
+      <mat-card-content>
+        <form [formGroup]="dropdownForm">
+
+          <div class="grid grid-cols-4 gap-x-5 ">
+            <div>
+              <mat-form-field class=" w-full text-md" appearance="outline">
+                <mat-label class="label-font-size">Module</mat-label>
+                <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                <mat-select formControlName="dropdownTypeId" (selectionChange)="handleSelectModule($event)">
+                  <mat-option *ngFor="let item of dropdownOptions.dropdownTypeDef" [value]="item.dropdownID">{{item.description}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+
+              <mat-form-field class=" w-full text-md" appearance="outline">
+                <mat-label class="label-font-size">Description</mat-label>
+                <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                <input matInput type="text" formControlName="dropdownDescription">
+              </mat-form-field>
+            </div>
+            <div class="relative overflow-auto xl:max-h-[750px] md:max-h-[430px] col-span-3 border-l-2">
+              <table #Table mat-table [dataSource]="dataSource" class="mat-elevation-z0">
+                <ng-container matColumnDef="dropdownDescription">
+                  <th mat-header-cell *matHeaderCellDef> DESCRIPTION </th>
+                  <td mat-cell *matCellDef="let element"> {{element.dropdownDescription}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="active">
+                  <th mat-header-cell *matHeaderCellDef> ACTIVE </th>
+                  <td mat-cell *matCellDef="let element; let i = index">
+                    <mat-slide-toggle color="primary" (change)="handleActive(i, $event)" [checked]="element.active"></mat-slide-toggle>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="delete">
+                  <th mat-header-cell *matHeaderCellDef> DELETE </th>
+                  <td mat-cell *matCellDef="let element; let i = index">
+                    <button type="button" color="warn" mat-button (click)="handleDelete(i)"><mat-icon svgIcon="heroicons_outline:trash"></mat-icon></button>
+                  </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: 'header-1'"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+              </table>
+            </div>
+          </div>
+
+        </form>
+      </mat-card-content>
+    </mat-card>
+
+  </div>
+</div>

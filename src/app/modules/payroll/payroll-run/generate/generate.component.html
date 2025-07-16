@@ -1,0 +1,132 @@
+    <div class="table-container mat-elevation-z8 h-full" tabindex="0">
+
+        <table mat-table [dataSource]="datasource">
+            <!-- UNSHIFT CHECKBOX -->
+            <ng-container matColumnDef="checkbox">
+                <th mat-header-cell *matHeaderCellDef>
+                    <mat-checkbox [color]="'primary'"
+                                  (change)="selectAllCheckbox($event,0)"
+                                  [checked]="itemChecked(true,0)">
+                                  <!-- [(ngModel)]="isAllSelected"
+                                  [indeterminate]="checkedList.length > 0 && !isAllSelected"
+                                  (change)="selectAllCheckbox($event)" -->
+                    </mat-checkbox>
+                </th>
+                <td mat-cell class="pl-5 w-10" *matCellDef="let element; let i = index">
+                    <div>
+                        <mat-checkbox [color]="'primary'"
+                                      [checked]="itemChecked(false,i)"
+                                      (change)="selectOneCheckbox($event,i)">
+                                      <!-- [(ngModel)]="element.checked"
+                                      (change)="selectOneCheckbox(i,$event)" -->
+                        </mat-checkbox>
+                    </div>
+                </td>
+            </ng-container>
+
+            <ng-container *ngFor="let column of cols" [matColumnDef]="column?.key">
+                <!-- HEADER -->
+                <th class="pl-5" mat-header-cell *matHeaderCellDef>
+                    <div class="flex align-center justify-center">
+                        <ng-container *ngIf="!column.info; else infoTemplate">
+                            <div *ngIf="!column.info && !column.inputfield">
+                                {{column?.label}}
+                            </div>
+                            <div *ngIf="!column.info && column.inputfield">
+                                <mat-form-field class="w-30 text-md h-5 pr-3" appearance="outline">
+                                    <mat-label class="label-font-size">{{column?.label}}</mat-label>
+                                    <input *ngIf="column.type === 'text'" class="input" [(ngModel)]="dataModel[column?.key]"
+                                                         type="text"
+                                                         [OnlyNumber]="true" [max]="999" [min]="0" [maxLength]="4"
+                                                         matInput
+                                                         (blur)="selectAllHeader(dataModel[column?.key],column.key)">
+                                    <input *ngIf="column.type === 'number'" class="input" matInput type="number" [(ngModel)]="dataModel[column?.key]"
+                                    (blur)="selectAllHeader(dataModel[column?.key],column.key)">
+                                </mat-form-field>
+                                <mat-icon class="icon icon-size-5" matPrefix svgIcon="mat_outline:info" [matTooltip]="column.toolDesc"></mat-icon>
+                            </div>
+                        </ng-container>
+                        <ng-template #infoTemplate>
+                            <mat-checkbox [color]="'primary'"
+                                          [checked]="isHeadeChecked(column.key)"
+                                          (change)="selectAllHeader($event,column.key)"
+                                          >
+                                          <!-- [checked]="column.checked"
+                                          (change)="selectAllColumn($event,column.key)" -->
+                            </mat-checkbox>
+                            <span>
+                            {{column?.label}}
+                            </span>
+                            <mat-icon class="icon icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info" [matTooltip]="column.toolDesc"></mat-icon>
+                        </ng-template>
+                    </div>
+                </th>
+                <!-- BODY -->
+                <td class="pr-2" mat-cell *matCellDef="let element; let i = index">
+                    <div *ngIf="!column.info">
+                        <ng-container *ngIf="!column.decimalPipe; else decimalPipeTemplate">
+                            {{ element[column.key] }}
+                        </ng-container>
+                        <ng-template #decimalPipeTemplate>
+                            <div *ngIf="!column.inputfield">
+                                {{ element[column.key] | number: '1.2-2' }}
+                            </div>
+                            <div *ngIf="column.inputfield" class="h-13 w-full">
+                                <mat-form-field class="w-30 text-md h-5" appearance="outline">
+                                    <input *ngIf="column.type === 'text'" class="input" [(ngModel)]="element[column.key]"
+                                                         (blur)="selectOne(element[column.key],i,column.key,element.id)"
+                                                         type="text"
+                                                         [OnlyNumber]="true" [max]="999" [min]="0" [maxLength]="4"
+                                                         matInput>
+                                    <input *ngIf="column.type === 'number'" class="input" matInput type="number" [(ngModel)]="element[column.key]"
+                                    (blur)="selectOne(element[column.key],i,column.key,element.id)">
+                                </mat-form-field>
+                            </div>
+                        </ng-template>
+                    </div>
+                    <ng-container *ngIf="column.info">
+                        <mat-checkbox [color]="'primary'"
+                                      [(ngModel)]="element[column.key]"
+                                      (change)="selectOne($event,i,column.key,element.id)"
+                                      >
+                                      <!-- (change)="inputChange()" -->
+                                      <!-- (change)="selectOneColumn(i,$event,column.key)" function to trigger header checkbox -->
+                        </mat-checkbox>
+
+                    </ng-container>
+                </td>
+            </ng-container>
+
+            <div *ngIf="details">
+                <ng-container matColumnDef="header-row">
+                    <th mat-header-cell *matHeaderCellDef [attr.colspan]="12">
+                        <div class="flex items-center justify-center">
+                            <mat-icon class="icon-size-5 mr-2 mt-4"
+                                [ngClass]="{ 'green-icon': empStatus, 'red-icon': !empStatus }" matPrefix
+                                svgIcon="{{empStatus? 'heroicons_outline:exclamation-triangle':'heroicons_outline:check-circle'}}"></mat-icon>
+                            <span>{{ empStatus ? "NOTE: The following users are On-Hold for the selected cutoff" : "No users are on Hold" }}</span>
+                        </div>
+                    </th>
+                </ng-container>
+            </div>
+
+            <div *ngIf="details">
+                <tr mat-header-row *matHeaderRowDef="['header-row'];sticky: true"></tr>
+                <tr mat-header-row *matHeaderRowDef="displayedColumns;sticky: true"></tr>
+            </div>
+
+            <div *ngIf="hideCols">
+                <tr mat-header-row *matHeaderRowDef="displayedColumns;sticky: true"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </div>
+
+        </table>
+
+
+
+    </div>
+
+    <mat-paginator class="mat-paginator-sticky" [attr.disabled]="isLoadingResults ? true : null" (page)="handlePageEvent($event)"
+    [length]="totalRows" [pageSize]="request.Length" [pageIndex]="request.Start"
+    [pageSizeOptions]="[10, 20, 50]" showFirstLastButtons></mat-paginator>
+

@@ -1,0 +1,209 @@
+<div class="flex flex-col flex-auto min-w-0">
+    <!-- Main -->
+    <div class="flex-auto sm:p-2 w-full min-w-0 sm:absolute sm:inset-0 sm:overflow-auto text-md">
+        <mat-card class="body-card">
+            <app-card-title title="Approval"></app-card-title>
+            <mat-card-content>
+                <mat-tab-group class="child-mat-tab-group">
+                    <mat-tab class="child-mat-tab">
+                        <ng-template mat-tab-label>
+                            <mat-icon class="icon-size-5 mt-4 mr-2" matPrefix svgIcon="mat_outline:thumb_up"></mat-icon>
+                            Approval
+                        </ng-template>
+
+                        <mat-radio-group *ngIf="radiobuttons" aria-label="Select an option" class="grid grid-cols-9 p-2 h-13 justify-items-center" [(ngModel)]="moduleIdSelected">
+                            <div class="w-full radio" *ngFor="let item of radiobuttons">
+                                <mat-radio-button color="primary" matBadgeSize="medium" [matBadge]="item.count" (click)="ChangeModule(item)" [value]="item.moduleId"
+                                    matBadgeColor="primary" matBadgeOverlap="false">
+                                    {{item.moduleName}} </mat-radio-button>
+                            </div>
+
+                        </mat-radio-group>
+
+                        <form [formGroup]="approvalForm">
+
+                            <div class="grid grid-cols-7 gap-2">
+
+                                <mat-form-field class="w-full text-md" appearance="outline">
+                                    <mat-label class="label-font-size">Date From</mat-label>
+                                    <input formControlName="dateFrom" [max]="approvalForm.controls['dateTo'].value"
+                                        matInput [matDatepicker]="df" readonly [placeholder]="'MM/DD/YYYY'"
+                                        (click)="df.open()">
+                                    <mat-datepicker-toggle matSuffix [for]="df"></mat-datepicker-toggle>
+                                    <mat-datepicker #df></mat-datepicker>
+                                </mat-form-field>
+
+                                <mat-form-field class="w-full text-md" appearance="outline">
+                                    <mat-label class="label-font-size">Date To</mat-label>
+                                    <input formControlName="dateTo" [min]="approvalForm.controls['dateFrom'].value"
+                                        matInput [matDatepicker]="dt" readonly [placeholder]="'MM/DD/YYYY'"
+                                        (click)="dt.open()">
+                                    <mat-datepicker-toggle matSuffix [for]="dt"></mat-datepicker-toggle>
+                                    <mat-datepicker #dt></mat-datepicker>
+                                </mat-form-field>
+
+                                <app-dropdown-custom (selected)="selectEmployee($event)" [options]="employee" [control]="approvalForm.get('employee')" [all]="true" [multiple]="true" [value]="HisMid" [type]="1051" [useControl]="true"></app-dropdown-custom>
+
+                                <mat-form-field appearance="outline">
+                                    <mat-label class="label-font-size">Filing Code</mat-label>
+                                    <mat-icon class="icon-size-5 : mr-2" matPrefix
+                                        svgIcon="mat_outline:info"></mat-icon>
+                                    <mat-select multiple formControlName="code">
+                                        <mat-option *ngFor="let item of codes"
+                                            [value]="item.dropdownID">{{item.description}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+
+
+                                <div class="grid grid-cols-3 gap-2 w-90 mt-1">
+                                    <button class="text-md" mat-flat-button color="primary" aria-label="example icon" (click)="search()">
+                                        <mat-icon class="mr-1 mt-4" svgIcon="mat_outline:search"></mat-icon>Search
+                                    </button>
+                                    <button (click)="openModalApprove()" class="text-md" mat-flat-button color="primary"
+                                        aria-label="example icon">
+                                        <mat-icon class="mr-1 mt-4"
+                                            svgIcon="heroicons_outline:thumb-up"></mat-icon>Approve
+                                    </button>
+                                    <button (click)="openModalDissapprove()" class="text-md" mat-flat-button
+                                        color="warn" aria-label="example icon">
+                                        <mat-icon class="mr-1 mt-4"
+                                            svgIcon="heroicons_outline:thumb-down"></mat-icon>Disapprove
+                                    </button>
+                                </div>
+
+                            </div>
+                        </form>
+
+                        <section class="mat-elevation-z0 z-10">
+                            <table mat-table [dataSource]="data" class="mat-elevation-z0 border">
+
+                                <ng-container matColumnDef="checkbox">
+                                    <th mat-header-cell *matHeaderCellDef><mat-checkbox color="primary"
+                                            (change)="selectAll($event,0)" [checked]="itemChecked(true,0)" class="example-margin"></mat-checkbox></th>
+                                    <td mat-cell *matCellDef="let element;let i=index"><mat-checkbox
+                                            [checked]="itemChecked(false,i)" (change)="selectOne($event,i)" color="primary"
+                                            class="example-margin"></mat-checkbox></td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="action">
+                                    <th class="text-center" mat-header-cell *matHeaderCellDef></th>
+                                    <td mat-cell *matCellDef="let element; let i = index">
+                                        <!-- <button type="button" class="open_" (click)="handleDeleteBreak(i)"
+                                            mat-icon-button color="primary">
+                                            <mat-icon class="" matSuffix svgIcon="open_in_new"></mat-icon>
+                                        </button> -->
+                                    </td>
+                                </ng-container>
+
+                                <ng-container [matColumnDef]="column.columnDef" *ngFor="let column of displayedColumns">
+                                    <th mat-header-cell *matHeaderCellDef="let i = index"> {{column.column}} </th>
+                                    <td mat-cell *matCellDef="let element"> {{element[column.columnDef]}} </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="attachment">
+                                    <th mat-header-cell *matHeaderCellDef></th>
+                                    <td mat-cell *matCellDef="let element; let i = index">
+                                        <button mat-icon-button disabled *ngIf="!element.uploadPath && moduleId.moduleId != 52" color="primary" class="mt-2" >
+                                            <mat-icon class="mt-4 icon-size-5">download</mat-icon>
+                                        </button>
+                                        <button mat-icon-button *ngIf="element.uploadPath || moduleId.moduleId == 52" color="primary" class="mt-2" 
+                                            (click)="download(element)" matTooltip="Download Attachment">
+                                            <mat-icon class="mt-4 icon-size-5">download</mat-icon>
+                                        </button>
+                                    </td>
+                                </ng-container>
+
+                                <tr mat-header-row *matHeaderRowDef="columnsToDisplay; sticky: true"></tr>
+                                <tr mat-row *matRowDef="let row; columns: columnsToDisplay;"></tr>
+                            </table>
+                        </section>
+
+                        <mat-paginator [pageSize]="request.Length" [pageIndex]="request.Start"
+                            [length]="AtotalRows" [pageSizeOptions]="[20, 50, 100]" showFirstLastButtons
+                            (page)="handlePageEvent($event)"></mat-paginator>
+
+                    </mat-tab>
+
+                    <mat-tab class="child-mat-tab">
+                        <ng-template mat-tab-label>
+                            <mat-icon class="icon-size-5 mt-4 mr-2" matPrefix svgIcon="mat_solid:history"></mat-icon>
+                            History
+                        </ng-template>
+                        <form [formGroup]="historyForm">
+
+                            <div class="grid grid-cols-7 gap-2">
+
+                                <mat-form-field appearance="outline">
+                                    <mat-label class="label-font-size">Filing Type</mat-label>
+                                    <mat-icon class="icon-size-5 : mr-2" matPrefix
+                                        svgIcon="mat_outline:info"></mat-icon>
+                                    <mat-select formControlName="code" (selectionChange)="loadEmployees()">
+                                        <mat-option *ngFor="let item of filing"
+                                            [value]="item.dropdownID">{{item.description}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+
+                                <app-dropdown-custom [options]="employeeHistory" [control]="historyForm.get('employee')" [all]="true" [multiple]="true" [value]="ApMid" [type]="1052" [useControl]="true"></app-dropdown-custom>
+
+                                <mat-form-field class="w-full text-md" appearance="outline">
+                                    <mat-label class="label-font-size">Date From</mat-label>
+                                    <input formControlName="dateFrom" [max]="approvalForm.controls['dateTo'].value"
+                                        matInput [matDatepicker]="hdf" readonly [placeholder]="'MM/DD/YYYY'"
+                                        (click)="hdf.open()">
+                                    <mat-datepicker-toggle matSuffix [for]="hdf"></mat-datepicker-toggle>
+                                    <mat-datepicker #hdf></mat-datepicker>
+                                </mat-form-field>
+
+                                <mat-form-field class="w-full text-md" appearance="outline">
+                                    <mat-label class="label-font-size">Date To</mat-label>
+                                    <input formControlName="dateTo" [min]="approvalForm.controls['dateFrom'].value"
+                                        matInput [matDatepicker]="hdt" readonly [placeholder]="'MM/DD/YYYY'"
+                                        (click)="hdt.open()">
+                                    <mat-datepicker-toggle matSuffix [for]="hdt"></mat-datepicker-toggle>
+                                    <mat-datepicker #hdt></mat-datepicker>
+                                </mat-form-field>
+
+                                <div class="grid grid-cols-3 gap-2 w-90 button-margin-top">
+                                    <button class="text-md" mat-flat-button color="primary" aria-label="example icon" (click)="searchHistory()">
+                                        <mat-icon class="mr-1 mt-4" svgIcon="mat_outline:search"></mat-icon>Search
+                                    </button>
+                                </div>
+
+                            </div>
+
+
+
+                        </form>
+
+                        <section class="mat-elevation-z0 z-10">
+                            <table mat-table [dataSource]="dataHistory" class="border">
+
+                                <ng-container matColumnDef="action">
+                                    <th class="text-center" mat-header-cell *matHeaderCellDef></th>
+                                    <td mat-cell *matCellDef="let element; let i = index">
+                                        <button type="button" class="open_" (click)="handleDeleteBreak(i)"
+                                            mat-icon-button color="primary">
+                                            <mat-icon class="" matSuffix svgIcon="open_in_new"></mat-icon>
+                                        </button>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container [matColumnDef]="column.columnDef" *ngFor="let column of displayedColumnsH">
+                                    <th mat-header-cell *matHeaderCellDef="let i = index"> {{column.column}} </th>
+                                    <td mat-cell *matCellDef="let element"> {{element[column.columnDef]}} </td>
+                                </ng-container>
+
+                                <tr mat-header-row *matHeaderRowDef="columnsToDisplayH; sticky: true"></tr>
+                                <tr mat-row *matRowDef="let row; columns: columnsToDisplayH;"></tr>
+                            </table>
+                        </section>
+                        <mat-paginator [pageSize]="requestHistory.Length" [pageIndex]="requestHistory.Start"
+                            [length]="HtotalRows" [pageSizeOptions]="[20, 50, 100]" showFirstLastButtons
+                            (page)="handlePageHistoryEvent($event)"></mat-paginator>
+                    </mat-tab>
+                </mat-tab-group>
+
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>

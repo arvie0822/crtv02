@@ -1,0 +1,29 @@
+<div class="flex flex-col flex-auto min-w-0">
+    <!-- Main -->
+    <div class="flex-auto sm:p-2 w-full min-w-0 sm:absolute sm:inset-0 sm:overflow-auto text-md" [style]="isView && !this.isWidgets?'margin-top: 100px;':''">
+        <mat-card *ngIf="route.isBoldReport" class="body-card mat-elevation-z0" >
+            <app-card-title *ngIf="!isView" title="Reports"></app-card-title>
+
+            <div class="e-panel-container" [id]="'reportViewer_Control0'+report.Id" (window:beforeunload)="appDestroy(true)"></div>
+            
+            <bold-reportviewer *ngIf="report.showReport" [id]="'reportViewer_Control1'+report.Id" 
+                [reportServiceUrl]="serviceUrl"
+                [reportServerUrl]="reportServerUrl" 
+                [serviceAuthorizationToken]="serverServiceAuthorizationToken"
+                [parameters]="parameters" 
+                [reportPath]="reportPath" 
+                [toolbarSettings]="toolbarSettings" 
+                [exportSettings]="exportSettings" 
+                [toolbarRenderMode]="toolbarRenderMode" 
+                [parameterSettings]="parameterSettings"
+                (exportItemClick)="onExportItemClick($event)" 
+                (renderingComplete)="onRenderingComplete($event)">
+            </bold-reportviewer>
+
+        </mat-card>
+
+        <app-hdmf-report *ngIf="route.isHDMF"></app-hdmf-report>
+        
+        <app-report-details *ngIf="route.isDownload"></app-report-details>
+    </div>
+</div>

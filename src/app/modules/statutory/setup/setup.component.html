@@ -1,0 +1,434 @@
+<div class="flex flex-col flex-auto min-w-0">
+    <!-- Main -->
+    <div class="flex-auto sm:p-2 w-full min-w-0 sm:absolute sm:inset-0 sm:overflow-auto text-md">
+        <mat-card>
+            <mat-card-title>
+                <app-card-title title="Statutory Setup" [sub]="true" [back]="true" (submitTap)="submit()"></app-card-title>
+            </mat-card-title>
+            <mat-card-content>
+
+                <form [formGroup]="sssForm">
+                    <div class="grid grid-cols-8 gap-2 h-14">
+
+                        <app-dropdown [control]="sssForm.get('statutory')" (selected)="statutoryReset()" [options]="dropdownOptions.statutoryDef" [icon]="'mat_outline:info'" [type]="125" [useControl]="true"> </app-dropdown>
+
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2 h-14" *ngIf="sssForm.value.statutory == 30379">
+
+                        <div class="grid grid-cols-4 gap-2 h-12">
+
+                            <mat-form-field appearance="outline">
+                                <mat-label class="label-font-size">Types</mat-label>
+                                <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                                <mat-select (selectionChange)="reset()" formControlName="frequency">
+                                    <mat-option *ngFor="let item of types" [value]="item.id">{{item.description}}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+
+                            <mat-form-field class="text-md" appearance="outline">
+                                <mat-label class="label-font-size">Name</mat-label>
+                                <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                                <input class="input" formControlName="name" matInput [placeholder]="'Name'" />
+                            </mat-form-field>
+
+                            <mat-form-field class="text-md" appearance="outline">
+                                <mat-label class="label-font-size">Description</mat-label>
+                                <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                                <input class="input" formControlName="description" matInput [placeholder]="'Description'" />
+                            </mat-form-field>
+
+                            <app-dropdown-custom
+                                    [control]="sssForm.get('attendance')" [value]="this.sssF.attendance" [all]="true"
+                                    [options]="dropdownOptions.attendanceStatutoryDef" [useControl]="true" [multiple]="true"
+                                    [type]="1020">
+                            </app-dropdown-custom>
+
+
+
+                        </div>
+
+                        <form [formGroup]="sssForm">
+                            <div class="grid grid-cols-4 gap-2 h-14" *ngIf="sssForm.value.statutory == 30379">
+
+                            <app-dropdown
+                                [control]="sssForm.get('basic')" [selected]="select(sssForm)" [options]="dropdownOptions.sssBasisDef" [all]="true"
+                                [icon]="'mat_outline:info'" [type]="127" [multiple]="true" [useControl]="true">
+                            </app-dropdown>
+
+                            <app-dropdown-custom
+                                [control]="sssForm.get('leave')" [value]="this.sssF.leave" [all]="true"
+                                [options]="dropdownOptions.leaveStatutoryDef" [useControl]="true" [multiple]="true"
+                                [type]="1032">
+                            </app-dropdown-custom>
+
+                            <app-dropdown-custom [multiple]="true" [all]="true" [control]="sssForm.get('earnings')"   [type]="1022" [value]="this.sssF.earnings"   [options]="dropdownOptions.earningsDef" [useControl]="true"></app-dropdown-custom>
+
+                            <mat-form-field class="text-md" appearance="outline">
+                                <mat-label class="label-font-size">Status</mat-label>
+                                <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                                <mat-select formControlName="active">
+                                    <mat-option [value]="true">Active</mat-option>
+                                    <mat-option [value]="false">Inactive</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+
+                            </div>
+                        </form>
+
+                    </div>
+
+                    <!-- -------------------------TAX------------------------- -->
+
+                    <form [formGroup]="taxForm">
+                        <div class="grid grid-cols-8 gap-2 h-14" *ngIf="sssForm.value.statutory == 30380">
+
+                            <mat-form-field  appearance="outline">
+                                <mat-label class="label-font-size">Types</mat-label>
+                                <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                                <mat-select (selectionChange)="reset()" formControlName="frequency">
+                                    <mat-option *ngFor="let item of types" [value]="item.id">{{item.description}}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+
+                            <mat-form-field class="w-full text-md" appearance="outline">
+                                <mat-label class="label-font-size">Name</mat-label>
+                                <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                                <input class="input" formControlName="name" matInput [placeholder]="'Name'"/>
+                              </mat-form-field>
+
+                              <mat-form-field class="w-full text-md" appearance="outline">
+                                <mat-label class="label-font-size">Description</mat-label>
+                                <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                                <input class="input" formControlName="description" matInput [placeholder]="'Description'"/>
+                              </mat-form-field>
+
+                              <mat-form-field class="w-full text-md" appearance="outline">
+                                <mat-label class="label-font-size">Status</mat-label>
+                                <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                                <mat-select formControlName="active">
+                                <mat-option [value]="true">Active</mat-option>
+                                <mat-option [value]="false">Inactive</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+
+                        </div>
+                    </form>
+
+                    <!-- -------------------------HDMF------------------------- -->
+
+                    <form [formGroup]="hdmfForm">
+                        <div class="grid grid-cols-8 gap-2 h-14" *ngIf="sssForm.value.statutory == 30381">
+
+                            <mat-form-field  appearance="outline">
+                                <mat-label class="label-font-size">Types</mat-label>
+                                <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                                <mat-select (selectionChange)="headeReset()" formControlName="frequency">
+                                    <mat-option *ngFor="let item of types" [value]="item.id">{{item.description}}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+
+                            <mat-form-field class="w-full text-md" appearance="outline">
+                                <mat-label class="label-font-size">Name</mat-label>
+                                <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                                <input class="input" formControlName="name" matInput [placeholder]="'Name'"/>
+                              </mat-form-field>
+
+                              <mat-form-field class="w-full text-md" appearance="outline">
+                                <mat-label class="label-font-size">Description</mat-label>
+                                <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                                <input class="input" formControlName="description" matInput [placeholder]="'Description'"/>
+                              </mat-form-field>
+
+                              <app-dropdown-custom
+                                    [control]="hdmfForm.get('attendance')" [value]="this.hdmfF.attendance" [all]="true"
+                                    [options]="dropdownOptions.attendanceStatutoryDef" [useControl]="true" [multiple]="true"
+                                    [type]="1020">
+                              </app-dropdown-custom>
+
+                              <app-dropdown
+                                  [control]="hdmfForm.get('basic')" [selected]="select(hdmfForm)" [options]="dropdownOptions.sssBasisDef" [all]="true"
+                                  [icon]="'mat_outline:info'" [type]="127" [multiple]="true" [useControl]="true">
+                              </app-dropdown>
+
+                              <app-dropdown-custom
+                                  [control]="hdmfForm.get('leave')" [value]="this.hdmfF.leave" [all]="true"
+                                  [options]="dropdownOptions.leaveStatutoryDef" [useControl]="true" [multiple]="true"
+                                  [type]="1032">
+                              </app-dropdown-custom>
+
+                              <app-dropdown-custom [multiple]="true" [all]="true" [control]="hdmfForm.get('earnings')"   [type]="1022" [value]="this.hdmfF.earnings"   [options]="dropdownOptions.earningsDef" [useControl]="true"></app-dropdown-custom>
+
+                              <mat-form-field class="w-full text-md" appearance="outline">
+                                <mat-label class="label-font-size">Status</mat-label>
+                                <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                                <mat-select formControlName="active">
+                                <mat-option [value]="true">Active</mat-option>
+                                <mat-option [value]="false">Inactive</mat-option>
+                                </mat-select>
+                              </mat-form-field>
+
+                        </div>
+                    </form>
+
+                    <!-- -------------------------PHIC------------------------- -->
+
+                    <form [formGroup]="phicForm">
+                        <div class="grid grid-cols-8 gap-2 h-14" *ngIf="sssForm.value.statutory == 30382">
+
+                            <mat-form-field  appearance="outline">
+                                <mat-label class="label-font-size">Types</mat-label>
+                                <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                                <mat-select (selectionChange)="headeReset()" formControlName="frequency">
+                                    <mat-option *ngFor="let item of types" [value]="item.id">{{item.description}}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+
+                            <mat-form-field class="w-full text-md" appearance="outline">
+                                <mat-label class="label-font-size">Name</mat-label>
+                                <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                                <input class="input" formControlName="name" matInput [placeholder]="'Name'"/>
+                            </mat-form-field>
+
+                            <mat-form-field class="w-full text-md" appearance="outline">
+                              <mat-label class="label-font-size">Description</mat-label>
+                              <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                              <input class="input" formControlName="description" matInput [placeholder]="'Description'"/>
+                            </mat-form-field>
+
+                            <app-dropdown-custom
+                                  [control]="phicForm.get('attendance')" [value]="phicF.attendance" [all]="true"
+                                  [options]="dropdownOptions.attendanceStatutoryDef" [useControl]="true" [multiple]="true"
+                                  [type]="1020">
+                            </app-dropdown-custom>
+
+                            <app-dropdown
+                                [control]="phicForm.get('basic')" [selected]="select(phicForm)" [options]="dropdownOptions.sssBasisDef" [all]="true"
+                                [icon]="'mat_outline:info'" [type]="127" [multiple]="true" [useControl]="true">
+                            </app-dropdown>
+
+                            <app-dropdown-custom
+                                [control]="phicForm.get('leave')" [value]="this.phicF.leave" [all]="true"
+                                [options]="dropdownOptions.leaveStatutoryDef" [useControl]="true" [multiple]="true"
+                                [type]="1032">
+                            </app-dropdown-custom>
+
+                            <app-dropdown-custom [multiple]="true" [all]="true" [control]="phicForm.get('earnings')"   [type]="1022" [value]="this.phicF.earnings"   [options]="dropdownOptions.earningsDef" [useControl]="true"></app-dropdown-custom>
+
+                            <mat-form-field class="w-full text-md" appearance="outline">
+                                <mat-label class="label-font-size">Status</mat-label>
+                                <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                                <mat-select formControlName="active">
+                                <mat-option [value]="true">Active</mat-option>
+                                <mat-option [value]="false">Inactive</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+
+                        </div>
+                    </form>
+
+
+                    <mat-divider></mat-divider>
+
+                <!-- SSS -->
+                    <form [formGroup]="sssForm">
+                        <div *ngIf="sssForm.value.statutory == 30379 && sssForm.value.frequency == 0 || sssForm.value.statutory == 30379 && sssForm.value.frequency == 1 || sssForm.value.statutory == 30379 && sssForm.value.frequency == 2">
+                            <div class="mt-2 pb-3 pt-3">
+                                <p>First Cut-off</p>
+                            </div>
+                            <mat-divider></mat-divider>
+                            <div class="grid grid-cols-7 gap-2 h-14 mt-5">
+
+                                <form [formGroup]="sssForm">
+                                    <app-dropdown [control]="sssForm.get('firstCutOff')" (selected)="sssReset(); calcFull(this.sssForm)" [options]="filteredOption(true,this.sssForm)" [icon]="'mat_outline:info'" [type]="126" [useControl]="true"> </app-dropdown>
+                                </form>
+
+                                <app-dropdown *ngIf=" sssForm.value.frequency == 1  && sssForm.value.firstCutOff == 30388 || sssForm.value.statutory == 30379  && sssForm.value.firstCutOff == 30388"
+                                [control]="sssForm.get('firstCalc')" (selected)="calcReset()" [options]="dropdownOptions.sssValueDef" [icon]="'mat_outline:info'" [type]="129" [useControl]="true"> </app-dropdown>
+
+                                <form [formGroup]="sssForm">
+                                    <mat-form-field *ngIf="sssForm.value.firstCutOff == 30387" class="w-full text-md h-10" appearance="outline">
+                                        <mat-label class="label-font-size">Max Amount</mat-label>
+                                        <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                                        <input  class="input" type="number" formControlName="firstMax" matInput />
+                                    </mat-form-field>
+                                </form>
+
+                            </div>
+
+                        </div>
+                    </form>
+
+                    <form [formGroup]="sssForm">
+                        <div *ngIf="sssForm.value.statutory == 30379 && sssForm.value.frequency == 1">
+                            <div class="mt-2 pb-3 pt-3">
+                                <p>Second Cut-off</p>
+                            </div>
+                            <mat-divider></mat-divider>
+                            <div class="grid grid-cols-7 gap-2 h-14 mt-5">
+
+                                <form [formGroup]="sssForm">
+                                    <app-dropdown [control]="sssForm.get('secondCutoff')" (selected)="sssReset1(); calcFull(this.sssForm)" [options]="filteredOption(false,this.sssForm)" [icon]="'mat_outline:info'" [type]="126" [useControl]="true"> </app-dropdown>
+                                </form>
+
+                                <app-dropdown *ngIf="sssForm.value.statutory == 30379 && sssForm.value.frequency == 1 && sssForm.value.secondCutoff == 30388"
+                                [control]="sssForm.get('secondCalc')" (selected)="calcReset1()" [options]="dropdownOptions.sssValueDef" [icon]="'mat_outline:info'" [type]="129" [useControl]="true"> </app-dropdown>
+
+                                <form [formGroup]="sssForm">
+                                    <mat-form-field *ngIf="sssForm.value.secondCutoff == 30387" class="w-full text-md h-10" appearance="outline">
+                                        <mat-label class="label-font-size">Max Amount</mat-label>
+                                        <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                                        <input  class="input" type="number" formControlName="secondMax" matInput />
+                                    </mat-form-field>
+                                </form>
+                            </div>
+                        </div>
+                    </form>
+
+                <!-- HDMF -->
+
+                <form [formGroup]="hdmfForm">
+                    <div *ngIf="sssForm.value.statutory == 30381 && hdmfForm.value.frequency == 0 || sssForm.value.statutory == 30381 && hdmfForm.value.frequency == 1 || sssForm.value.statutory == 30381 && hdmfForm.value.frequency == 2 " >
+
+                        <div class="mt-2 pb-3 pt-3">
+                            <p>First Cut-off</p>
+                        </div>
+                        <mat-divider></mat-divider>
+                        <div class="grid grid-cols-7 gap-2 h-14 mt-5">
+                            <app-dropdown [control]="hdmfForm.get('firstCutOff')" (selected)="hdmiPHICReset(); calcFull(this.hdmfForm)" [options]="filteredOption(true,this.hdmfForm)" [icon]="'mat_outline:info'" [type]="126" [useControl]="true"> </app-dropdown>
+
+                            <app-dropdown *ngIf="sssForm.value.frequency == 1  && hdmfForm.value.firstCutOff == 30388 || sssForm.value.statutory == 30381  && hdmfForm.value.firstCutOff == 30388"
+                            [control]="hdmfForm.get('firstCalc')" [options]="dropdownOptions.hdmfFirstCalcDef" [icon]="'mat_outline:info'" [type]="129" [useControl]="true"> </app-dropdown>
+
+                            <mat-form-field *ngIf="hdmfForm.value.frequency == 0 &&  hdmfForm.value.firstCutOff == 30387 || hdmfForm.value.frequency == 1 &&  hdmfForm.value.firstCutOff == 30387" class="w-full text-md h-10" appearance="outline">
+                                <mat-label class="label-font-size">Max Amount</mat-label>
+                                <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                                <input class="input" type="number" formControlName="firstMax" matInput />
+                            </mat-form-field>
+
+                        </div>
+
+                    </div>
+
+                    <div *ngIf="sssForm.value.statutory == 30381 && hdmfForm.value.frequency == 1" >
+
+                        <div class="mt-2 pb-3 pt-3">
+                            <p>Second Cut-off</p>
+                        </div>
+                        <mat-divider></mat-divider>
+                        <div class="grid grid-cols-7 gap-2 h-14 mt-5">
+
+                            <app-dropdown [control]="hdmfForm.get('secondCutoff')"  (selected)="hdmiPHICReset1(); calcFull(this.hdmfForm)" [options]="filteredOption(false,this.hdmfForm)" [icon]="'mat_outline:info'" [type]="126" [useControl]="true"> </app-dropdown>
+
+                            <app-dropdown *ngIf="sssForm.value.statutory == 30381 && hdmfForm.value.frequency == 1 && hdmfForm.value.secondCutoff == 30388" [control]="hdmfForm.get('secondCalc')" [options]="dropdownOptions.hdmfSecondCalcDef" [icon]="'mat_outline:info'" [type]="129" [useControl]="true"> </app-dropdown>
+
+                            <mat-form-field *ngIf="hdmfForm.value.secondCutoff == 30387" class="w-full text-md h-10" appearance="outline">
+                                <mat-label class="label-font-size">Max Amount</mat-label>
+                                <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                                <input class="input" type="number" formControlName="secondMax" matInput />
+                            </mat-form-field>
+
+
+
+                        </div>
+                    </div>
+                </form>
+
+                 <!-- PHIC -->
+
+                 <form [formGroup]="phicForm">
+                    <div *ngIf="sssForm.value.statutory == 30382 && phicForm.value.frequency == 0 || sssForm.value.statutory == 30382 && phicForm.value.frequency == 2 || sssForm.value.statutory == 30382 && phicForm.value.frequency == 1" >
+
+                        <div class="mt-2 pb-3 pt-3">
+                            <p>First Cut-off</p>
+                        </div>
+                        <mat-divider></mat-divider>
+                        <div class="grid grid-cols-7 gap-2 h-14 mt-5">
+
+                            <app-dropdown [control]="phicForm.get('firstCutOff')"  (selected)="hdmiPHICReset(); calcFull(this.phicForm)" [options]="filteredOption(true,this.phicForm)" [icon]="'mat_outline:info'" [type]="126" [useControl]="true"> </app-dropdown>
+
+                            <app-dropdown *ngIf="sssForm.value.frequency == 1  && phicForm.value.firstCutOff == 30388 || sssForm.value.statutory == 30382  && phicForm.value.firstCutOff == 30388"
+                            [control]="phicForm.get('firstCalc')" [options]="dropdownOptions.hdmfFirstCalcDef" [icon]="'mat_outline:info'" [type]="129" [useControl]="true"> </app-dropdown>
+
+                            <mat-form-field *ngIf="phicForm.value.frequency == 0 &&  phicForm.value.firstCutOff == 30387 || phicForm.value.frequency == 1 &&  phicForm.value.firstCutOff == 30387 || phicForm.value.firstCalc == 30399" class="w-full text-md h-10" appearance="outline">
+                                <mat-label class="label-font-size">Max Amount</mat-label>
+                                <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                                <input class="input" type="number" formControlName="firstMax" matInput />
+                            </mat-form-field>
+
+                        </div>
+
+                    </div>
+
+                    <div *ngIf="sssForm.value.statutory == 30382 && phicForm.value.frequency == 1" >
+
+                        <div class="mt-2 pb-3 pt-3">
+                            <p>Second Cut-off</p>
+                        </div>
+                        <mat-divider></mat-divider>
+                        <div class="grid grid-cols-7 gap-2 h-14 mt-5">
+
+                            <app-dropdown [control]="phicForm.get('secondCutoff')"  (selected)="hdmiPHICReset1(); calcFull(this.phicForm)" [options]="filteredOption(false,this.phicForm)" [icon]="'mat_outline:info'" [type]="126" [useControl]="true"> </app-dropdown>
+
+                            <mat-form-field *ngIf="phicForm.value.secondCutoff == 30387" class="w-full text-md h-10" appearance="outline">
+                                <mat-label class="label-font-size">Max Amount</mat-label>
+                                <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                                <input class="input" type="number" formControlName="secondMax" matInput />
+                            </mat-form-field>
+
+                            <app-dropdown *ngIf="sssForm.value.statutory == 30382 && phicForm.value.frequency == 1 && phicForm.value.secondCutoff == 30388" [control]="phicForm.get('secondCalc')" [options]="dropdownOptions.hdmfSecondCalcDef" [icon]="'mat_outline:info'" [type]="129" [useControl]="true"> </app-dropdown>
+                        </div>
+                    </div>
+                </form>
+
+                <!-- TAX -->
+
+                <form [formGroup]="taxForm">
+                    <div *ngIf="sssForm.value.statutory == 30380 && taxForm.value.frequency == 0 || sssForm.value.statutory == 30380 && taxForm.value.frequency == 1 || sssForm.value.statutory == 30380 && taxForm.value.frequency == 2">
+                        <div class="mt-2 pb-3 pt-3">
+                            <p>First Cut-off</p>
+                        </div>
+                        <mat-divider></mat-divider>
+                        <div class="grid grid-cols-7 gap-2 h-14 mt-5">
+
+                            <app-dropdown [control]="taxForm.get('firstCutOff')"  (selected)="taxReset()" [options]="taxOpt(true)" [icon]="'mat_outline:info'" [type]="126" [useControl]="true"> </app-dropdown>
+
+                            <app-dropdown *ngIf="taxForm.value.firstCutOff == 30388" [control]="taxForm.get('firstCalc')"  [options]="taxRate(true)" [icon]="'mat_outline:info'" [type]="130" [useControl]="true"> </app-dropdown>
+
+                            <mat-form-field *ngIf="taxForm.value.firstCutOff == 30387" class="w-full text-md h-10" appearance="outline">
+                                <mat-label class="label-font-size">Max Amount</mat-label>
+                                <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                                <input class="input" type="number" formControlName="firstMax" matInput />
+                            </mat-form-field>
+
+
+                        </div>
+                    </div>
+
+                    <div *ngIf="sssForm.value.statutory == 30380 && taxForm.value.frequency == 1">
+                        <div class="mt-2 pb-3 pt-3">
+                            <p>Second Cut-off</p>
+                        </div>
+                        <mat-divider></mat-divider>
+                        <div class="grid grid-cols-7 gap-2 h-14 mt-5">
+
+                            <app-dropdown [control]="taxForm.get('secondCutoff')"  (selected)="taxReset1()" [options]="taxOpt(false)" [icon]="'mat_outline:info'" [type]="126" [useControl]="true"> </app-dropdown>
+
+                            <app-dropdown [control]="taxForm.get('secondCalc')" *ngIf="taxForm.value.frequency == 1 && taxForm.value.secondCutoff == 30388 || taxForm.value.frequency == 1 && taxForm.value.secondCutoff == 30389" [options]="taxRate(false)" [icon]="'mat_outline:info'" [type]="130" [useControl]="true"> </app-dropdown>
+
+                            <mat-form-field *ngIf="taxForm.value.secondCutoff == 30387" class="w-full text-md h-10" appearance="outline">
+                                <mat-label class="label-font-size">Max Amount</mat-label>
+                                <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                                <input class="input" type="number" formControlName="secondMax" matInput />
+                            </mat-form-field>
+
+                        </div>
+                    </div>
+                </form>
+
+            </form>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    </div>
+

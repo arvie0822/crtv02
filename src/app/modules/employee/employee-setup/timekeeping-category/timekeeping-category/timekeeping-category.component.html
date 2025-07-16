@@ -1,0 +1,1441 @@
+<div class="flex flex-col flex-auto min-w-0">
+    <!-- Main -->
+    <div class="flex-auto  sm:p-2  w-full min-w-0 sm:inset-0 sm:overflow-auto text-md {{view?'':'sm:absolute'}}">
+        <mat-card class="h-full">
+            <mat-card-title>
+                <app-card-title *ngIf="!hidebuttons" title="Timekeeping Settings" [sub]="true" [switch]="false" [back]="!view"
+                    (switchTap)="changeOrient()" (submitTap)="submit()"></app-card-title>
+                <div class="grid place-items-end">
+                    <button *ngIf="hidebuttons" (click)="confirm()" class="text-md" mat-flat-button color="primary" aria-label="example icon">
+                        Confirm
+                    </button>
+                </div>
+            </mat-card-title>
+            <mat-card-content>
+                <form [formGroup]="timekeepingCategoryForm">
+                    <div *ngIf="hide" class="grid grid-cols-11 gap-2 h-15 ml-6">
+                        <mat-form-field class="w-full text-md col-span-2" appearance="outline">
+                            <mat-label class="label-font-size">Category Name</mat-label>
+                            <mat-icon class="iconsize icon-size-5 : mr-2" matPrefix
+                                svgIcon="mat_outline:info"></mat-icon>
+                            <input class="input" formControlName="name" matInput [placeholder]="'Category Name'">
+                        </mat-form-field>
+                        <mat-form-field class="w-full text-md col-span-2" appearance="outline">
+                            <mat-label class="label-font-size">Description</mat-label>
+                            <mat-icon class="iconsize icon-size-5 : mr-2" matPrefix
+                                svgIcon="mat_outline:info"></mat-icon>
+                            <input class="input" formControlName="description" matInput [placeholder]="'Description'">
+                        </mat-form-field>
+                    </div>
+
+                    <mat-tab-group mat-align-tabs="start">
+                        <mat-tab label="Schedule Hours">
+                            <div class="grid grid-cols-10 gap-2 h-13 ">
+                                <div class="col-span-2">
+                                    <mat-form-field class="w-full text-md mt-1" appearance="outline">
+                                        <mat-label class="label-font-size">Set Up Schedule</mat-label>
+                                        <mat-select formControlName="scheduleTypeId" [placeholder]="'No'"
+                                            (selectionChange)="onSelectionChanged($event)">
+                                            <mat-option *ngFor="let item of scheduleType"
+                                                [value]="item.dropdownID">{{item.description}}</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                                <!--+++++++++++++++++++++++++++++++ full flex set up======================================== -->
+
+                                <div class="col-span-2" *ngIf="tk.scheduleTypeId===30052 ">
+                                    <mat-form-field class="w-full text-md mt-1" appearance="outline">
+                                        <mat-label class="label-font-size">Assume logs</mat-label>
+                                        <mat-select formControlName="assumeClockInOut" [placeholder]="'No'">
+                                            <mat-option [value]="0">No</mat-option>
+                                            <mat-option *ngFor="let item of assume_logs"
+                                            [value]="item.dropdownID">{{item.description}}</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+
+                                <!--+++++++++++++++++++++++++++++++ partial set up======================================== -->
+
+                                <div class="col-span-2" *ngIf="tk.scheduleTypeId===30053">
+                                    <mat-form-field class="w-full text-md mt-1" appearance="outline">
+                                        <mat-label class="label-font-size">Assume logs</mat-label>
+                                        <mat-select formControlName="assumeClockInOut" [placeholder]="'No'">
+                                            <mat-option [value]="0">No</mat-option>
+                                            <mat-option *ngFor="let item of assume_logs"
+                                            [value]="item.dropdownID">{{item.description}}</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-span-2">
+                                    <mat-form-field class="w-full text-md mt-1" appearance="outline">
+                                        <mat-label class="label-font-size">Set Up Halfday</mat-label>
+                                        <mat-select formControlName="hasHalfday" [placeholder]="'No'">
+                                            <mat-option [value]="true">Yes</mat-option>
+                                            <mat-option [value]="false">No</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-6 gap-2 h-12"
+                                *ngIf="timekeepingCategoryForm.value.scheduleTypeId ==30054">
+                                <!-- <mat-form-field class="w-full text-md mt-1" appearance="outline">
+                                    <mat-label  class="label-font-size">Assume Logs</mat-label>
+                                    <mat-select formControlName="assumelogs" [placeholder]="'No'">
+                                        <mat-option [value]="true">Yes</mat-option>
+                                        <mat-option [value]="false">No</mat-option>
+                                    </mat-select>
+                                </mat-form-field> -->
+                                <!--+++++++++++++++++++++++++++++++ regular set up======================================== -->
+                                <mat-form-field class="w-full text-md mt-1" appearance="outline" >
+                                    <mat-label class="label-font-size">Assume logs</mat-label>
+                                    <mat-select formControlName="assumeClockInOut" [placeholder]="'No'">
+                                        <mat-option [value]="0">No</mat-option>
+                                        <mat-option *ngFor="let item of assume_logs"
+                                        [value]="item.dropdownID">{{item.description}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+
+                                <div class="mt-1">
+                                    <app-dropdown-custom [all]="false" [multiple]="false" [control]="timekeepingCategoryForm.get('breakTypeId')"
+                                        [options]="breakTypeReg" [useControl]="true" [type]="1000"></app-dropdown-custom>
+                                </div>
+                            </div>
+                            <!-- <div *ngIf="tk.scheduleTypeId===30054" class="grid grid-cols-11 gap-2 h-15">
+                            <div class="col-span-2">
+                                <app-dropdown-custom [all]="false" [multiple]="false" [control]="timekeepingCategoryForm.get('breakTypeId')" [options]="breakType" [useControl]="true" [type]="1044"></app-dropdown-custom>
+                            </div>
+                        </div> -->
+                            <form [formGroup]="CSuiteForm">
+                                <table *ngIf="tk.scheduleTypeId===30051" mat-table [dataSource]="dataSource"
+                                    class="mat-elevation-z0 border mb-0 ">
+                                    <ng-container matColumnDef="Monday">
+                                        <th mat-header-cell *matHeaderCellDef class="pl-8 text-md">Schedule Hours</th>
+                                        <td mat-cell *matCellDef="let element">
+                                            <mat-form-field class="w-full text-md mt-[1%] h-[5%] " appearance="outline">
+                                                <mat-label class="label-font-size">Monday</mat-label>
+                                                <input matInput type="number" formControlName="monday"
+                                                    [placeholder]="''">
+                                                <button *ngIf="description" matSuffix mat-icon-button aria-label="Clear"
+                                                    (click)="description=''">
+                                                    <mat-icon>close</mat-icon>
+                                                </button>
+                                            </mat-form-field>
+                                        </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="Tuesday">
+                                        <th mat-header-cell *matHeaderCellDef></th>
+                                        <td mat-cell *matCellDef="let element">
+                                            <mat-form-field class="w-full text-md mt-[1%] h-[5%] " appearance="outline">
+                                                <mat-label class="label-font-size">Tuesday</mat-label>
+                                                <input matInput type="number" formControlName="tuesday"
+                                                    [placeholder]="''">
+                                                <button *ngIf="description" matSuffix mat-icon-button aria-label="Clear"
+                                                    (click)="description=''">
+                                                    <mat-icon>close</mat-icon>
+                                                </button>
+                                            </mat-form-field>
+                                        </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="Wednesday">
+                                        <th mat-header-cell *matHeaderCellDef></th>
+                                        <td mat-cell *matCellDef="let element">
+                                            <mat-form-field class="w-full text-md mt-[1%] h-[5%] " appearance="outline">
+                                                <mat-label class="label-font-size">Wednesday</mat-label>
+                                                <input matInput type="number" formControlName="wednesday"
+                                                    [placeholder]="''">
+                                                <button *ngIf="description" matSuffix mat-icon-button aria-label="Clear"
+                                                    (click)="description=''">
+                                                    <mat-icon>close</mat-icon>
+                                                </button>
+                                            </mat-form-field>
+                                        </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="Thursday">
+                                        <th mat-header-cell *matHeaderCellDef class="text-md"></th>
+                                        <td mat-cell *matCellDef="let element">
+                                            <mat-form-field class="w-full text-md mt-[1%] h-[5%] " appearance="outline">
+                                                <mat-label class="label-font-size">Thursday</mat-label>
+                                                <input matInput type="number" formControlName="thursday"
+                                                    [placeholder]="''">
+                                                <button *ngIf="description" matSuffix mat-icon-button aria-label="Clear"
+                                                    (click)="description=''">
+                                                    <mat-icon>close</mat-icon>
+                                                </button>
+                                            </mat-form-field>
+                                        </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="Friday">
+                                        <th mat-header-cell *matHeaderCellDef></th>
+                                        <td mat-cell *matCellDef="let element">
+                                            <mat-form-field class="w-full text-md mt-[1%] h-[5%] " appearance="outline">
+                                                <mat-label class="label-font-size">Friday</mat-label>
+                                                <input matInput type="number" formControlName="friday"
+                                                    [placeholder]="''">
+                                                <button *ngIf="description" matSuffix mat-icon-button aria-label="Clear"
+                                                    (click)="description=''">
+                                                    <mat-icon>close</mat-icon>
+                                                </button>
+                                            </mat-form-field>
+                                        </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="Saturday">
+                                        <th mat-header-cell *matHeaderCellDef></th>
+                                        <td mat-cell *matCellDef="let element">
+                                            <mat-form-field class="w-full text-md mt-[1%] h-[5%] " appearance="outline">
+                                                <mat-label class="label-font-size">Saturday</mat-label>
+                                                <input matInput type="number" formControlName="saturday"
+                                                    [placeholder]="''">
+                                                <button *ngIf="description" matSuffix mat-icon-button aria-label="Clear"
+                                                    (click)="description=''">
+                                                    <mat-icon>close</mat-icon>
+                                                </button>
+                                            </mat-form-field>
+                                        </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="Sunday">
+                                        <th mat-header-cell *matHeaderCellDef></th>
+                                        <td mat-cell *matCellDef="let element">
+                                            <mat-form-field class="w-full text-md mt-[1%] h-[5%] " appearance="outline">
+                                                <mat-label class="label-font-size">Sunday</mat-label>
+                                                <input matInput type="number" formControlName="sunday"
+                                                    [placeholder]="''">
+                                                <button *ngIf="description" matSuffix mat-icon-button aria-label="Clear"
+                                                    (click)="description=''">
+                                                    <mat-icon>close</mat-icon>
+                                                </button>
+                                            </mat-form-field>
+                                        </td>
+                                    </ng-container>
+                                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                                </table>
+                            </form>
+
+                            <form [formGroup]="PartialFlexiForm">
+                                <div *ngIf="tk.scheduleTypeId===30053" class="grid grid-cols-10 gap-2 h-12">
+                                    <div class="col-span-2">
+                                        <mat-form-field class="w-full text-md mt-1" appearance="outline">
+                                            <mat-label class="label-font-size">Can Clock in </mat-label>
+                                            <mat-icon class="icon-size-5 : mr-2" matPrefix
+                                                svgIcon="mat_outline:info"></mat-icon>
+                                            <input matInput formControlName="clockIn" [placeholder]="'Hrs before and'">
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-span-2">
+                                        <mat-form-field class="w-full text-md mt-1" appearance="outline">
+                                            <mat-label class="label-font-size">Hrs after schedule in</mat-label>
+                                            <mat-icon class="icon-size-5 : mr-2" matPrefix
+                                                svgIcon="mat_outline:info"></mat-icon>
+                                            <input matInput formControlName="hours"
+                                                [placeholder]="'Hrs after schedule in'">
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-span-2 mt-1">
+                                        <app-dropdown-custom [all]="false" [multiple]="false" [control]="PartialFlexiForm.get('breakTypeId')"
+                                            [options]="breakTypeReg" [useControl]="true"
+                                            [type]="1000"></app-dropdown-custom>
+                                    </div>
+                                </div>
+                            </form><br>
+
+                            <form [formGroup]="FullFlexiForm">
+                                <div *ngIf="tk.scheduleTypeId===30052" class="schedulecss border"><span>Schedule Hours</span></div>
+                                <table *ngIf="tk.scheduleTypeId===30052" mat-table [dataSource]="ds_FullFlexi"
+                                    class="mat-elevation-z0 border ">
+                                    <ng-container matColumnDef="days">
+                                        <th mat-header-cell *matHeaderCellDef class="pl-8 text-md">Days</th>
+                                        <td mat-cell *matCellDef="let element">
+                                            {{element.days}}
+                                        </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="hours_work">
+                                        <th mat-header-cell *matHeaderCellDef class="pl-8 text-md">Hours Work</th>
+                                        <td mat-cell *matCellDef="let element">
+                                            <mat-form-field class="w-full text-md h-12 mt-1 " appearance="outline">
+                                                <mat-label class="label-font-size"></mat-label>
+                                                <input matInput [formControlName]="element.hours_work" type="number"
+                                                    min="0" [placeholder]="''">
+                                                <button *ngIf="description" matSuffix mat-icon-button aria-label="Clear"
+                                                    (click)="description=''">
+                                                </button>
+                                            </mat-form-field>
+                                        </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="minutes">
+                                        <th mat-header-cell *matHeaderCellDef class="pl-8 text-md">Minutes</th>
+                                        <td mat-cell *matCellDef="let element">
+                                            <mat-form-field class="w-full text-md h-12 mt-1" appearance="outline">
+                                                <mat-label class="label-font-size"></mat-label>
+                                                <input matInput [formControlName]="element.minutes" type="number"
+                                                    min="0" [placeholder]="''">
+                                                <button *ngIf="description" matSuffix mat-icon-button aria-label="Clear"
+                                                    (click)="description=''">
+                                                </button>
+                                            </mat-form-field>
+                                        </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="deduct_break">
+                                        <th mat-header-cell *matHeaderCellDef class="pl-8 text-md">Deduct Break</th>
+                                        <td mat-cell *matCellDef="let element">
+                                            <mat-form-field class="w-full text-sm h-12 mt-1" appearance="outline">
+                                                <mat-select [formControlName]="element.deduct_break" [placeholder]="''">
+                                                    <mat-option [value]="true">Yes</mat-option>
+                                                    <mat-option [value]="false">No</mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                        </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="break_type">
+                                        <th mat-header-cell *matHeaderCellDef class="pl-8 text-md">Break Type</th>
+                                        <td class="" mat-cell *matCellDef="let element">
+                                            <div class="h-11  ">
+                                                <app-dropdown-custom [all]="false" [multiple]="false" [control]="FullFlexiForm.get(element.break_type)"
+                                                    [options]="breakTypeReg" [useControl]="true"
+                                                    [type]="1000"></app-dropdown-custom>
+                                            </div>
+                                        </td>
+                                    </ng-container>
+                                    <tr class="" mat-header-row *matHeaderRowDef="dc_FullFlexi"></tr>
+                                    <tr mat-row *matRowDef="let row; columns: dc_FullFlexi"></tr>
+                                </table>
+                            </form>
+
+                            <br>
+                            <mat-divider *ngIf="tk.hasHalfday"></mat-divider>
+                            <br>
+                            <mat-card-title *ngIf="tk.hasHalfday">
+                                <app-card-title title="Halfday Settings" [sub]="false" [switch]="false"
+                                    [back]="false"></app-card-title>
+                            </mat-card-title>
+                            <mat-card-content>
+                                <form [formGroup]="HalfDayForm">
+                                    <div class="flex flex-wrap justify-start " *ngIf="tk.hasHalfday">
+                                        <div class=" mr-2" *ngIf="tk.hasHalfday">
+                                            <mat-form-field class="w-full text-md mt-1" appearance="outline">
+                                                <mat-label class="label-font-size">Halfday Setup</mat-label>
+                                                <mat-select formControlName="halfDaySetupId"
+                                                    [placeholder]="'Hours Work'" (Change)="changesMe()">
+                                                    <mat-option *ngFor="let item of halfdayType"
+                                                        [value]="item.dropdownID">{{item.description}}</mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="mr-2" *ngIf="hd.halfDaySetupId===30055">
+                                            <mat-form-field class="w-full text-md mt-1 h-13" appearance="outline">
+                                                <mat-label class="label-font-size">Halfday if hours work is between</mat-label>
+                                                <mat-icon class="icon-size-5 : mr-2" matPrefix
+                                                    svgIcon="mat_outline:info"></mat-icon>
+                                                <input type="number" min="0" formControlName="start" matInput
+                                                    [placeholder]="'Start'" (blur)="lessthan()">
+                                            </mat-form-field>
+                                            <div *ngIf="istimeerrrorto" class="text-red-400" required>Invalid Time</div>
+                                        </div>
+                                        <div class="" *ngIf="hd.halfDaySetupId===30055">
+                                            <mat-form-field class="w-full text-md mt-1 h-13" appearance="outline">
+                                                <mat-label class="label-font-size">End</mat-label>
+                                                <mat-icon class="icon-size-5 : mr-2" matPrefix
+                                                    svgIcon="mat_outline:info"></mat-icon>
+                                                <input type="number" min="0" formControlName="end" matInput
+                                                    [placeholder]="''" (blur)="greaterthan()">
+                                            </mat-form-field>
+                                            <div *ngIf="istimeerrror" class="text-red-400" required>Invalid Time</div>
+                                        </div>
+                                        <div class=" mr-2" *ngIf="hd.halfDaySetupId===30056">
+                                            <mat-form-field class="w-full text-md mt-1" appearance="outline">
+                                                <mat-label class="label-font-size">First half end</mat-label>
+                                                <mat-icon class="icon-size-5 : mr-2" matPrefix
+                                                    svgIcon="mat_outline:info"></mat-icon>
+                                                <input matInput formControlName="start" type="number" min="0"
+                                                    [placeholder]="'hrs after schedule in'">
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="" *ngIf="hd.halfDaySetupId===30056">
+                                            <mat-form-field class="w-full text-md mt-1" appearance="outline">
+                                                <mat-label class="label-font-size">Second half start</mat-label>
+                                                <mat-icon class="icon-size-5 : mr-2" matPrefix
+                                                    svgIcon="mat_outline:info"></mat-icon>
+                                                <input matInput formControlName="end" type="number" min="0"
+                                                    [placeholder]="'hrs after schedule in'">
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                </form>
+                            </mat-card-content>
+                        </mat-tab>
+                        <mat-tab label="Tardiness/Undertime and Absences">
+                            <div class="grid grid-cols-11 gap-2 h-15">
+                                <div class="col-span-2">
+                                    <mat-form-field class="w-full text-md mt-1" appearance="outline">
+                                        <mat-label class="label-font-size">Setup Absent</mat-label>
+                                        <mat-select formControlName="hasRangeAbsent" [placeholder]="'Hours Work'">
+                                            <mat-option [value]="true">Yes</mat-option>
+                                            <mat-option [value]="false">No</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-span-2" *ngIf="tk.hasRangeAbsent">
+                                    <mat-form-field class="w-full text-md mt-1" appearance="outline">
+                                        <mat-label class="label-font-size">Absent when hours work between</mat-label>
+                                        <mat-icon class="icon-size-5 : mr-2" matPrefix
+                                            svgIcon="mat_outline:info"></mat-icon>
+                                        <input formControlName="absentFrom" matInput type="number" min="0"
+                                            [placeholder]="'From'">
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-span-2" *ngIf="tk.hasRangeAbsent">
+                                    <mat-form-field class="w-full text-md mt-1" appearance="outline">
+                                        <mat-label class="label-font-size">Hours</mat-label>
+                                        <mat-icon class="icon-size-5 : mr-2" matPrefix
+                                            svgIcon="mat_outline:info"></mat-icon>
+                                        <input formControlName="absentTo" matInput type="number" min="0"
+                                            [placeholder]="'to'">
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <mat-divider></mat-divider><br>
+                            <mat-card-title>
+                                <app-card-title title="Tardy and Undertime Settings"></app-card-title>
+                            </mat-card-title>
+                            <mat-card-content>
+                                <form [formGroup]="TardySetupForm">
+                                    <div class="grid grid-cols-10 gap-2 mt-1 h-15">
+                                        <div class="col-span-3">
+                                            <form [formGroup]="timekeepingCategoryForm">
+                                                <mat-form-field class="w-full text-md mt-1" appearance="outline">
+                                                    <mat-label class="label-font-size">Set Up</mat-label>
+                                                    <mat-select formControlName="tardySetupId"
+                                                        [placeholder]="'Hours Work'" (selectionChange)="resetfield()">
+                                                        <mat-option *ngFor="let item of tardyUnderType"
+                                                            [value]="item.dropdownID">{{item.description}}</mat-option>
+                                                    </mat-select>
+                                                </mat-form-field>
+                                            </form>
+                                        </div>
+                                        <div class=""
+                                            *ngIf="tk.tardySetupId===30060  || tk.tardySetupId===30059 ">
+                                            <mat-form-field class="w-full text-md mt-1" appearance="outline">
+                                                <mat-label class="label-font-size">Display On</mat-label>
+                                                <mat-select formControlName="sumDisplayOn" [placeholder]="''">
+                                                    <mat-option *ngFor="let item of displayOnTypeF"
+                                                        [value]="item.dropdownID">{{item.description}}</mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-span-2"
+                                            *ngIf="tk.tardySetupId===30057 || tk.tardySetupId===30058 || tk.tardySetupId===30060">
+                                            <mat-form-field class="w-full text-md mt-1" appearance="outline">
+                                                <mat-label class="label-font-size">Decaying grace starts
+                                                    (Minutes)</mat-label>
+                                                <mat-icon class="icon-size-5 : mr-2" matPrefix
+                                                    svgIcon="mat_outline:info"></mat-icon>
+                                                <input type="number" formControlName="tardyGraceMins" matInput
+                                                    [placeholder]="'Decaying grace starts'">
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-span-2"
+                                            *ngIf="tk.tardySetupId===30057 || tk.tardySetupId===30058 || tk.tardySetupId===30060 ">
+                                            <mat-form-field class="w-full text-md mt-1" appearance="outline">
+                                                <mat-label class="label-font-size">Decaying Start (Minutes)</mat-label>
+                                                <mat-icon class="icon-size-5 : mr-2" matPrefix
+                                                    svgIcon="mat_outline:info"></mat-icon>
+                                                <input type="number" formControlName="tardyMins" matInput type="number"
+                                                    [placeholder]="'Decaying Start'">
+                                            </mat-form-field>
+                                        </div>
+                                        <div class=""
+                                            *ngIf="tk.tardySetupId===30057 || tk.tardySetupId===30058 || tk.tardySetupId===30060 ">
+                                            <mat-form-field class="w-full text-md mt-1" appearance="outline">
+                                                <mat-label class="label-font-size">Rounding Policy</mat-label>
+                                                <mat-select formControlName="tardyRoundingId"
+                                                    [placeholder]="'Hours Work'" (selectionChange)="Disablerd()">
+                                                    <mat-option *ngFor="let item of roundPolicyType"
+                                                        [value]="item.dropdownID">{{item.description}}</mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                        </div>
+                                        <!-- <div class=""
+                                            *ngIf="tk.tardySetupId===30057 || tk.tardySetupId===30058 || tk.tardySetupId===30060 ">
+                                            <mat-form-field class="w-full text-md h-12 mt-1" appearance="outline">
+                                                <mat-label class="label-font-size">Time Period</mat-label>
+                                                <mat-select [placeholder]="''">
+                                                    <mat-option [value]="1">Daily</mat-option>
+                                                    <mat-option [value]="2">Per Cut-Off</mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                        </div> -->
+
+                                    </div>
+                                    <div>
+                                        <!-- tardines && undertime: tardines -->
+                                        <mat-card class="mat-elevation-z0" *ngIf="tk.tardySetupId===30059">
+                                            <mat-card-title>
+                                                <app-card-title title="Tardy Grace Minutes "></app-card-title>
+                                            </mat-card-title>
+                                            <mat-card-content>
+                                                <form [formGroup]="TardySetupForm">
+                                                    <!-- tardines -->
+                                                    <div>
+                                                        <div class="grid grid-cols-11 gap-2 mt-1 h-15">
+                                                            <div class="col-span-2">
+                                                                <mat-form-field class="w-full text-md mt-1"
+                                                                    appearance="outline">
+                                                                    <mat-label class="label-font-size">Decaying grace starts (Minutes)</mat-label>
+                                                                    <mat-icon class="icon-size-5 : mr-2" matPrefix
+                                                                        svgIcon="mat_outline:info"></mat-icon>
+                                                                    <input formControlName="tardyGraceMins" matInput
+                                                                        type="number"
+                                                                        [placeholder]="'Decaying grace starts'">
+                                                                </mat-form-field>
+                                                            </div>
+                                                            <div class="col-span-2">
+                                                                <mat-form-field class="w-full text-md mt-1"
+                                                                    appearance="outline">
+                                                                    <mat-label class="label-font-size">Decaying Start (Minutes)</mat-label>
+                                                                    <mat-icon class="icon-size-5 : mr-2" matPrefix
+                                                                        svgIcon="mat_outline:info"></mat-icon>
+                                                                    <input formControlName="tardyMins" matInput
+                                                                        type="number" [placeholder]="'Decaying Start'">
+                                                                </mat-form-field>
+                                                            </div>
+                                                            <div class="col-span-2">
+                                                                <mat-form-field class="w-full text-md mt-1"
+                                                                    appearance="outline">
+                                                                    <mat-label class="label-font-size">Rounding Policy</mat-label>
+                                                                    <mat-select formControlName="tardyRoundingId"
+                                                                        [placeholder]="'Hours Work'"
+                                                                        (selectionChange)="Disablerd()">
+                                                                        <mat-option *ngFor="let item of roundPolicyType"
+                                                                            [value]="item.dropdownID">{{item.description}}</mat-option>
+                                                                    </mat-select>
+                                                                </mat-form-field>
+                                                            </div>
+                                                            <div class="">
+                                                            <!-- <mat-form-field class="w-full text-md h-12 mt-1" appearance="outline">
+                                                                <mat-label class="label-font-size">Time Period</mat-label>
+                                                                <mat-select [placeholder]="''">
+                                                                    <mat-option [value]="1">Time Period</mat-option>
+                                                                    <mat-option [value]="2">Daily</mat-option>
+                                                                    <mat-option [value]="3">Per Cut-Off</mat-option>
+                                                                </mat-select>
+                                                            </mat-form-field> -->
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </mat-card-content>
+                                        </mat-card>
+
+                                        <!-- Tardiness -->
+                                        <mat-card class="mat-elevation-z0"
+                                            *ngIf="ts.tardyRoundingId===30061 && (tk.tardySetupId===30060||tk.tardySetupId===30057||tk.tardySetupId===30059)">
+                                            <mat-divider></mat-divider><br>
+                                            <mat-card-title>
+                                                <app-card-title title="{{byBracketTitle}}"></app-card-title>
+                                            </mat-card-title>
+                                            <mat-card-content>
+                                                <form [formGroup]="BracketForm">
+                                                    <table #bracket mat-table [dataSource]="ds_tardiness"
+                                                        class="mat-elevation-z0 border">
+                                                        <ng-container matColumnDef="from">
+                                                            <th mat-header-cell *matHeaderCellDef class="pl-8 text-md">
+                                                                From (Minutes)</th>
+                                                            <td mat-cell *matCellDef="let element;let i = index"
+                                                                class="pl-8 text-md">
+                                                                <div class="h-13 mt-1">
+                                                                    <mat-form-field class="w-full text-md"
+                                                                        appearance="outline">
+                                                                        <mat-icon class="icon-size-5 : mr-2" matPrefix
+                                                                            svgIcon="mat_outline:info"></mat-icon>
+                                                                        <input matInput type="number" min="0"
+                                                                            [value]="element.from"
+                                                                            (change)="val_changes(ds_tardiness,'from',$event,i)"
+                                                                            (blur)="lessthanmin('from','to',i)">
+                                                                    </mat-form-field>
+                                                                    <div *ngIf="istimeerrrorto" class="text-red-400"
+                                                                        required>Invalid Time</div>
+                                                                </div>
+                                                            </td>
+                                                        </ng-container>
+                                                        <ng-container matColumnDef="to">
+                                                            <th mat-header-cell *matHeaderCellDef class="pl-8 text-md">
+                                                                To (Minutes)</th>
+                                                            <td mat-cell *matCellDef="let element;let i = index"
+                                                                class="pl-8 text-md">
+                                                                <div class="h-13 mt-1">
+                                                                    <mat-form-field class="w-full text-md"
+                                                                        appearance="outline">
+                                                                        <mat-icon class="icon-size-5 : mr-2" matPrefix
+                                                                            svgIcon="mat_outline:info"></mat-icon>
+                                                                        <input matInput type="number" min="0"
+                                                                            [value]="element.to"
+                                                                            (change)="val_changes(ds_tardiness,'to',$event,i)"
+                                                                            (blur)="greaterthansum('from','to',i)">
+                                                                    </mat-form-field>
+                                                                    <div *ngIf="istimeerrror" class="text-red-400"
+                                                                        required>Invalid Time</div>
+                                                                </div>
+                                                            </td>
+                                                        </ng-container>
+                                                        <ng-container matColumnDef="deduct">
+                                                            <th mat-header-cell *matHeaderCellDef class="pl-8 text-md">
+                                                                Deduct</th>
+                                                            <td mat-cell *matCellDef="let element;let i = index"
+                                                                class="pl-8 text-md">
+                                                                <div class="h-13 mt-1">
+                                                                    <mat-form-field class="w-full text-md"
+                                                                        appearance="outline">
+                                                                        <mat-icon class="icon-size-5 : mr-2" matPrefix
+                                                                            svgIcon="mat_outline:info"></mat-icon>
+                                                                        <input matInput type="number" min="0"
+                                                                            [value]="element.deduct"
+                                                                            (change)="val_changes(ds_tardiness,'deduct',$event,i)">
+                                                                    </mat-form-field>
+                                                                </div>
+                                                            </td>
+                                                        </ng-container>
+                                                        <ng-container matColumnDef="delete">
+                                                            <th mat-header-cell *matHeaderCellDef class="pl-8 text-md">
+                                                                <button mat-flat-button class="w-full"
+                                                                    (click)="addTardiness()" color="primary">
+                                                                    <mat-icon class="icon-size-5 mt-4 mr-1"
+                                                                        [svgIcon]="'heroicons_solid:plus-circle'"></mat-icon>Add
+                                                                </button>
+                                                            </th>
+                                                            <td mat-cell *matCellDef="let element" class="pl-8 text-md">
+                                                                <div class="mt-1 mb-1">
+                                                                    <button type="button" matSuffix
+                                                                        (click)="deleteTardiness(i)"
+                                                                        class="Bborder w-full" mat-icon-button
+                                                                        color="warn">
+                                                                        <mat-icon class="mt-4"
+                                                                            svgIcon="mat_outline:delete"></mat-icon>
+                                                                    </button>
+                                                                </div>
+                                                            </td>
+                                                        </ng-container>
+                                                        <tr mat-header-row *matHeaderRowDef="dc_bracket"></tr>
+                                                        <tr mat-row *matRowDef="let row; columns: dc_bracket;"></tr>
+                                                    </table>
+                                                </form>
+                                            </mat-card-content>
+                                            <!-- Sum of tardyness ===== -->
+                                        </mat-card>
+
+                                        <!-- tardines && undertime: undertime -->
+                                        <mat-divider *ngIf="tk.tardySetupId===30059"></mat-divider><br>
+                                        <mat-card class="mat-elevation-z0" *ngIf="tk.tardySetupId===30059">
+                                            <mat-card-title>
+                                                <app-card-title title="Undertime Grace Minutes "></app-card-title>
+                                            </mat-card-title>
+                                            <mat-card-content>
+                                                <form [formGroup]="TardySetupForm">
+                                                    <div>
+                                                        <div class="grid grid-cols-11 gap-2 mt-1 h-15">
+
+                                                            <div class="col-span-2">
+                                                                <mat-form-field class="w-full text-md mt-1"
+                                                                    appearance="outline">
+                                                                    <mat-label class="label-font-size">Decaying grace
+                                                                        starts (Minutes)</mat-label>
+                                                                    <mat-icon class="icon-size-5 : mr-2" matPrefix
+                                                                        svgIcon="mat_outline:info"></mat-icon>
+                                                                    <input formControlName="undertimeGraceMins" matInput
+                                                                        type="number"
+                                                                        [placeholder]="'Decaying grace starts'">
+                                                                </mat-form-field>
+                                                            </div>
+                                                            <div class="col-span-2">
+                                                                <mat-form-field class="w-full text-md mt-1"
+                                                                    appearance="outline">
+                                                                    <mat-label class="label-font-size">Decaying Start
+                                                                        (Minutes)</mat-label>
+                                                                    <mat-icon class="icon-size-5 : mr-2" matPrefix
+                                                                        svgIcon="mat_outline:info"></mat-icon>
+                                                                    <input formControlName="undertimeMins" matInput
+                                                                        type="number" [placeholder]="'Decaying Start'">
+                                                                </mat-form-field>
+                                                            </div>
+                                                            <div class="col-span-2">
+                                                                <mat-form-field class="w-full text-md mt-1"
+                                                                    appearance="outline">
+                                                                    <mat-label class="label-font-size">Rounding
+                                                                        Policy</mat-label>
+                                                                    <mat-select formControlName="undertimeRoundingId"
+                                                                        [placeholder]="'Hours Work'"
+                                                                        (selectionChange)="Disablerdunder()">
+                                                                        <mat-option *ngFor="let item of roundPolicyType"
+                                                                            [value]="item.dropdownID">{{item.description}}</mat-option>
+                                                                    </mat-select>
+                                                                </mat-form-field>
+                                                            </div>
+                                                            <div class="">
+                                                            <!-- <mat-form-field class="w-full text-md h-12 mt-1" appearance="outline">
+                                                                <mat-label class="label-font-size">Time Period</mat-label>
+                                                                <mat-select [placeholder]="''">
+                                                                    <mat-option [value]="1">Time Period</mat-option>
+                                                                    <mat-option [value]="2">Daily</mat-option>
+                                                                    <mat-option [value]="3">Per Cut-Off</mat-option>
+                                                                </mat-select>
+                                                            </mat-form-field> -->
+                                                             </div>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </mat-card-content>
+                                        </mat-card>
+
+                                        <!-- UnderTime -->
+                                        <mat-card class="mat-elevation-z0"
+                                            *ngIf="(ts.tardyRoundingId===30061||ts.undertimeRoundingId===30061) && (tk.tardySetupId===30058||tk.tardySetupId===30059)">
+                                            <mat-divider></mat-divider><br>
+                                            <mat-card-title>
+                                                <app-card-title title="Undertime"></app-card-title>
+                                            </mat-card-title>
+                                            <mat-card-content>
+                                                <form [formGroup]="BracketUndertimeForm">
+                                                    <table #bracketUndertime mat-table [dataSource]="ds_undertime"
+                                                        class="mat-elevation-z0 border">
+                                                        <ng-container matColumnDef="from">
+                                                            <th mat-header-cell *matHeaderCellDef class="pl-8 text-md">
+                                                                From (Minutes)</th>
+                                                            <td mat-cell *matCellDef="let element;let i = index"
+                                                                class="pl-8 text-md">
+                                                                <div class="h-13 mt-1">
+                                                                    <mat-form-field class="w-full text-md"
+                                                                        appearance="outline">
+                                                                        <mat-icon class="icon-size-5 : mr-2" matPrefix
+                                                                            svgIcon="mat_outline:info"></mat-icon>
+                                                                        <input matInput type="number" min="0"
+                                                                            [value]="element.from"
+                                                                            (change)="val_changes(ds_undertime,'from',$event,i)"
+                                                                            (blur)="lessthanmin('from','to',i)">
+                                                                    </mat-form-field>
+                                                                    <div *ngIf="istimeerrrorto" class="text-red-400"
+                                                                        required>Invalid Time</div>
+                                                                </div>
+                                                            </td>
+                                                        </ng-container>
+                                                        <ng-container matColumnDef="to">
+                                                            <th mat-header-cell *matHeaderCellDef class="pl-8 text-md">
+                                                                To (Minutes)</th>
+                                                            <td mat-cell *matCellDef="let element;let i = index"
+                                                                class="pl-8 text-md">
+                                                                <div class="h-13 mt-1">
+                                                                    <mat-form-field class="w-full text-md"
+                                                                        appearance="outline">
+                                                                        <mat-icon class="icon-size-5 : mr-2" matPrefix
+                                                                            svgIcon="mat_outline:info"></mat-icon>
+                                                                        <input matInput type="number" min="0"
+                                                                            [value]="element.to"
+                                                                            (change)="val_changes(ds_undertime,'to',$event,i)"
+                                                                            (blur)="greaterthansum('from','to',i)">
+                                                                    </mat-form-field>
+                                                                    <div *ngIf="istimeerrror" class="text-red-400"
+                                                                        required>Invalid Time</div>
+                                                                </div>
+                                                            </td>
+                                                        </ng-container>
+                                                        <ng-container matColumnDef="deduct">
+                                                            <th mat-header-cell *matHeaderCellDef class="pl-8 text-md">
+                                                                Deduct</th>
+                                                            <td mat-cell *matCellDef="let element;let i = index"
+                                                                class="pl-8 text-md">
+                                                                <div class="h-13 mt-1">
+                                                                    <mat-form-field class="w-full text-md"
+                                                                        appearance="outline">
+                                                                        <mat-icon class="icon-size-5 : mr-2" matPrefix
+                                                                            svgIcon="mat_outline:info"></mat-icon>
+                                                                        <input matInput type="number" min="0"
+                                                                            [value]="element.deduct"
+                                                                            (change)="val_changes(ds_undertime,'deduct',$event,i)">
+                                                                    </mat-form-field>
+                                                                </div>
+                                                            </td>
+                                                        </ng-container>
+                                                        <ng-container matColumnDef="delete">
+                                                            <th mat-header-cell *matHeaderCellDef class="pl-8 text-md">
+                                                                <button mat-flat-button class="w-full"
+                                                                    (click)="addUndertime()" color="primary">
+                                                                    <mat-icon class="icon-size-5 mt-4 mr-1"
+                                                                        [svgIcon]="'heroicons_solid:plus-circle'"></mat-icon>Add
+                                                                </button>
+                                                            </th>
+                                                            <td mat-cell *matCellDef="let element" class="pl-8 text-md">
+                                                                <div class="mt-1 mb-1">
+                                                                    <button type="button" matSuffix
+                                                                        (click)="deleteUndertime(i)"
+                                                                        class="Bborder w-full" mat-icon-button
+                                                                        color="warn">
+                                                                        <mat-icon class="mt-4"
+                                                                            svgIcon="mat_outline:delete"></mat-icon>
+                                                                    </button>
+                                                                </div>
+                                                            </td>
+                                                        </ng-container>
+                                                        <tr mat-header-row *matHeaderRowDef="dc_bracket"></tr>
+                                                        <tr mat-row *matRowDef="let row; columns: dc_bracket;"></tr>
+                                                    </table>
+                                                </form>
+                                            </mat-card-content>
+                                            <!-- Sum of tardyness ===== -->
+                                        </mat-card>
+
+                                    </div>
+                                </form>
+                            </mat-card-content>
+                        </mat-tab>
+                        <mat-tab label="Night Diff">
+                            <div class="grid grid-cols-6 gap-2 h-14">
+                                <mat-form-field class="w-full text-md mt-1" appearance="outline">
+                                    <mat-label class="label-font-size">Setup Night Diff</mat-label>
+                                    <mat-select formControlName="hasNightDiff" [placeholder]="'Hours Work'">
+                                        <mat-option [value]="true">Yes</mat-option>
+                                        <mat-option [value]="false">No</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                                <mat-form-field class="w-full text-md mt-1" appearance="outline"
+                                    *ngIf="tk.hasNightDiff">
+                                    <mat-label class="label-font-size">Hours Between</mat-label>
+                                    <mat-icon class="icon-size-5 : mr-2" matPrefix
+                                        svgIcon="mat_outline:access_time"></mat-icon>
+                                    <input formControlName="nightDiffIn" readonly
+                                        type="text" matTimepicker #t="matTimepicker">
+                                </mat-form-field>
+                                <div>
+                                    <mat-form-field class="w-full text-md mt-1 h-12" appearance="outline"
+                                        *ngIf="tk.hasNightDiff" required>
+                                        <mat-label class="label-font-size">To</mat-label>
+                                        <mat-icon class="icon-size-5 : mr-2" matPrefix
+                                            svgIcon="mat_outline:access_time"></mat-icon>
+                                        <input formControlName="nightDiffOut" readonly
+                                            type="text" matTimepicker #t="matTimepicker">
+                                    </mat-form-field>
+                                    <div *ngIf="istimeerrror" class="text-red-400" required>Invalid Time</div>
+                                </div>
+                                <mat-form-field class="w-full text-md mt-1" appearance="outline"
+                                    *ngIf="tk.hasNightDiff">
+                                    <mat-label class="label-font-size">Rounding Policy</mat-label>
+                                    <mat-select formControlName="nightDiffRoundingId" [placeholder]="''"
+                                        (selectionChange)="nightDiff_RP()">
+                                        <mat-option *ngFor="let item of roundPolicyType"
+                                            [value]="item.dropdownID">{{item.description}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                                <mat-form-field class="w-full text-md mt-1" appearance="outline"
+                                    *ngIf="tk.hasNightDiff">
+                                    <mat-label class="label-font-size">Minimum (Minutes)</mat-label>
+                                    <mat-icon class="icon-size-5 : mr-2" matPrefix
+                                        svgIcon="mat_outline:info"></mat-icon>
+                                    <input formControlName="nightDiffMin" matInput type="number"
+                                        [placeholder]="'Minutes'">
+                                </mat-form-field>
+                                <mat-form-field class="w-full text-md mt-1" appearance="outline"
+                                    *ngIf="tk.hasNightDiff">
+                                    <mat-label class="label-font-size">Maximum (Minutes)</mat-label>
+                                    <mat-icon class="icon-size-5 : mr-2" matPrefix
+                                        svgIcon="mat_outline:info"></mat-icon>
+                                    <input formControlName="nightDiffMax" matInput type="number"
+                                        [placeholder]="'Minutes'">
+                                </mat-form-field>
+                            </div>
+                            <br><mat-divider *ngIf="tk.nightDiffRoundingId===30061"></mat-divider><br>
+                            <mat-card class="mat-elevation-z0" *ngIf="tk.nightDiffRoundingId===30061">
+                                <mat-card-title>
+                                    <app-card-title title="Nightdiff By Bracket "></app-card-title>
+                                </mat-card-title>
+                                <mat-card-content>
+                                    <form [formGroup]="BracketNightDiffForm">
+                                        <table #bracketNightDiff mat-table [dataSource]="ds_nightdiff"
+                                            class="mat-elevation-z0 border">
+                                            <ng-container matColumnDef="from">
+                                                <th mat-header-cell *matHeaderCellDef class="pl-8 text-md">From
+                                                    (Minutes)</th>
+                                                <td mat-cell *matCellDef="let element;let i = index"
+                                                    class="pl-8 text-md">
+                                                    <div class="h-13 mt-1">
+                                                        <mat-form-field class="w-full text-md" appearance="outline">
+                                                            <mat-icon class="icon-size-5 : mr-2" matPrefix
+                                                                svgIcon="mat_outline:info"></mat-icon>
+                                                            <input matInput type="number" min="0" [value]="element.from"
+                                                                (change)="val_changes(ds_nightdiff,'from',$event,i)"
+                                                                (blur)="lessthanmin('from','to',i)">
+                                                        </mat-form-field>
+                                                        <div *ngIf="istimeerrrorto" class="text-red-400" required>
+                                                            Invalid Time</div>
+                                                    </div>
+                                                </td>
+                                            </ng-container>
+                                            <ng-container matColumnDef="to">
+                                                <th mat-header-cell *matHeaderCellDef class="pl-8 text-md">To (Minutes)
+                                                </th>
+                                                <td mat-cell *matCellDef="let element;let i = index"
+                                                    class="pl-8 text-md">
+                                                    <div class="h-13 mt-1">
+                                                        <mat-form-field class="w-full text-md" appearance="outline">
+                                                            <mat-icon class="icon-size-5 : mr-2" matPrefix
+                                                                svgIcon="mat_outline:info"></mat-icon>
+                                                            <input matInput type="number" min="0" [value]="element.to"
+                                                                (change)="val_changes(ds_nightdiff,'to',$event,i)"
+                                                                (blur)="greaterthansum('from','to',i)">
+                                                        </mat-form-field>
+                                                        <div *ngIf="istimeerrror" class="text-red-400" required>Invalid
+                                                            Time</div>
+                                                    </div>
+                                                </td>
+                                            </ng-container>
+                                            <ng-container matColumnDef="deduct">
+                                                <th mat-header-cell *matHeaderCellDef class="pl-8 text-md">Deduct</th>
+                                                <td mat-cell *matCellDef="let element;let i = index"
+                                                    class="pl-8 text-md">
+                                                    <div class="h-13 mt-1">
+                                                        <mat-form-field class="w-full text-md" appearance="outline">
+                                                            <mat-icon class="icon-size-5 : mr-2" matPrefix
+                                                                svgIcon="mat_outline:info"></mat-icon>
+                                                            <input matInput type="number" min="0"
+                                                                [value]="element.deduct"
+                                                                (change)="val_changes(ds_nightdiff,'deduct',$event,i)">
+                                                        </mat-form-field>
+                                                    </div>
+                                                </td>
+                                            </ng-container>
+                                            <ng-container matColumnDef="delete">
+                                                <th mat-header-cell *matHeaderCellDef class="pl-8 text-md">
+                                                    <button mat-flat-button class="w-full" (click)="addNightDiff()"
+                                                        color="primary">
+                                                        <mat-icon class="icon-size-5 mt-4 mr-1"
+                                                            [svgIcon]="'heroicons_solid:plus-circle'"></mat-icon>Add
+                                                    </button>
+                                                </th>
+                                                <td mat-cell *matCellDef="let element" class="pl-8 text-md">
+                                                    <div class="mt-1 mb-1">
+                                                        <button type="button" matSuffix (click)="deleteNightDiff(i)"
+                                                            class="Bborder w-full" mat-icon-button color="warn">
+                                                            <mat-icon class="mt-4"
+                                                                svgIcon="mat_outline:delete"></mat-icon>
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </ng-container>
+                                            <tr mat-header-row *matHeaderRowDef="dc_bracket"></tr>
+                                            <tr mat-row *matRowDef="let row; columns: dc_bracket;"></tr>
+                                        </table>
+                                    </form>
+
+                                </mat-card-content>
+                            </mat-card>
+                        </mat-tab>
+                        <mat-tab label="Regular and Restday Overtime">
+                            <mat-card-title>
+                                <app-card-title title="Regular Overtime"></app-card-title>
+                            </mat-card-title>
+                            <div class="flex flex-nowrap gap-2 h-15">
+                                <!-- Regular===== -->
+                                <mat-form-field class="w-80 hover:w-120 text-md mt-1" appearance="outline">
+                                    <mat-label class="label-font-size">OverTime Hours Basis</mat-label>
+                                    <mat-select (selectionChange)="clear('regularOt')" formControlName="regularOTTypeId" [placeholder]="'Hours Work'">
+                                        <mat-option *ngFor="let item of regular_RG_OT_Type"
+                                            [value]="item.dropdownID">{{item.description}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                                <!-- <mat-form-field *ngIf="timekeepingCategoryForm.value.regularOTTypeId == 30635 || timekeepingCategoryForm.value.regularOTTypeId == 30627 || timekeepingCategoryForm.value.regularOTTypeId ==30636  || timekeepingCategoryForm.value.regularOTTypeId ==30065 " class="w-80 text-md mt-1" appearance="outline">
+                                    <mat-label class="label-font-size">Break Hours Basis</mat-label>
+                                    <mat-select formControlName="regularBreakHours" [placeholder]="'Hours Work'">
+                                        <mat-option *ngFor="let item of hoursbasis"
+                                        [value]="item.dropdownID">{{item.description}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field> -->
+                                <div class="mt-1" *ngIf="timekeepingCategoryForm.value.regularOTTypeId == 30064 || timekeepingCategoryForm.value.regularOTTypeId == 30066 || timekeepingCategoryForm.value.regularOTTypeId ==30065 || timekeepingCategoryForm.value.regularOTTypeId == 31141 ">
+                                    <app-dropdown-custom [all]="false" [multiple]="false" [control]="timekeepingCategoryForm.get('regularOTBreakTypeId')"
+                                    [options]="breakType" [useControl]="true" [type]="1044"></app-dropdown-custom>
+                                </div>
+                                <!-- <mat-form-field class="w-80 text-md mt-1" appearance="outline" *ngIf="timekeepingCategoryForm.value.regularOTTypeId == 30066 || timekeepingCategoryForm.value.regularOTTypeId ==30065">
+                                    <mat-label class="label-font-size">Min (Hours)</mat-label>
+                                    <mat-icon class="iconsize icon-size-5 : mr-2" matPrefix
+                                        svgIcon="mat_outline:info"></mat-icon>
+                                    <input class="input" type="number" formControlName="regularMin" matInput [placeholder]="'Min (Hours)'">
+                                </mat-form-field>
+                                <mat-form-field class="w-80 text-md mt-1" appearance="outline" *ngIf="timekeepingCategoryForm.value.regularOTTypeId == 30066 || timekeepingCategoryForm.value.regularOTTypeId ==30065">
+                                    <mat-label class="label-font-size">Max (Hours)</mat-label>
+                                    <mat-icon class="iconsize icon-size-5 : mr-2" matPrefix
+                                        svgIcon="mat_outline:info"></mat-icon>
+                                    <input class="input" type="number" formControlName="regularMax" matInput [placeholder]="'Max (Hours)'">
+                                </mat-form-field> -->
+                            </div>
+                            <mat-card-title>
+                                <app-card-title title="Rest Day Overtime"></app-card-title>
+                            </mat-card-title>
+                            <div class="flex flex-nowrap gap-2 h-15">
+                                <!-- RestDay==== -->
+                                <mat-form-field class="w-80 hover:w-120 text-md mt-1" appearance="outline">
+                                    <mat-label class="label-font-size">Overtime Based on</mat-label>
+                                    <mat-select formControlName="rDOTTypeId" [placeholder]="'Hours Work'">
+                                        <mat-option *ngFor="let item of regular_RG_OT_Type"
+                                            [value]="item.dropdownID">{{item.description}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                                <!-- <mat-form-field *ngIf="timekeepingCategoryForm.value.rDOTTypeId == 30064 || timekeepingCategoryForm.value.rDOTTypeId == 30066 || timekeepingCategoryForm.value.rDOTTypeId == 30065 || timekeepingCategoryForm.value.rDOTTypeId == 31141" class="w-80 text-md mt-1" appearance="outline">
+                                    <mat-label class="label-font-size">Break Hours Basis</mat-label>
+                                    <mat-select formControlName="rDBreakHours" [placeholder]="'Hours Work'">
+                                        <mat-option *ngFor="let item of hoursbasis"
+                                        [value]="item.dropdownID">{{item.description}}</mat-option>
+                                    </mat-select> 31141
+                                </mat-form-field> -->
+                                <div class="mt-1" *ngIf="timekeepingCategoryForm.value.rDOTTypeId == 30064
+                                || timekeepingCategoryForm.value.rDOTTypeId == 30066
+                                || timekeepingCategoryForm.value.rDOTTypeId == 30065
+                                || timekeepingCategoryForm.value.rDOTTypeId == 31141">
+                                    <app-dropdown-custom [all]="false" [multiple]="false" [control]="timekeepingCategoryForm.get('rDOTBreakTypeId')"
+                                    [options]="breakType" [useControl]="true" [type]="1044"></app-dropdown-custom>
+                                </div>
+
+                                <mat-form-field class="w-80 text-md mt-1" appearance="outline" *ngIf="timekeepingCategoryForm.value.rDOTTypeId == 30065">
+                                    <mat-label class="label-font-size">RD After Sched In (minutes)</mat-label>
+                                    <mat-icon class="iconsize icon-size-5 : mr-2" matPrefix
+                                        svgIcon="mat_outline:info"></mat-icon>
+                                    <input class="input" type="number" formControlName="rdMinutesAfterSchedIn" matInput [placeholder]="" >
+                                </mat-form-field>
+                                <!-- <mat-form-field class="w-80 text-md mt-1" appearance="outline">
+                                    <mat-label class="label-font-size">Threshold hrs after clock in (hrs)</mat-label>
+                                    <mat-icon class="iconsize icon-size-5 : mr-2" matPrefix
+                                        svgIcon="mat_outline:info"></mat-icon>
+                                    <input (blur)="convert('thresholdHoursAfterClockIn')" class="input" type="text" formControlName="thresholdHoursAfterClockIn"  matInput [placeholder]="">
+                                </mat-form-field> -->
+                                <mat-form-field class="w-80 text-md mt-1" appearance="outline" *ngIf="timekeepingCategoryForm.value.rDOTTypeId == 30066 || timekeepingCategoryForm.value.rDOTTypeId == 30065 ">
+                                    <mat-label class="label-font-size">Min (Hours)</mat-label>
+                                    <mat-icon class="iconsize icon-size-5 : mr-2" matPrefix
+                                        svgIcon="mat_outline:info"></mat-icon>
+                                    <input class="input" type="number" formControlName="rDMin" matInput [placeholder]="'Min (Hours)'">
+                                </mat-form-field>
+                                <mat-form-field class="w-80 text-md mt-1" appearance="outline" *ngIf="timekeepingCategoryForm.value.rDOTTypeId == 30066 || timekeepingCategoryForm.value.rDOTTypeId == 30065">
+                                    <mat-label class="label-font-size">Max (Hours)</mat-label>
+                                    <mat-icon class="iconsize icon-size-5 : mr-2" matPrefix
+                                        svgIcon="mat_outline:info"></mat-icon>
+                                    <input class="input" type="number" formControlName="rDMax" matInput [placeholder]="'Max (Hours)'">
+                                </mat-form-field>
+                                <mat-form-field class="w-30 text-md mt-1" *ngIf="timekeepingCategoryForm.value.rDOTTypeId !==0" appearance="outline">
+                                    <mat-label class="label-font-size">Based On</mat-label>
+                                    <mat-select formControlName="rdBaseOn" [placeholder]="'Hours Work'">
+                                        <mat-option *ngFor="let item of baseOnType"
+                                            [value]="item.dropdownID">{{item.description}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <!-- working resday  -->
+                            <div class=" grid grid-cols-3 gap-2">
+                                <mat-card-title>
+                                    <app-card-title title="Working Restday"></app-card-title>
+                                </mat-card-title>
+                            </div>
+                            <div class="flex flex-nowrap gap-2 h-15">
+                                <mat-form-field class="w-80 hover:w-120 text-md mt-1" appearance="outline">
+                                    <mat-label class="label-font-size">Overtime hours basis</mat-label>
+                                    <mat-select formControlName="wRDOTTypeId" [placeholder]="'Hours Work'">
+                                        <mat-option *ngFor="let item of regular_RD_OT_Type"
+                                            [value]="item.dropdownID">{{item.description}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                                <!-- <mat-form-field  *ngIf="timekeepingCategoryForm.value.wRDOTTypeId == 30635 || timekeepingCategoryForm.value.wRDOTTypeId == 30627 || timekeepingCategoryForm.value.wRDOTTypeId ==30636  || timekeepingCategoryForm.value.wRDOTTypeId ==30065 " class="w-80 text-md mt-1" appearance="outline">
+                                    <mat-label class="label-font-size">Break Hours Basis</mat-label>
+                                    <mat-select formControlName="workBreakHours" [placeholder]="'Hours Work'">
+                                        <mat-option *ngFor="let item of hoursbasis"
+                                        [value]="item.dropdownID">{{item.description}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field> -->
+                                <div class="mt-1" *ngIf="timekeepingCategoryForm.value.wRDOTTypeId  == 30064
+                                || timekeepingCategoryForm.value.wRDOTTypeId  == 30066
+                                || timekeepingCategoryForm.value.wRDOTTypeId  == 30065
+                                || timekeepingCategoryForm.value.wRDOTTypeId  == 30627
+                                || timekeepingCategoryForm.value.wRDOTTypeId  == 30636
+                                || timekeepingCategoryForm.value.wRDOTTypeId  == 30635">
+                                    <app-dropdown-custom [all]="false" [multiple]="false" [control]="timekeepingCategoryForm.get('wRDOTBreakTypeId')"
+                                    [options]="breakType" [useControl]="true" [type]="1044"></app-dropdown-custom>
+                                </div>
+
+                                <mat-form-field class="w-80 text-md mt-1" appearance="outline" *ngIf="timekeepingCategoryForm.value.wRDOTTypeId  == 30066">
+                                    <mat-label class="label-font-size">Min (Hours)</mat-label>
+                                    <mat-icon class="iconsize icon-size-5 : mr-2" matPrefix
+                                        svgIcon="mat_outline:info"></mat-icon>
+                                    <input class="input" type="number" formControlName="wRDMin" matInput [placeholder]="'Min (Hours)'">
+                                </mat-form-field>
+                                <mat-form-field class="w-80 text-md mt-1" appearance="outline" *ngIf="timekeepingCategoryForm.value.wRDOTTypeId  == 30066">
+                                    <mat-label class="label-font-size">Max (Hours)</mat-label>
+                                    <mat-icon class="iconsize icon-size-5 : mr-2" matPrefix
+                                        svgIcon="mat_outline:info"></mat-icon>
+                                    <input class="input" type="number" formControlName="wRDMax" matInput [placeholder]="'Max (Hours)'">
+                                </mat-form-field>
+                                <mat-form-field class="w-30 text-md mt-1" *ngIf="timekeepingCategoryForm.value.wRDOTTypeId  !== 0" appearance="outline">
+                                    <mat-label class="label-font-size">Based On</mat-label>
+                                    <mat-select formControlName="wrdBaseOn" [placeholder]="'Hours Work'">
+                                        <mat-option *ngFor="let item of baseOnType"
+                                            [value]="item.dropdownID">{{item.description}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                                <!-- //additional -->
+                            <mat-card-title>
+                                <app-card-title title="Pre-Approve Overtime"></app-card-title>
+                            </mat-card-title>
+                            <div class="flex flex-nowrap gap-2 h-15">
+                                <!-- pre-approval-overtime===== -->
+                                <mat-form-field class="w-80 hover:w-120 text-md mt-1" appearance="outline">
+                                    <mat-label class="label-font-size">OverTime Hours Basis</mat-label>
+                                    <mat-select (selectionChange)="clear('preaaproveot')" formControlName="preAppOTTypeId" [placeholder]="'Hours Work'">
+                                        <mat-option *ngFor="let item of preapp_PR_OT_Type"
+                                            [value]="item.dropdownID">{{item.description}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                                 <!-- <mat-form-field *ngIf="timekeepingCategoryForm.value.preAppOTTypeId== 30635 || timekeepingCategoryForm.value.preAppOTTypeId== 30627 || timekeepingCategoryForm.value.preAppOTTypeId==30636  || timekeepingCategoryForm.value.preAppOTTypeId==30065 " class="w-80 text-md mt-1" appearance="outline">
+                                    <mat-label class="label-font-size">Break Hours Basis</mat-label>
+                                    <mat-select formControlName="preBreakHours" [placeholder]="'Hours Work'">
+                                        <mat-option *ngFor="let item of hoursbasis"
+                                        [value]="item.dropdownID">{{item.description}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field> -->
+                                <div class="mt-1" *ngIf="timekeepingCategoryForm.value.preAppOTTypeId == 31146">
+                                    <app-dropdown-custom [all]="false" [multiple]="false" [control]="timekeepingCategoryForm.get('preAppOTBreakTypeId')"
+                                    [options]="breakType" [useControl]="true" [type]="1044"></app-dropdown-custom>
+                                </div>
+                                <mat-form-field class="w-80 text-md mt-1" appearance="outline" *ngIf="timekeepingCategoryForm.value.preAppOTTypeId == 30066">
+                                    <mat-label class="label-font-size">Min (Hours)</mat-label>
+                                    <mat-icon class="iconsize icon-size-5 : mr-2" matPrefix
+                                        svgIcon="mat_outline:info"></mat-icon>
+                                    <input class="input" type="number" formControlName="preAppMin" matInput [placeholder]="'Min (Hours)'">
+                                </mat-form-field>
+                                <mat-form-field class="w-80 text-md mt-1" appearance="outline" *ngIf="timekeepingCategoryForm.value.preAppOTTypeId == 30066">
+                                    <mat-label class="label-font-size">Max (Hours)</mat-label>
+                                    <mat-icon class="iconsize icon-size-5 : mr-2" matPrefix
+                                        svgIcon="mat_outline:info"></mat-icon>
+                                    <input class="input" type="number" formControlName="preAppMax" matInput [placeholder]="'Max (Hours)'">
+                                </mat-form-field>
+                            </div>
+                        </mat-tab>
+                        <mat-tab label="Holiday">
+                            <!-- ==================== regular holiday ========================= -->
+                            <mat-card-title>
+                                <app-card-title title="Regular Holiday"></app-card-title>
+                            </mat-card-title>
+                            <div class="flex flex-nowrap gap-2 h-15">
+                                <mat-form-field class="w-30 text-md mt-1" appearance="outline">
+                                    <mat-label class="label-font-size">Based On</mat-label>
+                                    <mat-select formControlName="rHBased" [placeholder]="'Hours Work'">
+                                        <mat-option *ngFor="let item of baseOnType"
+                                            [value]="item.dropdownID">{{item.description}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                                    <mat-form-field class="w-80 hover:w-100 text-md mt-1" appearance="outline">
+                                        <mat-label class="label-font-size">Holiday Rule</mat-label>
+                                        <mat-select formControlName="rHRule" [placeholder]="'Hours Work'">
+                                            <mat-option *ngFor="let item of holidayRuleType"
+                                                [value]="item.dropdownID">{{item.description}}</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                    <mat-form-field class="w-80 hover:w-120 text-md mt-1" appearance="outline">
+                                        <mat-label class="label-font-size">With Shift</mat-label>
+                                        <mat-select (selectionChange)="clear('regularholiday')" formControlName="rHShift" [placeholder]="'Holiday hours are'">
+                                            <mat-option *ngFor="let item of regular_PR_OT_Type"
+                                                [value]="item.dropdownID">{{item.description}}</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                    <!-- <mat-form-field class="w-80 text-md mt-1" appearance="outline" *ngIf="timekeepingCategoryForm.value.rHShift== 30635 || timekeepingCategoryForm.value.rHShift== 30627 || timekeepingCategoryForm.value.rHShift==30636  || timekeepingCategoryForm.value.rHShift==30065 ">
+                                        <mat-label class="label-font-size">Break Hours Basis</mat-label>
+                                        <mat-select formControlName="rHHours" [placeholder]="'Hours Work'">
+                                            <mat-option *ngFor="let item of hoursbasis"
+                                            [value]="item.dropdownID">{{item.description}}</mat-option>
+                                        </mat-select>
+                                    </mat-form-field> -->
+                                <div class="mt-1" *ngIf="timekeepingCategoryForm.value.rHShift !== 31141">
+                                    <app-dropdown-custom [all]="false" [multiple]="false" [control]="timekeepingCategoryForm.get('rhHolidayBreak')"
+                                    [options]="breakType" [useControl]="true" [type]="1044"></app-dropdown-custom>
+                                </div>
+                                <!-- <div class="col-span-2">
+                                    <mat-form-field class="w-full text-md mt-1" appearance="outline">
+                                        <mat-label class="label-font-size">Without Shift</mat-label>
+                                        <mat-select formControlName="rhNoShift" [placeholder]="'Holiday hours are'">
+                                            <mat-option *ngFor="let item of regular_RD_OT_Type"
+                                                [value]="item.dropdownID">{{item.description}}</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div> -->
+                                    <mat-form-field class="w-80 text-md mt-1" appearance="outline" *ngIf="tk.rHRule===30069">
+                                        <mat-label class="label-font-size">Consider restday prior to holiday as
+                                            working</mat-label>
+                                        <mat-select formControlName="rHPrio" [placeholder]="'Hours Work'">
+                                            <mat-option [value]="true">Yes</mat-option>
+                                            <mat-option [value]="false">No</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                <mat-form-field class="w-40 text-md mt-1" appearance="outline" *ngIf="timekeepingCategoryForm.value.rHShift==30066">
+                                    <mat-label class="label-font-size">Min Hrs</mat-label>
+                                    <mat-icon class="iconsize icon-size-5 : mr-2" matPrefix
+                                        svgIcon="mat_outline:info"></mat-icon>
+                                    <input class="input" type="number" formControlName="rHMin" matInput [placeholder]="''">
+                                </mat-form-field>
+                                <mat-form-field class="w-40 text-md mt-1" appearance="outline" *ngIf="timekeepingCategoryForm.value.rHShift==30066">
+                                    <mat-label class="label-font-size">Max Hrs</mat-label>
+                                    <mat-icon class="iconsize icon-size-5 : mr-2" matPrefix
+                                        svgIcon="mat_outline:info"></mat-icon>
+                                    <input class="input" type="number" formControlName="rHMax" matInput [placeholder]="''">
+                                </mat-form-field>
+                            </div>
+
+                             <!-- ==================== Special Non-Working Holiday ========================= -->
+                            <mat-card-title>
+                                <app-card-title title="Special Non-Working Holiday"></app-card-title>
+                            </mat-card-title>
+                            <div class="flex flex-nowrap gap-2 h-15">
+                                <mat-form-field class="w-30 text-md mt-1" appearance="outline">
+                                    <mat-label class="label-font-size">Based On</mat-label>
+                                    <mat-select formControlName="sNHBased" [placeholder]="'Hours Work'">
+                                        <mat-option *ngFor="let item of baseOnType"
+                                            [value]="item.dropdownID">{{item.description}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                                    <mat-form-field class="w-80 hover:w-100 text-md mt-1" appearance="outline">
+                                        <mat-label class="label-font-size">Holiday Rule</mat-label>
+                                        <mat-select formControlName="sNHRule" [placeholder]="'Hours Work'">
+                                            <mat-option *ngFor="let item of holidayRuleType"
+                                                [value]="item.dropdownID">{{item.description}}</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                    <mat-form-field class="w-80 hover:w-120 text-md mt-1" appearance="outline">
+                                        <mat-label class="label-font-size">With Shift</mat-label>
+                                        <mat-select (selectionChange)="clear('specialholiday')" formControlName="sNHShift" [placeholder]="'Holiday hours are'">
+                                            <mat-option *ngFor="let item of regular_PR_OT_Type"
+                                                [value]="item.dropdownID">{{item.description}}</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                <!-- <div *ngIf="timekeepingCategoryForm.value.sNHShift==30635 || timekeepingCategoryForm.value.sNHShift==30627 || timekeepingCategoryForm.value.sNHShift==30636  || timekeepingCategoryForm.value.sNHShift==30065 ">
+                                    <mat-form-field class="w-80 text-md mt-1" appearance="outline">
+                                        <mat-label class="label-font-size">Break Hours Basis</mat-label>
+                                        <mat-select formControlName="sNHours" [placeholder]="'Hours Work'">
+                                            <mat-option *ngFor="let item of hoursbasis"
+                                            [value]="item.dropdownID">{{item.description}}</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div> -->
+                                <div class="mt-1" *ngIf="timekeepingCategoryForm.value.sNHShift !== 31141">
+                                    <app-dropdown-custom [all]="false" [multiple]="false" [control]="timekeepingCategoryForm.get('snHolidayBreak')"
+                                    [options]="breakType" [useControl]="true" [type]="1044"></app-dropdown-custom>
+                                </div>
+                                <!-- <div class="col-span-2">
+                                    <mat-form-field class="w-80 text-md mt-1" appearance="outline">
+                                        <mat-label class="label-font-size">Without Shift</mat-label>
+                                        <mat-select formControlName="snhNoShift" [placeholder]="'Holiday hours are'">
+                                            <mat-option *ngFor="let item of regular_RD_OT_Type"
+                                                [value]="item.dropdownID">{{item.description}}</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div> -->
+                                <div *ngIf="tk.sNHRule===30069">
+                                    <mat-form-field class="w-80 text-md mt-1" appearance="outline">
+                                        <mat-label class="label-font-size">Consider restday prior to holiday as
+                                            working</mat-label>
+                                        <mat-select formControlName="sHPrio" [placeholder]="'Hours Work'">
+                                            <mat-option [value]="true">Yes</mat-option>
+                                            <mat-option [value]="false">No</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                                <mat-form-field class="w-40 text-md mt-1" appearance="outline" *ngIf="timekeepingCategoryForm.value.sNHShift==30066">
+                                    <mat-label class="label-font-size">Min Hrs</mat-label>
+                                    <mat-icon class="iconsize icon-size-5 : mr-2" matPrefix
+                                        svgIcon="mat_outline:info"></mat-icon>
+                                    <input class="input" type="number" formControlName="sNHMin" matInput [placeholder]="''">
+                                </mat-form-field>
+                                <mat-form-field class="w-40 text-md mt-1" appearance="outline" *ngIf="timekeepingCategoryForm.value.sNHShift==30066">
+                                    <mat-label class="label-font-size">Max Hrs</mat-label>
+                                    <mat-icon class="iconsize icon-size-5 : mr-2" matPrefix
+                                        svgIcon="mat_outline:info"></mat-icon>
+                                    <input class="input" type="number" formControlName="sNHMax" matInput [placeholder]="''">
+                                </mat-form-field>
+                            </div>
+
+                             <!-- ==================== Special Working Holiday ========================= -->
+
+                            <mat-card-title>
+                                <app-card-title title="Special Working Holiday"></app-card-title>
+                            </mat-card-title>
+                            <div class="flex flex-nowrap gap-2 h-15">
+                                <mat-form-field class="w-30 text-md mt-1" appearance="outline">
+                                    <mat-label class="label-font-size">Based On</mat-label>
+                                    <mat-select formControlName="sWHBased" [placeholder]="'Hours Work'">
+                                        <mat-option *ngFor="let item of baseOnType"
+                                            [value]="item.dropdownID">{{item.description}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                                    <mat-form-field class="w-80 hover:w-100 text-md mt-1" appearance="outline">
+                                        <mat-label class="label-font-size">Holiday Rule</mat-label>
+                                        <mat-select formControlName="sWHRule" [placeholder]="'Hours Work'">
+                                            <mat-option *ngFor="let item of holidayRuleType"
+                                                [value]="item.dropdownID">{{item.description}}</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                    <mat-form-field class="w-80 hover:w-120 text-md mt-1" appearance="outline">
+                                        <mat-label class="label-font-size">With Shift</mat-label>
+                                        <mat-select (selectionChange)="clear('specialworkingholiday')" formControlName="sWHShift" [placeholder]="'Holiday hours are'">
+                                            <mat-option *ngFor="let item of regular_PR_OT_Type"
+                                                [value]="item.dropdownID">{{item.description}}</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                <!-- <div *ngIf="timekeepingCategoryForm.value.swhShift==30635 || timekeepingCategoryForm.value.swhShift==30627 || timekeepingCategoryForm.value.swhShift==30636  || timekeepingCategoryForm.value.swhShift==30065 ">
+                                    <mat-form-field class="w-80 text-md mt-1" appearance="outline">
+                                        <mat-label class="label-font-size">Break Hours Basis</mat-label>
+                                        <mat-select formControlName="sWHours" [placeholder]="'Hours Work'">
+                                            <mat-option *ngFor="let item of hoursbasis"
+                                        [value]="item.dropdownID">{{item.description}}</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div> -->
+                                <div class=" mt-1" *ngIf="timekeepingCategoryForm.value.sWHShift !== 31141">
+                                    <app-dropdown-custom [all]="false" [multiple]="false"  [control]="timekeepingCategoryForm.get('swHolidayBreak')"
+                                    [options]="breakType" [useControl]="true" [type]="1044"></app-dropdown-custom>
+                                </div>
+                                <!-- <div class="col-span-2">
+                                    <mat-form-field class="w-80 text-md mt-1" appearance="outline">
+                                        <mat-label class="label-font-size">Without Shift</mat-label>
+                                        <mat-select formControlName="swhNoShift" [placeholder]="'Holiday hours are'">
+                                            <mat-option *ngFor="let item of regular_RD_OT_Type"
+                                                [value]="item.dropdownID">{{item.description}}</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div> -->
+                                <div *ngIf="tk.sWHRule===30069">
+                                    <mat-form-field class="w-80 text-md mt-1" appearance="outline">
+                                        <mat-label class="label-font-size">Consider restday prior to holiday as
+                                            working</mat-label>
+                                        <mat-select formControlName="sWHPrio" [placeholder]="'Hours Work'">
+                                            <mat-option [value]="true">Yes</mat-option>
+                                            <mat-option [value]="false">No</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                                <mat-form-field class="w-40 text-md mt-1" appearance="outline" *ngIf="timekeepingCategoryForm.value.sWHShift==30066">
+                                    <mat-label class="label-font-size">Min Hrs</mat-label>
+                                    <mat-icon class="iconsize icon-size-5 : mr-2" matPrefix
+                                        svgIcon="mat_outline:info"></mat-icon>
+                                    <input class="input" type="number" formControlName="sWHMin" matInput [placeholder]="''">
+                                </mat-form-field>
+                                <mat-form-field class="w-40 text-md mt-1" appearance="outline" *ngIf="timekeepingCategoryForm.value.sWHShift==30066">
+                                    <mat-label class="label-font-size">Max Hrs</mat-label>
+                                    <mat-icon class="iconsize icon-size-5 : mr-2" matPrefix
+                                        svgIcon="mat_outline:info"></mat-icon>
+                                    <input class="input" type="number" formControlName="sWHMax" matInput [placeholder]="''">
+                                </mat-form-field>
+                            </div>
+
+                             <!-- ==================== Company Holiday ========================= -->
+
+                            <mat-card-title>
+                                <app-card-title title="Company Holiday"></app-card-title>
+                            </mat-card-title>
+                            <div class="flex flex-nowrap gap-2 h-18">
+                                <mat-form-field class="w-30 text-md mt-1" appearance="outline">
+                                    <mat-label class="label-font-size">Based On</mat-label>
+                                    <mat-select  formControlName="cHBased" [placeholder]="'Hours Work'">
+                                        <mat-option *ngFor="let item of baseOnType"
+                                            [value]="item.dropdownID">{{item.description}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                                    <mat-form-field class="w-80 hover:w-100 text-md mt-1" appearance="outline">
+                                        <mat-label class="label-font-size">Holiday Rule</mat-label>
+                                        <mat-select formControlName="cHRule" [placeholder]="'Hours Work'">
+                                            <mat-option *ngFor="let item of holidayRuleType"
+                                                [value]="item.dropdownID">{{item.description}}</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                    <mat-form-field class="w-80 hover:w-120 text-md mt-1" appearance="outline">
+                                        <mat-label class="label-font-size">With Shift</mat-label>
+                                        <mat-select (selectionChange)="clear('companyholiday')" formControlName="cHShift" [placeholder]="'Holiday hours are'">
+                                            <mat-option *ngFor="let item of regular_PR_OT_Type"
+                                                [value]="item.dropdownID">{{item.description}}</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                <!-- <div *ngIf="timekeepingCategoryForm.value.cHShift==30635 || timekeepingCategoryForm.value.cHShift==30627 || timekeepingCategoryForm.value.cHShift==30636  || timekeepingCategoryForm.value.cHShift==30065 ">
+                                    <mat-form-field  class="w-80 text-md mt-1" appearance="outline">
+                                        <mat-label class="label-font-size">Break Hours Basis</mat-label>
+                                        <mat-select formControlName="cHHours" [placeholder]="'Hours Work'">
+                                            <mat-option *ngFor="let item of hoursbasis"
+                                            [value]="item.dropdownID">{{item.description}}</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div> -->
+                                <div class=" mt-1" *ngIf="timekeepingCategoryForm.value.cHShift !== 31141">
+                                    <app-dropdown-custom [all]="false" [multiple]="false"  [control]="timekeepingCategoryForm.get('chHolidayBreak')"
+                                    [options]="breakType" [useControl]="true" [type]="1044"></app-dropdown-custom>
+                                </div>
+                                <!-- <div class="col-span-2">
+                                    <mat-form-field class="w-80 text-md mt-1" appearance="outline">
+                                        <mat-label class="label-font-size">Without Shift</mat-label>
+                                        <mat-select formControlName="chNoShift" [placeholder]="'Holiday hours are'">
+                                            <mat-option *ngFor="let item of regular_RD_OT_Type"
+                                                [value]="item.dropdownID">{{item.description}}</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div> -->
+                                <div *ngIf="tk.cHRule===30069">
+                                    <mat-form-field class="w-80 text-md mt-1" appearance="outline">
+                                        <mat-label class="label-font-size">Consider restday prior to holiday as
+                                            working</mat-label>
+                                        <mat-select formControlName="cHPrio" [placeholder]="'Hours Work'">
+                                            <mat-option [value]="true">Yes</mat-option>
+                                            <mat-option [value]="false">No</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                                <mat-form-field class="w-40 text-md mt-1" appearance="outline" *ngIf="timekeepingCategoryForm.value.cHShift==30066">
+                                    <mat-label class="label-font-size">Min Hrs</mat-label>
+                                    <mat-icon class="iconsize icon-size-5 : mr-2" matPrefix
+                                        svgIcon="mat_outline:info"></mat-icon>
+                                    <input class="input" type="number" formControlName="cHMin" matInput [placeholder]="''">
+                                </mat-form-field>
+                                <mat-form-field class="w-40 text-md mt-1" appearance="outline" *ngIf="timekeepingCategoryForm.value.cHShift==30066">
+                                    <mat-label class="label-font-size">Max Hrs</mat-label>
+                                    <mat-icon class="iconsize icon-size-5 : mr-2" matPrefix
+                                        svgIcon="mat_outline:info"></mat-icon>
+                                    <input class="input" type="number" formControlName="cHMax" matInput [placeholder]="''">
+                                </mat-form-field>
+                            </div>
+                        </mat-tab>
+                        <mat-tab label="Threshold">
+                            <mat-card class="mat-elevation-z0">
+                                <mat-card-title>
+                                    <app-card-title title="Threshold"></app-card-title>
+                                </mat-card-title>
+                                <mat-card-content>
+                                    <div class="grid grid-cols-11 gap-2 h-13">
+                                        <mat-form-field class="w-full text-md col-span-2" appearance="outline">
+                                            <mat-label class="label-font-size">Hours after sched out</mat-label>
+                                            <mat-icon class="iconsize icon-size-5 : mr-2" matPrefix
+                                                svgIcon="mat_outline:info"></mat-icon>
+                                            <input class="input" formControlName="placeHolderOut" type="number" min="0"
+                                                matInput [placeholder]="'Hours after sched out'">
+                                        </mat-form-field>
+                                        <mat-form-field class="w-full text-md col-span-2" appearance="outline">
+                                            <mat-label class="label-font-size">Hours before sched in</mat-label>
+                                            <mat-icon class="iconsize icon-size-5 : mr-2" matPrefix
+                                                svgIcon="mat_outline:info"></mat-icon>
+                                            <input class="input" formControlName="placeHolderIn" type="number" min="0"
+                                                matInput [placeholder]="'Hours before sched in'">
+                                        </mat-form-field>
+                                        <mat-form-field class="w-full text-md col-span-2" appearance="outline">
+                                            <mat-label class="label-font-size">Use [after/before] rule when rules
+                                                overlap</mat-label>
+                                            <mat-select formControlName="placeholderOverlap" [placeholder]="''">
+                                                <mat-option [value]="1">After</mat-option>
+                                                <mat-option [value]="0">Before</mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                </mat-card-content>
+                            </mat-card>
+                        </mat-tab>
+                    </mat-tab-group>
+                </form>
+            </mat-card-content>
+        </mat-card>
+        <!-- </div> -->
+    </div>

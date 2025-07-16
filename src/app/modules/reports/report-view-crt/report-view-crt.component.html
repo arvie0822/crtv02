@@ -1,0 +1,70 @@
+<div class="flex flex-col flex-auto min-w-0">
+
+    <!-- Main -->
+    <div class="flex-auto sm:p-2 w-full min-w-0 sm:absolute sm:inset-0 sm:overflow-auto text-md">
+        <!-- [style]="isView && !this.isWidgets?'margin-top: 100px;':''"> -->
+        <mat-card class="body-card mat-elevation-z0">
+            <!-- <app-card-title *ngIf="!isView" title="Reports"></app-card-title> -->
+
+            <div class="flex" *ngIf="settings.upload">
+                <div class="mr-3 w-50 h-13">
+                    <mat-form-field class="w-50 text-md h-13" appearance="outline" *ngIf="!isUploading">
+                        <mat-icon class="uploadbutton icon-size-5 maticon" matSuffix svgIcon="upload" (click)="file.click($event)"></mat-icon>
+                        <input type="file" #file (change)="uploadFile($event)" accept=".xls,.xlsx" hidden/>
+                        <input class="input" readonly matInput id="fielUpload" placeholder="Choose File" (click)="file.click($event)"/>
+                      </mat-form-field>
+    
+                      <mat-form-field class="w-50 text-md h-13" appearance="outline" *ngIf="isUploading">
+                        <mat-icon class="uploadbutton icon-size-5 maticon rotate" matSuffix svgIcon="feather:loader"></mat-icon>
+                        <input type="file" #file accept=".xls,.xlsx" hidden/>
+                        <input class="input" readonly matInput id="fielUpload" placeholder="Validating..."/>
+                      </mat-form-field>
+
+                      <input class="mt-8 -z-50 absolute" type="number" [value]="uploadType" [(ngModel)]="uploadType" id="uploadType"/>
+                      <input class="mt-8 -z-50 absolute" type="text" [value]="dataTemp" [(ngModel)]="dataTemp" id="uploadView"/>
+                </div>
+
+                <button *ngIf="settings.upload" id="uploadNow" mat-flat-button color="primary" class="text-sm w-[10px] mr-3 mt-1" (click)="submitEvent()" matTooltip="Upload">
+                    <mat-icon matSuffix svgIcon="mat_outline:upload"></mat-icon>
+                </button>
+    
+                <button *ngIf="settings.add" mat-flat-button color="primary" class="text-sm w-[10px] mr-3 mt-1" (click)="addEvent()"  matTooltip="Add">
+                    <mat-icon matSuffix svgIcon="mat_outline:add"></mat-icon>
+                </button>
+    
+                <button *ngIf="settings.delete" mat-flat-button color="warn" class="text-sm w-[10px] mr-3 mt-1"  (click)="deleteEvent()" matTooltip="Delete">
+                    <mat-icon matSuffix svgIcon="mat_outline:delete"></mat-icon>
+                </button>
+
+                <button *ngIf="isUploadMode" mat-flat-button color="primary" class="text-sm w-[10px] mr-3 mt-1"  (click)="listEvent()" matTooltip="View List">
+                    <mat-icon matSuffix svgIcon="mat_outline:view_list"></mat-icon>
+                </button>
+            </div>
+
+            <div *ngIf="isUploadMode">
+                <section class="example-container mat-elevation-z0 z-10" tabindex="0">
+                    <table mat-table [dataSource]="dataSource" class="mat-elevation-z0 border-2">
+                        <ng-container *ngFor="let column of displayedColumns" [matColumnDef]="column.col">
+                            <th mat-header-cell *matHeaderCellDef class="no-wrap"> {{column.colName}} </th>
+                            <td mat-cell *matCellDef="let element"  class="padding hover-effect" [ngClass]="{'witherror': element.withError}">
+                                <div [ngClass]="{'txterror': element.withError}" class="truncate-cell" [matTooltip]="element[column.col]">{{element[column.col]}}</div>
+                            </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="columnsToDisplay; sticky: true"></tr>
+                        <tr mat-row *matRowDef="let row; columns: columnsToDisplay;"></tr>
+                    </table>
+                </section>
+                <mat-paginator class="paganation" [length]="totalRows" [pageSize]="request.Length" [pageIndex]="request.Start"
+                (page)="handlePageEvent($event)"
+                [pageSizeOptions]="[50,100]" aria-label="Select page of users"></mat-paginator>
+            </div>
+
+            <div *ngIf="!isUploadMode">
+                <app-report-view [parentDetails]="parentDetails"></app-report-view>
+            </div>
+
+        </mat-card>
+
+    </div>
+</div>

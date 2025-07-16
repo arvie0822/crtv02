@@ -1,0 +1,18 @@
+
+<mat-card class="mat-elevation-z0">
+    <mat-card-header>
+        <mat-card-title>Delete Upload</mat-card-title>
+        <mat-card-subtitle>Warning! This Action cannot be undone.</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+
+    <div class="h-13 mr-3">
+        <app-dropdown-custom [value]="fileName" (selected)="fileName = $event" [options]="[]" [useControl]="false" [all]="false" [multiple]="false" [type]="1054" dropdownValue="encryptID"></app-dropdown-custom>
+    </div>
+
+    </mat-card-content>
+    <mat-card-actions align="end">
+        <button mat-stroked-button (click)="cencel()">Cancel</button>&nbsp;
+        <button mat-flat-button color="primary" (click)="onClick()">Confirm</button>
+    </mat-card-actions>
+</mat-card>

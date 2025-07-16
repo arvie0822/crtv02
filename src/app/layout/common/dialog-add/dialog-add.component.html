@@ -1,0 +1,75 @@
+
+<mat-card class="mat-elevation-z0">
+    <mat-card-header>
+        <mat-card-title>{{isEdit ? 'Edit' : 'Add'}} Users</mat-card-title>
+        <mat-card-subtitle>Fill out all required fields.</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+
+        <form [formGroup]="userForm">
+
+            <div class="grid grid-cols-2">
+                <mat-form-field class="w-60 text-md h-13 mr-3" appearance="outline">
+                    <mat-label class="label-font-size">Employee ID</mat-label>
+                    <input  class="input" matInput formControlName="employeeCode" [matTooltip]="valideName('employeeCode','Employee ID')" matTooltipClass="error-tip">
+                </mat-form-field>
+
+                <mat-form-field class="w-60 text-md h-13 mr-3" appearance="outline" [matTooltip]="valideName('firstName','First Name')" matTooltipClass="error-tip">
+                    <mat-label class="label-font-size">First Name</mat-label>
+                    <input  class="input" matInput formControlName="firstName" [value]="uf.firstName | titlecase">
+                </mat-form-field>
+        
+                <mat-form-field class="w-60 text-md h-13 mr-3" appearance="outline" [matTooltip]="valideName('middleName','Middle Name')" matTooltipClass="error-tip">
+                    <mat-label class="label-font-size">Middle Name</mat-label>
+                    <input  class="input" matInput formControlName="middleName" [value]="uf.middleName | titlecase">
+                </mat-form-field>
+        
+                <mat-form-field class="w-60 text-md h-13 mr-3" appearance="outline" [matTooltip]="valideName('lastName','Last Name')" matTooltipClass="error-tip">
+                    <mat-label class="label-font-size">Last Name</mat-label>
+                    <input  class="input" matInput formControlName="lastName" [value]="uf.lastName | titlecase">
+                </mat-form-field>
+        
+                <div class="h-13 w-60"><app-dropdown [control]="userForm.get('suffix')"  [options]="dropdownOptions.suffixDef" [icon]="'mat_outline:info'" [type]="30" [useControl]="true"> </app-dropdown></div>
+                
+                <mat-form-field class="w-60 text-md h-13 mr-3" appearance="outline">
+                    <mat-label class="label-font-size">Birth Day</mat-label>
+                    <input formControlName="birthDate" matInput [matDatepicker]="bd" readonly [placeholder]="'MM/DD/YYYY'" (click)="bd.open()">
+                    <mat-datepicker-toggle matSuffix [for]="bd"></mat-datepicker-toggle>
+                    <mat-datepicker #bd></mat-datepicker>
+                </mat-form-field>
+
+                <mat-form-field class="w-60 text-md h-13 mr-3" appearance="outline">
+                    <mat-label class="label-font-size">Site</mat-label>
+                    <input  class="input" matInput formControlName="site" [value]="uf.site | titlecase">
+                </mat-form-field>
+
+                <!-- <div class="w-60 h-13 mr-3"><app-dropdown-custom    [control]="userForm.get('idSubCompany')" [type]="1001" [value]="uf.idSubCompany" [options]="dropdownOptions.subCompanyDef" [useControl]="true" ></app-dropdown-custom></div>
+                <div class="w-60 h-13 mr-3"><app-dropdown-hierarchy [control]="userForm.get('site')" [useControl]="true" [multiple]="false" [all]="false" [type]="1" [type_id]="-1" [id]="[uf.idSubCompany]"></app-dropdown-hierarchy></div> -->
+                <!-- <div class="h-13 w-60"><app-dropdown [placeholder]="'Site'" [options]="branchOptions" [multiple]="false" [field]="[]" (selectionChanges)="site = $event" ></app-dropdown></div> -->
+                <!-- <div class="h-13 w-60"><app-dropdown [placeholder]="'Account Type'" [options]="accountTypeOptions" [multiple]="false" [field]="[]" (selectionChanges)="site = $event" ></app-dropdown></div> -->
+                <!-- <div class="h-13 w-60"><app-dropdown [control]="userForm.get('accountType')"  [options]="accountTypeOptions" label="Account Type" [icon]="'mat_outline:info'" [type]="30"> </app-dropdown></div> -->
+        
+                <div class="h-13 w-60"><app-dropdown [control]="userForm.get('accountType')" label="Account Type" [options]="accountTypeOptions" [icon]="'mat_outline:info'" [type]="173" [useControl]="true"> </app-dropdown></div>
+
+                <!-- <mat-form-field class="w-60 text-md h-13 mr-3" appearance="outline">
+                    <mat-select formControlName="accountType" placeholder="Account Type">
+                        <mat-option *ngFor="let item of accountTypeOptions" [value]="item.dropdownID">
+                            {{ item.description }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field> -->
+
+                <mat-form-field class="w-60 text-md h-13 mr-3" appearance="outline">
+                    <mat-label class="label-font-size">Employee TIN</mat-label>
+                    <input  class="input" mask="000-000-000" matInput formControlName="employeeTin">
+                </mat-form-field>
+            </div>
+
+        </form>
+
+    </mat-card-content>
+    <mat-card-actions align="end">
+        <button mat-stroked-button (click)="cencel()">Cancel</button>&nbsp;
+        <button mat-flat-button color="primary" (click)="onClick()">Confirm</button>
+    </mat-card-actions>
+</mat-card>

@@ -1,0 +1,13 @@
+.field {
+    height: 50px;
+    /* width: 70%; */
+}
+.mat-icon{
+    position: relative;
+    bottom: 9px;
+}
+.mat-select{
+position: relative;
+bottom: 10px;
+font-size: medium;
+}

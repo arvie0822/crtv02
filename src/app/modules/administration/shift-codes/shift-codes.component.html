@@ -1,0 +1,1201 @@
+<div class="flex flex-col flex-auto min-w-0">
+  <!-- Main -->
+  <div class="flex-auto p-2 sm:p-4">
+    <!-- Content -->
+    <mat-card>
+      <mat-card-title>
+        <app-card-title title="Shift Codes" [sub]="true" [back]="true" (submitTap)="submit()"></app-card-title>
+      </mat-card-title>
+      <mat-card-content>
+        <form [formGroup]="shiftForm">
+          <div class="grid grid-cols-4 gap-x-5">
+            <mat-form-field class="w-full text-md" appearance="outline">
+              <mat-label class="label-font-size">Shift Name</mat-label>
+              <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+              <input matInput type="text" formControlName="shiftName" [placeholder]="'Shift Name'">
+            </mat-form-field>
+            <mat-form-field class="w-full text-md" appearance="outline">
+              <mat-label class="label-font-size">Description</mat-label>
+              <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+              <input matInput type="text" formControlName="description" [placeholder]="'Description'">
+            </mat-form-field>
+            <app-dropdown [control]="shiftForm.get('weekCount')" [options]="options" [icon]="'mat_outline:info'"
+              [type]="1002"> </app-dropdown>
+            <div class="pl-0 pt-3">
+              <mat-label class="mb-3">&nbsp;</mat-label>
+              <mat-checkbox class="example-margin" formControlName="isFlexi" color="primary">Is Flexi?</mat-checkbox>
+            </div>
+          </div>
+        </form>
+
+        <mat-divider class="mb-3"></mat-divider>
+        <mat-tab-group mat-align-tabs="start">
+          <mat-tab label="Week One">
+            <table #weekOneTable mat-table [dataSource]="weekOneSource" class="mat-elevation-z0 border">
+              <ng-container  matColumnDef="day">
+                <th class="head" mat-header-cell *matHeaderCellDef> Day </th>
+                <td mat-cell *matCellDef="let element"> {{element.description}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="restday">
+                <th class="RD" mat-header-cell *matHeaderCellDef>RD
+                  <br>
+                  <mat-slide-toggle class="mr-5" color="primary" (change)="handleHeader($event.checked, 'isRestDay', 'weekOne')">
+                  </mat-slide-toggle>
+                </th>
+                <td mat-cell *matCellDef="let element; let i = index">
+                  <mat-slide-toggle color="primary" (change)="handleToggleEvent($event.checked, i, 'weekOne')"
+                    [checked]="element.isRestDay"></mat-slide-toggle>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="timeIn">
+                <th mat-header-cell *matHeaderCellDef>Sched In
+                  <input class="put-border" [(ngModel)]="firsttimeIn"
+                    (ngModelChange)="handleHeader($event, 'timeIn', 'weekOne')" readonly [strict]="false" mode="12h"
+                    type="text" matTimepicker #t="matTimepicker" [placeholder]="'12:00 am'">
+                </th>
+                <td mat-cell *matCellDef="let element; let i = index">
+                  <input class="put-border" [(ngModel)]="element.timeIn" (ngModelChange)="handleTimeEvent(i, 'weekOne')"
+                    readonly [strict]="false" mode="12h" type="text" matTimepicker #t="matTimepicker"
+                    [placeholder]="'12:00 am'">
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="timeOut">
+                <th mat-header-cell *matHeaderCellDef> Sched Out
+                  <br>
+                  <input class="put-border" [(ngModel)]="firsttimeOut"
+                    (ngModelChange)="handleHeader($event, 'timeOut', 'weekOne')" readonly [strict]="false" mode="12h"
+                    type="text" matTimepicker #t="matTimepicker" [placeholder]="'12:00 am'">
+                </th>
+
+                <td mat-cell *matCellDef="let element; let i = index">
+                  <input class="put-border" [(ngModel)]="element.timeOut"
+                    (ngModelChange)="handleTimeEvent(i, 'weekOne')" readonly [strict]="false" mode="12h" type="text"
+                    matTimepicker #t="matTimepicker" [placeholder]="'12:00 am'">
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="totalWorkingHours">
+                <th mat-header-cell *matHeaderCellDef> Working Hrs
+                  <br>
+                  <input class="put-border" [(ngModel)]="firsttotalWorkingHours" [disabled]="!shiftForm.value.isFlexi"
+                    (change)="handleHeader($event.target.value, 'totalWorkingHours', 'weekOne')" matInput type="text"
+                    [placeholder]="'0'">
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <input class="put-border" [disabled]="!shiftForm.value.isFlexi"
+                    [(ngModel)]="element.totalWorkingHours" matInput type="text" [placeholder]="'0'">
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="halfDayIn">
+                <th mat-header-cell *matHeaderCellDef> Halfday In
+                  <br>
+                  <input class="put-border" [(ngModel)]="firsthalfDayIn"
+                    (ngModelChange)="handleHeader($event, 'halfDayIn', 'weekOne')" readonly [strict]="false" mode="12h"
+                    type="text" matTimepicker #t="matTimepicker" [placeholder]="'12:00 am'">
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <input class="put-border" [(ngModel)]="element.halfDayIn" readonly [strict]="false" mode="12h"
+                    type="text" matTimepicker #t="matTimepicker" [placeholder]="'12:00 am'">
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="halfDayInDaysCover">
+                <th mat-header-cell *matHeaderCellDef> Days Cover
+                  <br>
+                  <input class="put-border" [(ngModel)]="firsthalfDayInDaysCover"
+                    (change)="handleHeader($event.target.value, 'halfDayInDaysCover', 'weekOne')" matInput type="text"
+                    [placeholder]="'0'">
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <input class="put-border" [(ngModel)]="element.halfDayInDaysCover" matInput type="text"
+                    [placeholder]="'0'">
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="halfDayOut">
+                <th mat-header-cell *matHeaderCellDef> Halfday Out
+                  <br>
+                  <input class="put-border" [(ngModel)]="firsthalfDayOut"
+                    (ngModelChange)="handleHeader($event, 'halfDayOut', 'weekOne')" readonly [strict]="false" mode="12h"
+                    type="text" matTimepicker #t="matTimepicker" [placeholder]="'12:00 am'">
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <input class="put-border" [(ngModel)]="element.halfDayOut" readonly [strict]="false" mode="12h"
+                    type="text" matTimepicker #t="matTimepicker" [placeholder]="'12:00 am'">
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="halfDayOutDaysCover">
+                <th mat-header-cell *matHeaderCellDef> Days Cover
+                  <br>
+                  <input class="put-border" [(ngModel)]="firsthalfDayOutDaysCover"
+                    (change)="handleHeader($event.target.value, 'halfDayOutDaysCover', 'weekOne')" matInput type="text"
+                    [placeholder]="'0'">
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <input class="put-border" [(ngModel)]="element.halfDayOutDaysCover" matInput type="text"
+                    [placeholder]="'0'">
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="breaks">
+                <th mat-header-cell *matHeaderCellDef> Break Count
+                  <br>
+                  <mat-select class="put-border" placeholder="No Break" [(ngModel)]="firstbreakOne"
+                    (ngModelChange)="handleHeader($event, 'breaks', 'weekOne')">
+                    <mat-option *ngFor="let item of breakCount" [value]="item.id">{{item.description}}</mat-option>
+                  </mat-select>
+                </th>
+                <td mat-cell *matCellDef="let element; let i = index">
+                  <mat-select class="put-border" [(ngModel)]="element.breaks" placeholder="No Break"
+                    (ngModelChange)="handleBreakEvent(i, $event, 'weekOne')">
+                    <mat-option *ngFor="let item of breakCount" [value]="item.id">{{item.description}}</mat-option>
+                  </mat-select>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="firstBreakIn">
+                <th mat-header-cell *matHeaderCellDef> FIRST BREAK IN
+                  <br>
+                  <input class="put-border" [(ngModel)]="firstfirstBreakIn"
+                    (ngModelChange)="handleHeader($event, 'firstBreakIn', 'weekOne')" readonly [strict]="false"
+                    mode="12h" type="text" matTimepicker #t="matTimepicker" [placeholder]="'12:00 am'">
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <input *ngIf="!element.firstBreakHide" class="put-border" [(ngModel)]="element.firstBreakIn" readonly
+                    [strict]="false" mode="12h" type="text" matTimepicker #t="matTimepicker" [placeholder]="'12:00 am'">
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="firstBreakInDaysCover">
+                <th mat-header-cell *matHeaderCellDef> Days Cover
+                  <br>
+                  <input class="put-border" [(ngModel)]="firstfirstBreakInDaysCover"
+                    (change)="handleHeader($event.target.value, 'firstBreakInDaysCover', 'weekOne')" matInput
+                    type="text" [placeholder]="'0'">
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <input class="put-border" *ngIf="!element.firstBreakHide" [(ngModel)]="element.firstBreakInDaysCover"
+                    matInput type="text" [placeholder]="'0'">
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="firstBreakOut">
+                <th mat-header-cell *matHeaderCellDef> FIRST BREAK OUT
+                  <br>
+                  <input class="put-border" [(ngModel)]="firstfirstBreakOut"
+                    (ngModelChange)="handleHeader($event, 'firstBreakOut', 'weekOne')" readonly [strict]="false"
+                    mode="12h" type="text" matTimepicker #t="matTimepicker" [placeholder]="'12:00 am'">
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <input *ngIf="!element.firstBreakHide" class="put-border" [(ngModel)]="element.firstBreakOut" readonly
+                    [strict]="false" mode="12h" type="text" matTimepicker #t="matTimepicker" [placeholder]="'12:00 am'">
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="firstBreakOutDaysCover">
+                <th mat-header-cell *matHeaderCellDef> Days Cover
+                  <br>
+                  <input class="put-border" [(ngModel)]="firstfirstBreakOutDaysCover"
+                    (change)="handleHeader($event.target.value, 'firstBreakOutDaysCover', 'weekOne')" matInput
+                    type="text" [placeholder]="'0'">
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <input class="put-border" *ngIf="!element.firstBreakHide" [(ngModel)]="element.firstBreakOutDaysCover"
+                    matInput type="text" [placeholder]="'0'">
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="secondBreakIn">
+                <th mat-header-cell *matHeaderCellDef> SECOND BREAK IN
+                  <br>
+                  <input class="put-border" [(ngModel)]="firstsecondBreakIn"
+                    (ngModelChange)="handleHeader($event, 'secondBreakIn', 'weekOne')" readonly [strict]="false"
+                    mode="12h" type="text" matTimepicker #t="matTimepicker" [placeholder]="'12:00 am'">
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <input *ngIf="!element.secondBreakHide" class="put-border" [(ngModel)]="element.secondBreakIn"
+                    readonly [strict]="false" mode="12h" type="text" matTimepicker #t="matTimepicker"
+                    [placeholder]="'12:00 am'">
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="secondBreakInDaysCover">
+                <th mat-header-cell *matHeaderCellDef> Days Cover
+                  <br>
+                  <input class="put-border" [(ngModel)]="firstsecondBreakInDaysCover"
+                    (change)="handleHeader($event.target.value, 'secondBreakInDaysCover', 'weekOne')" matInput
+                    type="text" [placeholder]="'0'">
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <input class="put-border" *ngIf="!element.secondBreakHide"
+                    [(ngModel)]="element.secondBreakInDaysCover" matInput type="text" [placeholder]="'0'">
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="secondBreakOut">
+                <th mat-header-cell *matHeaderCellDef> SECOND BREAK OUT
+                  <br>
+                  <input class="put-border" [(ngModel)]="firstsecondBreakOut"
+                    (ngModelChange)="handleHeader($event, 'secondBreakOut', 'weekOne')" readonly [strict]="false"
+                    mode="12h" type="text" matTimepicker #t="matTimepicker" [placeholder]="'12:00 am'">
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <input *ngIf="!element.secondBreakHide" class="put-border" [(ngModel)]="element.secondBreakOut"
+                    readonly [strict]="false" mode="12h" type="text" matTimepicker #t="matTimepicker"
+                    [placeholder]="'12:00 am'">
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="secondBreakOutDaysCover">
+                <th mat-header-cell *matHeaderCellDef> Days Cover
+                  <br>
+                  <input class="put-border" [(ngModel)]="firstsecondBreakOutDaysCover"
+                    (change)="handleHeader($event.target.value, 'secondBreakOutDaysCover', 'weekOne')" matInput
+                    type="text" [placeholder]="'0'">
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <input class="put-border" *ngIf="!element.secondBreakHide"
+                    [(ngModel)]="element.secondBreakOutDaysCover" matInput type="text" [placeholder]="'0'">
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="thirdBreakIn">
+                <th mat-header-cell *matHeaderCellDef> THIRD BREAK IN
+                  <br>
+                  <input class="put-border" [(ngModel)]="firstthirdBreakIn"
+                    (ngModelChange)="handleHeader($event, 'thirdBreakIn', 'weekOne')" readonly [strict]="false"
+                    mode="12h" type="text" matTimepicker #t="matTimepicker" [placeholder]="'12:00 am'">
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <input *ngIf="!element.thirdBreakHide" class="put-border" [(ngModel)]="element.thirdBreakIn" readonly
+                    [strict]="false" mode="12h" type="text" matTimepicker #t="matTimepicker" [placeholder]="'12:00 am'">
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="thirdBreakInDaysCover">
+                <th mat-header-cell *matHeaderCellDef> Days Cover
+                  <br>
+                  <input class="put-border" [(ngModel)]="firstthirdBreakInDaysCover"
+                    (change)="handleHeader($event.target.value, 'thirdBreakInDaysCover', 'weekOne')" matInput
+                    type="text" [placeholder]="'0'">
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <input class="put-border" *ngIf="!element.thirdBreakHide" [(ngModel)]="element.thirdBreakInDaysCover"
+                    matInput type="text" [placeholder]="'0'">
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="thirdBreakOut">
+                <th mat-header-cell *matHeaderCellDef> THIRD BREAK OUT
+                  <br>
+                  <input class="put-border" [(ngModel)]="firstthirdBreakOut"
+                    (ngModelChange)="handleHeader($event, 'thirdBreakOut', 'weekOne')" readonly [strict]="false"
+                    mode="12h" type="text" matTimepicker #t="matTimepicker" [placeholder]="'12:00 am'">
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <input *ngIf="!element.thirdBreakHide" class="put-border" [(ngModel)]="element.thirdBreakOut" readonly
+                    [strict]="false" mode="12h" type="text" matTimepicker #t="matTimepicker" [placeholder]="'12:00 am'">
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="thirdBreakOutDaysCover">
+                <th mat-header-cell *matHeaderCellDef> Days Cover
+                  <br>
+                  <input class="put-border" [(ngModel)]="firstthirdBreakOutDaysCover"
+                    (change)="handleHeader($event.target.value, 'thirdBreakOutDaysCover', 'weekOne')" matInput
+                    type="text" [placeholder]="'0'">
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <input class="put-border" *ngIf="!element.thirdBreakHide" [(ngModel)]="element.thirdBreakOutDaysCover"
+                    matInput type="text" [placeholder]="'0'">
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="weekOneColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: weekOneColumns;"></tr>
+            </table>
+          </mat-tab>
+          <mat-tab *ngIf="shiftForm.value.weekCount > 1 ? true : false" label="Week Two">
+            <table #weekTwoTable mat-table [dataSource]="weekTwoSource" class="mat-elevation-z0 border">
+              <ng-container matColumnDef="day">
+                <th mat-header-cell *matHeaderCellDef> DAY </th>
+                <td mat-cell *matCellDef="let element"> {{element.description}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="restday">
+                <th mat-header-cell *matHeaderCellDef> RD
+                  <br>
+                  <mat-slide-toggle color="primary" class="mr-5" (change)="handleHeader($event.checked, 'isRestDay', 'weekTwo')">
+                  </mat-slide-toggle>
+                </th>
+                <td mat-cell *matCellDef="let element; let i = index">
+                  <mat-slide-toggle color="primary" (change)="handleToggleEvent($event.checked, i, 'weekTwo')"
+                    [checked]="element.isRestDay"></mat-slide-toggle>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="timeIn">
+                <th mat-header-cell *matHeaderCellDef> TIME IN
+                  <br>
+                  <input class="put-border" [(ngModel)]="secondtimeIn"
+                    (ngModelChange)="handleHeader($event, 'timeIn', 'weekTwo')" readonly [strict]="false" mode="12h"
+                    type="text" matTimepicker #t="matTimepicker" [placeholder]="'12:00 am'">
+                </th>
+                <td mat-cell *matCellDef="let element; let i = index">
+                  <input class="put-border" [(ngModel)]="element.timeIn" (ngModelChange)="handleTimeEvent(i, 'weekTwo')"
+                    readonly [strict]="false" mode="12h" type="text" matTimepicker #t="matTimepicker"
+                    [placeholder]="'12:00 am'">
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="timeOut">
+                <th mat-header-cell *matHeaderCellDef> TIME OUT
+                  <br>
+                  <input class="put-border" [(ngModel)]="secondtimeOut"
+                    (ngModelChange)="handleHeader($event, 'timeOut', 'weekTwo')" readonly [strict]="false" mode="12h"
+                    type="text" matTimepicker #t="matTimepicker" [placeholder]="'12:00 am'">
+                </th>
+
+                <td mat-cell *matCellDef="let element; let i = index">
+                  <input class="put-border" [(ngModel)]="element.timeOut"
+                    (ngModelChange)="handleTimeEvent(i, 'weekTwo')" readonly [strict]="false" mode="12h" type="text"
+                    matTimepicker #t="matTimepicker" [placeholder]="'12:00 am'">
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="totalWorkingHours">
+                <th mat-header-cell *matHeaderCellDef> WORKING HRS
+                  <br>
+                  <input class="put-border" [(ngModel)]="secondtotalWorkingHours" [disabled]="!shiftForm.value.isFlexi"
+                    (change)="handleHeader($event.target.value, 'totalWorkingHours', 'weekTwo')" matInput type="text"
+                    [placeholder]="'0'">
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <input class="put-border" [disabled]="!shiftForm.value.isFlexi"
+                    [(ngModel)]="element.totalWorkingHours" matInput type="text" [placeholder]="'0'">
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="halfDayIn">
+                <th mat-header-cell *matHeaderCellDef> HALFDAY IN
+                  <br>
+                  <input class="put-border" [(ngModel)]="secondhalfDayIn"
+                    (ngModelChange)="handleHeader($event, 'halfDayIn', 'weekTwo')" readonly [strict]="false" mode="12h"
+                    type="text" matTimepicker #t="matTimepicker" [placeholder]="'12:00 am'">
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <input class="put-border" [(ngModel)]="element.halfDayIn" readonly [strict]="false" mode="12h"
+                    type="text" matTimepicker #t="matTimepicker" [placeholder]="'12:00 am'">
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="halfDayInDaysCover">
+                <th mat-header-cell *matHeaderCellDef> Days Cover
+                  <br>
+                  <input class="put-border" [(ngModel)]="secondhalfDayInDaysCover"
+                    (change)="handleHeader($event.target.value, 'halfDayInDaysCover', 'weekTwo')" matInput type="text"
+                    [placeholder]="'0'">
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <input class="put-border" [(ngModel)]="element.halfDayInDaysCover" matInput type="text"
+                    [placeholder]="'0'">
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="halfDayOut">
+                <th mat-header-cell *matHeaderCellDef> HALFDAY OUT
+                  <br>
+                  <input class="put-border" [(ngModel)]="secondhalfDayOut"
+                    (ngModelChange)="handleHeader($event, 'halfDayOut', 'weekTwo')" readonly [strict]="false" mode="12h"
+                    type="text" matTimepicker #t="matTimepicker" [placeholder]="'12:00 am'">
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <input class="put-border" [(ngModel)]="element.halfDayOut" readonly [strict]="false" mode="12h"
+                    type="text" matTimepicker #t="matTimepicker" [placeholder]="'12:00 am'">
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="halfDayOutDaysCover">
+                <th mat-header-cell *matHeaderCellDef> Days Cover
+                  <br>
+                  <input class="put-border" [(ngModel)]="secondhalfDayOutDaysCover"
+                    (change)="handleHeader($event.target.value, 'halfDayOutDaysCover', 'weekTwo')" matInput type="text"
+                    [placeholder]="'0'">
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <input class="put-border" [(ngModel)]="element.halfDayOutDaysCover" matInput type="text"
+                    [placeholder]="'0'">
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="breaks">
+                <th mat-header-cell *matHeaderCellDef> BREAK COUNT
+                  <br>
+                  <mat-select class="put-border" placeholder="No Break" [(ngModel)]="secondbreakTwo"
+                    (ngModelChange)="handleHeader($event, 'breaks', 'weekTwo')">
+                    <mat-option *ngFor="let item of breakCount" [value]="item.id">{{item.description}}</mat-option>
+                  </mat-select>
+                </th>
+                <td mat-cell *matCellDef="let element; let i = index">
+                  <mat-select class="put-border" [(ngModel)]="element.breaks" placeholder="No Break"
+                    (ngModelChange)="handleBreakEvent(i, $event, 'weekTwo')">
+                    <mat-option *ngFor="let item of breakCount" [value]="item.id">{{item.description}}</mat-option>
+                  </mat-select>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="firstBreakIn">
+                <th mat-header-cell *matHeaderCellDef> FIRST BREAK IN
+                  <br>
+                  <input class="put-border" [(ngModel)]="secondfirstBreakIn"
+                    (ngModelChange)="handleHeader($event, 'firstBreakIn', 'weekTwo')" readonly [strict]="false"
+                    mode="12h" type="text" matTimepicker #t="matTimepicker" [placeholder]="'12:00 am'">
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <input *ngIf="!element.firstBreakHide" class="put-border" [(ngModel)]="element.firstBreakIn" readonly
+                    [strict]="false" mode="12h" type="text" matTimepicker #t="matTimepicker" [placeholder]="'12:00 am'">
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="firstBreakInDaysCover">
+                <th mat-header-cell *matHeaderCellDef> Days Cover
+                  <br>
+                  <input class="put-border" [(ngModel)]="secondfirstBreakInDaysCover"
+                    (change)="handleHeader($event.target.value, 'firstBreakInDaysCover', 'weekTwo')" matInput
+                    type="text" [placeholder]="'0'">
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <input class="put-border" *ngIf="!element.firstBreakHide" [(ngModel)]="element.firstBreakInDaysCover"
+                    matInput type="text" [placeholder]="'0'">
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="firstBreakOut">
+                <th mat-header-cell *matHeaderCellDef> FIRST BREAK OUT
+                  <br>
+                  <input class="put-border" [(ngModel)]="secondfirstBreakOut"
+                    (ngModelChange)="handleHeader($event, 'firstBreakOut', 'weekTwo')" readonly [strict]="false"
+                    mode="12h" type="text" matTimepicker #t="matTimepicker" [placeholder]="'12:00 am'">
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <input *ngIf="!element.firstBreakHide" class="put-border" [(ngModel)]="element.firstBreakOut" readonly
+                    [strict]="false" mode="12h" type="text" matTimepicker #t="matTimepicker" [placeholder]="'12:00 am'">
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="firstBreakOutDaysCover">
+                <th mat-header-cell *matHeaderCellDef> Days Cover
+                  <br>
+                  <input class="put-border" [(ngModel)]="secondfirstBreakOutDaysCover"
+                    (change)="handleHeader($event.target.value, 'firstBreakOutDaysCover', 'weekTwo')" matInput
+                    type="text" [placeholder]="'0'">
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <input class="put-border" *ngIf="!element.firstBreakHide" [(ngModel)]="element.firstBreakOutDaysCover"
+                    matInput type="text" [placeholder]="'0'">
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="secondBreakIn">
+                <th mat-header-cell *matHeaderCellDef> SECOND BREAK IN
+                  <br>
+                  <input class="put-border" [(ngModel)]="secondsecondBreakIn"
+                    (ngModelChange)="handleHeader($event, 'secondBreakIn', 'weekTwo')" readonly [strict]="false"
+                    mode="12h" type="text" matTimepicker #t="matTimepicker" [placeholder]="'12:00 am'">
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <input *ngIf="!element.secondBreakHide" class="put-border" [(ngModel)]="element.secondBreakIn"
+                    readonly [strict]="false" mode="12h" type="text" matTimepicker #t="matTimepicker"
+                    [placeholder]="'12:00 am'">
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="secondBreakInDaysCover">
+                <th mat-header-cell *matHeaderCellDef> Days Cover
+                  <br>
+                  <input class="put-border" [(ngModel)]="secondsecondBreakInDaysCover"
+                    (change)="handleHeader($event.target.value, 'secondBreakInDaysCover', 'weekTwo')" matInput
+                    type="text" [placeholder]="'0'">
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <input class="put-border" *ngIf="!element.secondBreakHide"
+                    [(ngModel)]="element.secondBreakInDaysCover" matInput type="text" [placeholder]="'0'">
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="secondBreakOut">
+                <th mat-header-cell *matHeaderCellDef> SECOND BREAK OUT
+                  <br>
+                  <input class="put-border" [(ngModel)]="secondsecondBreakOut"
+                    (ngModelChange)="handleHeader($event, 'secondBreakOut', 'weekTwo')" readonly [strict]="false"
+                    mode="12h" type="text" matTimepicker #t="matTimepicker" [placeholder]="'12:00 am'">
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <input *ngIf="!element.secondBreakHide" class="put-border" [(ngModel)]="element.secondBreakOut"
+                    readonly [strict]="false" mode="12h" type="text" matTimepicker #t="matTimepicker"
+                    [placeholder]="'12:00 am'">
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="secondBreakOutDaysCover">
+                <th mat-header-cell *matHeaderCellDef> Days Cover
+                  <br>
+                  <input class="put-border" [(ngModel)]="secondsecondBreakOutDaysCover"
+                    (change)="handleHeader($event.target.value, 'secondBreakOutDaysCover', 'weekTwo')" matInput
+                    type="text" [placeholder]="'0'">
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <input class="put-border" *ngIf="!element.secondBreakHide"
+                    [(ngModel)]="element.secondBreakOutDaysCover" matInput type="text" [placeholder]="'0'">
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="thirdBreakIn">
+                <th mat-header-cell *matHeaderCellDef> THIRD BREAK IN
+                  <br>
+                  <input class="put-border" [(ngModel)]="secondthirdBreakIn"
+                    (ngModelChange)="handleHeader($event, 'thirdBreakIn', 'weekTwo')" readonly [strict]="false"
+                    mode="12h" type="text" matTimepicker #t="matTimepicker" [placeholder]="'12:00 am'">
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <input *ngIf="!element.thirdBreakHide" class="put-border" [(ngModel)]="element.thirdBreakIn" readonly
+                    [strict]="false" mode="12h" type="text" matTimepicker #t="matTimepicker" [placeholder]="'12:00 am'">
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="thirdBreakInDaysCover">
+                <th mat-header-cell *matHeaderCellDef> Days Cover
+                  <br>
+                  <input class="put-border" [(ngModel)]="secondthirdBreakInDaysCover"
+                    (change)="handleHeader($event.target.value, 'thirdBreakInDaysCover', 'weekTwo')" matInput
+                    type="text" [placeholder]="'0'">
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <input class="put-border" *ngIf="!element.thirdBreakHide" [(ngModel)]="element.thirdBreakInDaysCover"
+                    matInput type="text" [placeholder]="'0'">
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="thirdBreakOut">
+                <th mat-header-cell *matHeaderCellDef> THIRD BREAK OUT
+                  <br>
+                  <input class="put-border" [(ngModel)]="secondthirdBreakOut"
+                    (ngModelChange)="handleHeader($event, 'thirdBreakOut', 'weekTwo')" readonly [strict]="false"
+                    mode="12h" type="text" matTimepicker #t="matTimepicker" [placeholder]="'12:00 am'">
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <input *ngIf="!element.thirdBreakHide" class="put-border" [(ngModel)]="element.thirdBreakOut" readonly
+                    [strict]="false" mode="12h" type="text" matTimepicker #t="matTimepicker" [placeholder]="'12:00 am'">
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="thirdBreakOutDaysCover">
+                <th mat-header-cell *matHeaderCellDef> Days Cover
+                  <br>
+                  <input class="put-border" [(ngModel)]="secondthirdBreakOutDaysCover"
+                    (change)="handleHeader($event.target.value, 'thirdBreakOutDaysCover', 'weekTwo')" matInput
+                    type="text" [placeholder]="'0'">
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <input class="put-border" *ngIf="!element.thirdBreakHide" [(ngModel)]="element.thirdBreakOutDaysCover"
+                    matInput type="text" [placeholder]="'0'">
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="weekTwoColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: weekTwoColumns;"></tr>
+            </table>
+          </mat-tab>
+          <mat-tab *ngIf="shiftForm.value.weekCount > 2 ? true : false" label="Week Three">
+            <table #weekThreeTable mat-table [dataSource]="weekThreeSource" class="mat-elevation-z0 border">
+              <ng-container matColumnDef="day">
+                <th mat-header-cell *matHeaderCellDef> DAY </th>
+                <td mat-cell *matCellDef="let element"> {{element.description}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="restday">
+                <th mat-header-cell *matHeaderCellDef> RD
+                  <br>
+                  <mat-slide-toggle color="primary" (change)="handleHeader($event.checked, 'isRestDay', 'weekThree')">
+                  </mat-slide-toggle>
+                </th>
+                <td mat-cell *matCellDef="let element; let i = index">
+                  <mat-slide-toggle color="primary" class="mr-5" (change)="handleToggleEvent($event.checked, i, 'weekThree')"
+                    [checked]="element.isRestDay"></mat-slide-toggle>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="timeIn">
+                <th mat-header-cell *matHeaderCellDef> TIME IN
+                  <br>
+                  <input class="put-border" [(ngModel)]="thirdtimeIn"
+                    (ngModelChange)="handleHeader($event, 'timeIn', 'weekThree')" readonly [strict]="false" mode="12h"
+                    type="text" matTimepicker #t="matTimepicker" [placeholder]="'12:00 am'">
+                </th>
+                <td mat-cell *matCellDef="let element; let i = index">
+                  <input class="put-border" [(ngModel)]="element.timeIn" (ngModelChange)="handleTimeEvent(i, 'weekThree')"
+                    readonly [strict]="false" mode="12h" type="text" matTimepicker #t="matTimepicker"
+                    [placeholder]="'12:00 am'">
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="timeOut">
+                <th mat-header-cell *matHeaderCellDef> TIME OUT
+                  <br>
+                  <input class="put-border" [(ngModel)]="thirdtimeOut"
+                    (ngModelChange)="handleHeader($event, 'timeOut', 'weekThree')" readonly [strict]="false" mode="12h"
+                    type="text" matTimepicker #t="matTimepicker" [placeholder]="'12:00 am'">
+                </th>
+
+                <td mat-cell *matCellDef="let element; let i = index">
+                  <input class="put-border" [(ngModel)]="element.timeOut"
+                    (ngModelChange)="handleTimeEvent(i, 'weekThree')" readonly [strict]="false" mode="12h" type="text"
+                    matTimepicker #t="matTimepicker" [placeholder]="'12:00 am'">
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="totalWorkingHours">
+                <th mat-header-cell *matHeaderCellDef> WORKING HRS
+                  <br>
+                  <input class="put-border" [(ngModel)]="thirdtotalWorkingHours" [disabled]="!shiftForm.value.isFlexi"
+                    (change)="handleHeader($event.target.value, 'totalWorkingHours', 'weekThree')" matInput type="text"
+                    [placeholder]="'0'">
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <input class="put-border" [disabled]="!shiftForm.value.isFlexi"
+                    [(ngModel)]="element.totalWorkingHours" matInput type="text" [placeholder]="'0'">
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="halfDayIn">
+                <th mat-header-cell *matHeaderCellDef> HALFDAY IN
+                  <br>
+                  <input class="put-border" [(ngModel)]="thirdhalfDayIn"
+                    (ngModelChange)="handleHeader($event, 'halfDayIn', 'weekThree')" readonly [strict]="false" mode="12h"
+                    type="text" matTimepicker #t="matTimepicker" [placeholder]="'12:00 am'">
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <input class="put-border" [(ngModel)]="element.halfDayIn" readonly [strict]="false" mode="12h"
+                    type="text" matTimepicker #t="matTimepicker" [placeholder]="'12:00 am'">
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="halfDayInDaysCover">
+                <th mat-header-cell *matHeaderCellDef> Days Cover
+                  <br>
+                  <input class="put-border" [(ngModel)]="thirdhalfDayInDaysCover"
+                    (change)="handleHeader($event.target.value, 'halfDayInDaysCover', 'weekThree')" matInput type="text"
+                    [placeholder]="'0'">
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <input class="put-border" [(ngModel)]="element.halfDayInDaysCover" matInput type="text"
+                    [placeholder]="'0'">
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="halfDayOut">
+                <th mat-header-cell *matHeaderCellDef> HALFDAY OUT
+                  <br>
+                  <input class="put-border" [(ngModel)]="thirdhalfDayOut"
+                    (ngModelChange)="handleHeader($event, 'halfDayOut', 'weekThree')" readonly [strict]="false" mode="12h"
+                    type="text" matTimepicker #t="matTimepicker" [placeholder]="'12:00 am'">
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <input class="put-border" [(ngModel)]="element.halfDayOut" readonly [strict]="false" mode="12h"
+                    type="text" matTimepicker #t="matTimepicker" [placeholder]="'12:00 am'">
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="halfDayOutDaysCover">
+                <th mat-header-cell *matHeaderCellDef> Days Cover
+                  <br>
+                  <input class="put-border" [(ngModel)]="thirdhalfDayOutDaysCover"
+                    (change)="handleHeader($event.target.value, 'halfDayOutDaysCover', 'weekThree')" matInput type="text"
+                    [placeholder]="'0'">
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <input class="put-border" [(ngModel)]="element.halfDayOutDaysCover" matInput type="text"
+                    [placeholder]="'0'">
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="breaks">
+                <th mat-header-cell *matHeaderCellDef> BREAK COUNT
+                  <br>
+                  <mat-select class="put-border" placeholder="No Break" [(ngModel)]="thirdbreakThree"
+                    (ngModelChange)="handleHeader($event, 'breaks', 'weekThree')">
+                    <mat-option *ngFor="let item of breakCount" [value]="item.id">{{item.description}}</mat-option>
+                  </mat-select>
+                </th>
+                <td mat-cell *matCellDef="let element; let i = index">
+                  <mat-select class="put-border" [(ngModel)]="element.breaks" placeholder="No Break"
+                    (ngModelChange)="handleBreakEvent(i, $event, 'weekThree')">
+                    <mat-option *ngFor="let item of breakCount" [value]="item.id">{{item.description}}</mat-option>
+                  </mat-select>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="firstBreakIn">
+                <th mat-header-cell *matHeaderCellDef> FIRST BREAK IN
+                  <br>
+                  <input class="put-border" [(ngModel)]="thirdfirstBreakIn"
+                    (ngModelChange)="handleHeader($event, 'firstBreakIn', 'weekThree')" readonly [strict]="false"
+                    mode="12h" type="text" matTimepicker #t="matTimepicker" [placeholder]="'12:00 am'">
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <input *ngIf="!element.firstBreakHide" class="put-border" [(ngModel)]="element.firstBreakIn" readonly
+                    [strict]="false" mode="12h" type="text" matTimepicker #t="matTimepicker" [placeholder]="'12:00 am'">
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="firstBreakInDaysCover">
+                <th mat-header-cell *matHeaderCellDef> Days Cover
+                  <br>
+                  <input class="put-border" [(ngModel)]="thirdfirstBreakInDaysCover"
+                    (change)="handleHeader($event.target.value, 'firstBreakInDaysCover', 'weekThree')" matInput
+                    type="text" [placeholder]="'0'">
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <input class="put-border" *ngIf="!element.firstBreakHide" [(ngModel)]="element.firstBreakInDaysCover"
+                    matInput type="text" [placeholder]="'0'">
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="firstBreakOut">
+                <th mat-header-cell *matHeaderCellDef> FIRST BREAK OUT
+                  <br>
+                  <input class="put-border" [(ngModel)]="thirdfirstBreakOut"
+                    (ngModelChange)="handleHeader($event, 'firstBreakOut', 'weekThree')" readonly [strict]="false"
+                    mode="12h" type="text" matTimepicker #t="matTimepicker" [placeholder]="'12:00 am'">
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <input *ngIf="!element.firstBreakHide" class="put-border" [(ngModel)]="element.firstBreakOut" readonly
+                    [strict]="false" mode="12h" type="text" matTimepicker #t="matTimepicker" [placeholder]="'12:00 am'">
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="firstBreakOutDaysCover">
+                <th mat-header-cell *matHeaderCellDef> Days Cover
+                  <br>
+                  <input class="put-border" [(ngModel)]="thirdfirstBreakOutDaysCover"
+                    (change)="handleHeader($event.target.value, 'firstBreakOutDaysCover', 'weekThree')" matInput
+                    type="text" [placeholder]="'0'">
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <input class="put-border" *ngIf="!element.firstBreakHide" [(ngModel)]="element.firstBreakOutDaysCover"
+                    matInput type="text" [placeholder]="'0'">
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="secondBreakIn">
+                <th mat-header-cell *matHeaderCellDef> SECOND BREAK IN
+                  <br>
+                  <input class="put-border" [(ngModel)]="thirdsecondBreakIn"
+                    (ngModelChange)="handleHeader($event, 'secondBreakIn', 'weekThree')" readonly [strict]="false"
+                    mode="12h" type="text" matTimepicker #t="matTimepicker" [placeholder]="'12:00 am'">
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <input *ngIf="!element.secondBreakHide" class="put-border" [(ngModel)]="element.secondBreakIn"
+                    readonly [strict]="false" mode="12h" type="text" matTimepicker #t="matTimepicker"
+                    [placeholder]="'12:00 am'">
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="secondBreakInDaysCover">
+                <th mat-header-cell *matHeaderCellDef> Days Cover
+                  <br>
+                  <input class="put-border" [(ngModel)]="thirdsecondBreakInDaysCover"
+                    (change)="handleHeader($event.target.value, 'secondBreakInDaysCover', 'weekThree')" matInput
+                    type="text" [placeholder]="'0'">
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <input class="put-border" *ngIf="!element.secondBreakHide"
+                    [(ngModel)]="element.secondBreakInDaysCover" matInput type="text" [placeholder]="'0'">
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="secondBreakOut">
+                <th mat-header-cell *matHeaderCellDef> SECOND BREAK OUT
+                  <br>
+                  <input class="put-border" [(ngModel)]="thirdsecondBreakOut"
+                    (ngModelChange)="handleHeader($event, 'secondBreakOut', 'weekThree')" readonly [strict]="false"
+                    mode="12h" type="text" matTimepicker #t="matTimepicker" [placeholder]="'12:00 am'">
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <input *ngIf="!element.secondBreakHide" class="put-border" [(ngModel)]="element.secondBreakOut"
+                    readonly [strict]="false" mode="12h" type="text" matTimepicker #t="matTimepicker"
+                    [placeholder]="'12:00 am'">
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="secondBreakOutDaysCover">
+                <th mat-header-cell *matHeaderCellDef> Days Cover
+                  <br>
+                  <input class="put-border" [(ngModel)]="thirdsecondBreakOutDaysCover"
+                    (change)="handleHeader($event.target.value, 'secondBreakOutDaysCover', 'weekThree')" matInput
+                    type="text" [placeholder]="'0'">
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <input class="put-border" *ngIf="!element.secondBreakHide"
+                    [(ngModel)]="element.secondBreakOutDaysCover" matInput type="text" [placeholder]="'0'">
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="thirdBreakIn">
+                <th mat-header-cell *matHeaderCellDef> THIRD BREAK IN
+                  <br>
+                  <input class="put-border" [(ngModel)]="thirdthirdBreakIn"
+                    (ngModelChange)="handleHeader($event, 'thirdBreakIn', 'weekThree')" readonly [strict]="false"
+                    mode="12h" type="text" matTimepicker #t="matTimepicker" [placeholder]="'12:00 am'">
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <input *ngIf="!element.thirdBreakHide" class="put-border" [(ngModel)]="element.thirdBreakIn" readonly
+                    [strict]="false" mode="12h" type="text" matTimepicker #t="matTimepicker" [placeholder]="'12:00 am'">
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="thirdBreakInDaysCover">
+                <th mat-header-cell *matHeaderCellDef> Days Cover
+                  <br>
+                  <input class="put-border" [(ngModel)]="thirdthirdBreakInDaysCover"
+                    (change)="handleHeader($event.target.value, 'thirdBreakInDaysCover', 'weekThree')" matInput
+                    type="text" [placeholder]="'0'">
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <input class="put-border" *ngIf="!element.thirdBreakHide" [(ngModel)]="element.thirdBreakInDaysCover"
+                    matInput type="text" [placeholder]="'0'">
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="thirdBreakOut">
+                <th mat-header-cell *matHeaderCellDef> THIRD BREAK OUT
+                  <br>
+                  <input class="put-border" [(ngModel)]="thirdthirdBreakOut"
+                    (ngModelChange)="handleHeader($event, 'thirdBreakOut', 'weekThree')" readonly [strict]="false"
+                    mode="12h" type="text" matTimepicker #t="matTimepicker" [placeholder]="'12:00 am'">
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <input *ngIf="!element.thirdBreakHide" class="put-border" [(ngModel)]="element.thirdBreakOut" readonly
+                    [strict]="false" mode="12h" type="text" matTimepicker #t="matTimepicker" [placeholder]="'12:00 am'">
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="thirdBreakOutDaysCover">
+                <th mat-header-cell *matHeaderCellDef> Days Cover
+                  <br>
+                  <input class="put-border" [(ngModel)]="thirdthirdBreakOutDaysCover"
+                    (change)="handleHeader($event.target.value, 'thirdBreakOutDaysCover', 'weekThree')" matInput
+                    type="text" [placeholder]="'0'">
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <input class="put-border" *ngIf="!element.thirdBreakHide" [(ngModel)]="element.thirdBreakOutDaysCover"
+                    matInput type="text" [placeholder]="'0'">
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="weekThreeColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: weekThreeColumns;"></tr>
+            </table>
+          </mat-tab>
+          <mat-tab *ngIf="shiftForm.value.weekCount > 3 ? true : false" label="Week Four">
+            <table #weekFourTable mat-table [dataSource]="weekFourSource" class="mat-elevation-z0 border">
+              <ng-container matColumnDef="day">
+                <th  mat-header-cell *matHeaderCellDef> DAY </th>
+                <td mat-cell *matCellDef="let element"> {{element.description}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="restday">
+                <th  mat-header-cell *matHeaderCellDef> RD
+                  <br>
+                  <mat-slide-toggle color="primary" class="mr-5" (change)="handleHeader($event.checked, 'isRestDay', 'weekFour')">
+                  </mat-slide-toggle>
+                </th>
+                <td mat-cell *matCellDef="let element; let i = index">
+                  <mat-slide-toggle color="primary" (change)="handleToggleEvent($event.checked, i, 'weekFour')"
+                    [checked]="element.isRestDay"></mat-slide-toggle>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="timeIn">
+                <th mat-header-cell *matHeaderCellDef> TIME IN
+                  <br>
+                  <input class="put-border" [(ngModel)]="fourthtimeIn"
+                    (ngModelChange)="handleHeader($event, 'timeIn', 'weekFour')" readonly [strict]="false" mode="12h"
+                    type="text" matTimepicker #t="matTimepicker" [placeholder]="'12:00 am'">
+                </th>
+                <td mat-cell *matCellDef="let element; let i = index">
+                  <input class="put-border" [(ngModel)]="element.timeIn" (ngModelChange)="handleTimeEvent(i, 'weekFour')"
+                    readonly [strict]="false" mode="12h" type="text" matTimepicker #t="matTimepicker"
+                    [placeholder]="'12:00 am'">
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="timeOut">
+                <th mat-header-cell *matHeaderCellDef> TIME OUT
+                  <br>
+                  <input class="put-border" [(ngModel)]="fourthtimeOut"
+                    (ngModelChange)="handleHeader($event, 'timeOut', 'weekFour')" readonly [strict]="false" mode="12h"
+                    type="text" matTimepicker #t="matTimepicker" [placeholder]="'12:00 am'">
+                </th>
+
+                <td mat-cell *matCellDef="let element; let i = index">
+                  <input class="put-border" [(ngModel)]="element.timeOut"
+                    (ngModelChange)="handleTimeEvent(i, 'weekFour')" readonly [strict]="false" mode="12h" type="text"
+                    matTimepicker #t="matTimepicker" [placeholder]="'12:00 am'">
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="totalWorkingHours">
+                <th mat-header-cell *matHeaderCellDef> WORKING HRS
+                  <br>
+                  <input class="put-border" [(ngModel)]="fourthtotalWorkingHours" [disabled]="!shiftForm.value.isFlexi"
+                    (change)="handleHeader($event.target.value, 'totalWorkingHours', 'weekFour')" matInput type="text"
+                    [placeholder]="'0'">
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <input class="put-border" [disabled]="!shiftForm.value.isFlexi"
+                    [(ngModel)]="element.totalWorkingHours" matInput type="text" [placeholder]="'0'">
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="halfDayIn">
+                <th mat-header-cell *matHeaderCellDef> HALFDAY IN
+                  <br>
+                  <input class="put-border" [(ngModel)]="fourthhalfDayIn"
+                    (ngModelChange)="handleHeader($event, 'halfDayIn', 'weekFour')" readonly [strict]="false" mode="12h"
+                    type="text" matTimepicker #t="matTimepicker" [placeholder]="'12:00 am'">
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <input class="put-border" [(ngModel)]="element.halfDayIn" readonly [strict]="false" mode="12h"
+                    type="text" matTimepicker #t="matTimepicker" [placeholder]="'12:00 am'">
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="halfDayInDaysCover">
+                <th mat-header-cell *matHeaderCellDef> Days Cover
+                  <br>
+                  <input class="put-border" [(ngModel)]="fourthhalfDayInDaysCover"
+                    (change)="handleHeader($event.target.value, 'halfDayInDaysCover', 'weekFour')" matInput type="text"
+                    [placeholder]="'0'">
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <input class="put-border" [(ngModel)]="element.halfDayInDaysCover" matInput type="text"
+                    [placeholder]="'0'">
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="halfDayOut">
+                <th mat-header-cell *matHeaderCellDef> HALFDAY OUT
+                  <br>
+                  <input class="put-border" [(ngModel)]="fourthhalfDayOut"
+                    (ngModelChange)="handleHeader($event, 'halfDayOut', 'weekFour')" readonly [strict]="false" mode="12h"
+                    type="text" matTimepicker #t="matTimepicker" [placeholder]="'12:00 am'">
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <input class="put-border" [(ngModel)]="element.halfDayOut" readonly [strict]="false" mode="12h"
+                    type="text" matTimepicker #t="matTimepicker" [placeholder]="'12:00 am'">
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="halfDayOutDaysCover">
+                <th mat-header-cell *matHeaderCellDef> Days Cover
+                  <br>
+                  <input class="put-border" [(ngModel)]="fourthhalfDayOutDaysCover"
+                    (change)="handleHeader($event.target.value, 'halfDayOutDaysCover', 'weekFour')" matInput type="text"
+                    [placeholder]="'0'">
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <input class="put-border" [(ngModel)]="element.halfDayOutDaysCover" matInput type="text"
+                    [placeholder]="'0'">
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="breaks">
+                <th mat-header-cell *matHeaderCellDef> BREAK COUNT
+                  <br>
+                  <mat-select class="put-border" placeholder="No Break" [(ngModel)]="fourthbreakFour"
+                    (ngModelChange)="handleHeader($event, 'breaks', 'weekFour')">
+                    <mat-option *ngFor="let item of breakCount" [value]="item.id">{{item.description}}</mat-option>
+                  </mat-select>
+                </th>
+                <td mat-cell *matCellDef="let element; let i = index">
+                  <mat-select class="put-border" [(ngModel)]="element.breaks" placeholder="No Break"
+                    (ngModelChange)="handleBreakEvent(i, $event, 'weekFour')">
+                    <mat-option *ngFor="let item of breakCount" [value]="item.id">{{item.description}}</mat-option>
+                  </mat-select>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="firstBreakIn">
+                <th mat-header-cell *matHeaderCellDef> FIRST BREAK IN
+                  <br>
+                  <input class="put-border" [(ngModel)]="fourthfirstBreakIn"
+                    (ngModelChange)="handleHeader($event, 'firstBreakIn', 'weekFour')" readonly [strict]="false"
+                    mode="12h" type="text" matTimepicker #t="matTimepicker" [placeholder]="'12:00 am'">
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <input *ngIf="!element.firstBreakHide" class="put-border" [(ngModel)]="element.firstBreakIn" readonly
+                    [strict]="false" mode="12h" type="text" matTimepicker #t="matTimepicker" [placeholder]="'12:00 am'">
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="firstBreakInDaysCover">
+                <th mat-header-cell *matHeaderCellDef> Days Cover
+                  <br>
+                  <input class="put-border" [(ngModel)]="fourthfirstBreakInDaysCover"
+                    (change)="handleHeader($event.target.value, 'firstBreakInDaysCover', 'weekFour')" matInput
+                    type="text" [placeholder]="'0'">
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <input class="put-border" *ngIf="!element.firstBreakHide" [(ngModel)]="element.firstBreakInDaysCover"
+                    matInput type="text" [placeholder]="'0'">
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="firstBreakOut">
+                <th mat-header-cell *matHeaderCellDef> FIRST BREAK OUT
+                  <br>
+                  <input class="put-border" [(ngModel)]="fourthfirstBreakOut"
+                    (ngModelChange)="handleHeader($event, 'firstBreakOut', 'weekFour')" readonly [strict]="false"
+                    mode="12h" type="text" matTimepicker #t="matTimepicker" [placeholder]="'12:00 am'">
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <input *ngIf="!element.firstBreakHide" class="put-border" [(ngModel)]="element.firstBreakOut" readonly
+                    [strict]="false" mode="12h" type="text" matTimepicker #t="matTimepicker" [placeholder]="'12:00 am'">
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="firstBreakOutDaysCover">
+                <th mat-header-cell *matHeaderCellDef> Days Cover
+                  <br>
+                  <input class="put-border" [(ngModel)]="fourthfirstBreakOutDaysCover"
+                    (change)="handleHeader($event.target.value, 'firstBreakOutDaysCover', 'weekFour')" matInput
+                    type="text" [placeholder]="'0'">
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <input class="put-border" *ngIf="!element.firstBreakHide" [(ngModel)]="element.firstBreakOutDaysCover"
+                    matInput type="text" [placeholder]="'0'">
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="secondBreakIn">
+                <th mat-header-cell *matHeaderCellDef> SECOND BREAK IN
+                  <br>
+                  <input class="put-border" [(ngModel)]="fourthsecondBreakIn"
+                    (ngModelChange)="handleHeader($event, 'secondBreakIn', 'weekFour')" readonly [strict]="false"
+                    mode="12h" type="text" matTimepicker #t="matTimepicker" [placeholder]="'12:00 am'">
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <input *ngIf="!element.secondBreakHide" class="put-border" [(ngModel)]="element.secondBreakIn"
+                    readonly [strict]="false" mode="12h" type="text" matTimepicker #t="matTimepicker"
+                    [placeholder]="'12:00 am'">
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="secondBreakInDaysCover">
+                <th mat-header-cell *matHeaderCellDef> Days Cover
+                  <br>
+                  <input class="put-border" [(ngModel)]="fourthsecondBreakInDaysCover"
+                    (change)="handleHeader($event.target.value, 'secondBreakInDaysCover', 'weekFour')" matInput
+                    type="text" [placeholder]="'0'">
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <input class="put-border" *ngIf="!element.secondBreakHide"
+                    [(ngModel)]="element.secondBreakInDaysCover" matInput type="text" [placeholder]="'0'">
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="secondBreakOut">
+                <th mat-header-cell *matHeaderCellDef> SECOND BREAK OUT
+                  <br>
+                  <input class="put-border" [(ngModel)]="fourthsecondBreakOut"
+                    (ngModelChange)="handleHeader($event, 'secondBreakOut', 'weekFour')" readonly [strict]="false"
+                    mode="12h" type="text" matTimepicker #t="matTimepicker" [placeholder]="'12:00 am'">
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <input *ngIf="!element.secondBreakHide" class="put-border" [(ngModel)]="element.secondBreakOut"
+                    readonly [strict]="false" mode="12h" type="text" matTimepicker #t="matTimepicker"
+                    [placeholder]="'12:00 am'">
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="secondBreakOutDaysCover">
+                <th mat-header-cell *matHeaderCellDef> Days Cover
+                  <br>
+                  <input class="put-border" [(ngModel)]="fourthsecondBreakOutDaysCover"
+                    (change)="handleHeader($event.target.value, 'secondBreakOutDaysCover', 'weekFour')" matInput
+                    type="text" [placeholder]="'0'">
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <input class="put-border" *ngIf="!element.secondBreakHide"
+                    [(ngModel)]="element.secondBreakOutDaysCover" matInput type="text" [placeholder]="'0'">
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="thirdBreakIn">
+                <th mat-header-cell *matHeaderCellDef> THIRD BREAK IN
+                  <br>
+                  <input class="put-border" [(ngModel)]="fourththirdBreakIn"
+                    (ngModelChange)="handleHeader($event, 'thirdBreakIn', 'weekFour')" readonly [strict]="false"
+                    mode="12h" type="text" matTimepicker #t="matTimepicker" [placeholder]="'12:00 am'">
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <input *ngIf="!element.thirdBreakHide" class="put-border" [(ngModel)]="element.thirdBreakIn" readonly
+                    [strict]="false" mode="12h" type="text" matTimepicker #t="matTimepicker" [placeholder]="'12:00 am'">
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="thirdBreakInDaysCover">
+                <th mat-header-cell *matHeaderCellDef> Days Cover
+                  <br>
+                  <input class="put-border" [(ngModel)]="fourththirdBreakInDaysCover"
+                    (change)="handleHeader($event.target.value, 'thirdBreakInDaysCover', 'weekFour')" matInput
+                    type="text" [placeholder]="'0'">
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <input class="put-border" *ngIf="!element.thirdBreakHide" [(ngModel)]="element.thirdBreakInDaysCover"
+                    matInput type="text" [placeholder]="'0'">
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="thirdBreakOut">
+                <th mat-header-cell *matHeaderCellDef> THIRD BREAK OUT
+                  <br>
+                  <input class="put-border" [(ngModel)]="fourththirdBreakOut"
+                    (ngModelChange)="handleHeader($event, 'thirdBreakOut', 'weekFour')" readonly [strict]="false"
+                    mode="12h" type="text" matTimepicker #t="matTimepicker" [placeholder]="'12:00 am'">
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <input *ngIf="!element.thirdBreakHide" class="put-border" [(ngModel)]="element.thirdBreakOut" readonly
+                    [strict]="false" mode="12h" type="text" matTimepicker #t="matTimepicker" [placeholder]="'12:00 am'">
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="thirdBreakOutDaysCover">
+                <th mat-header-cell *matHeaderCellDef> Days Cover
+                  <br>
+                  <input class="put-border" [(ngModel)]="fourththirdBreakOutDaysCover"
+                    (change)="handleHeader($event.target.value, 'thirdBreakOutDaysCover', 'weekFour')" matInput
+                    type="text" [placeholder]="'0'">
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <input class="put-border" *ngIf="!element.thirdBreakHide" [(ngModel)]="element.thirdBreakOutDaysCover"
+                    matInput type="text" [placeholder]="'0'">
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="weekFourColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: weekFourColumns;"></tr>
+            </table>
+          </mat-tab>
+        </mat-tab-group>
+
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

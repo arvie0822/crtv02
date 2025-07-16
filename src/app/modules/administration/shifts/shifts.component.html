@@ -1,0 +1,30 @@
+
+
+<div class="flex flex-col flex-auto min-w-0">
+    <!-- Main -->
+    <div class="flex-auto p-2 sm:p-4">
+      <!-- Content -->
+      <mat-card>
+        <mat-card-content>
+<mat-tab-group dynamicHeight>
+    <mat-tab label="Day">
+      <div class="example-small-box mat-elevation-z0">
+        <!-- <div *ngIf="true">
+            <app-datatable [val]="'shift-codes'"></app-datatable>
+        </div> -->
+        <app-shift-codes></app-shift-codes>
+      </div>
+    </mat-tab>
+    <mat-tab label="Weeek">
+      <div class="example-large-box mat-elevation-z0">
+        <!-- <div *ngIf="false">
+            <app-datatable [val]="'shift-codes'"></app-datatable>
+        </div> -->
+        <app-shiftcodesperday></app-shiftcodesperday>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</mat-card-content>
+</mat-card>
+</div>
+</div>

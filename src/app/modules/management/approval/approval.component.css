@@ -1,0 +1,90 @@
+.label-font-size{
+    font-size: 15px;
+}
+
+.mat-icon{
+    position: relative;
+    bottom: 8px;
+}
+.open_ {
+    top: 8px !important
+}
+
+.mat-select{
+    position: relative;
+    bottom: 13px;
+    font-size: medium;
+}
+.input{
+    position: relative;
+    bottom: 10px;
+    font-size: medium;
+}
+table {
+    width: 100%;
+}
+
+ .mat-datepicker-toggle{
+  position: relative;
+  bottom: 7px;
+  font-size: small;
+ }
+
+
+/* table css */
+ .body-card {
+     position: relative;
+     height: 100%;
+     padding-top: 1px;
+ }
+
+ .child-mat-tab-group {
+    position: absolute;
+    top: 50px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    max-height: 100%;
+    overflow: auto;
+ }
+
+ .child-mat-tab {
+    position: absolute;
+    top: 50px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    max-height: 100%;
+    overflow: auto;
+ }
+
+ /* .child-history-table {
+    position: absolute;
+    top: 100px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    max-height: 100%;
+    overflow: auto;
+ } */
+
+ .paganation {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+  /* .example-container {
+    position: absolute;
+    top:100px;
+    left: 15px;
+    right: 15px;
+    bottom: 80px;
+    max-height: 100%;
+    overflow: auto;
+} */
+
+::ng-deep .mat-badge-medium .mat-badge-content {
+    line-height: 24px !important
+}

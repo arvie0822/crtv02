@@ -1,0 +1,24 @@
+table {
+    width: 100%;
+}
+
+.label-font-size {
+    font-size: 15px;
+}
+
+.mat-icon {
+    position: relative;
+    bottom: 11px;
+}
+
+input {
+    position: relative;
+    bottom: 10px;
+    font-size: medium;
+}
+
+.mat-select{
+    position: relative;
+    bottom: 11px;
+    font-size: medium;
+}

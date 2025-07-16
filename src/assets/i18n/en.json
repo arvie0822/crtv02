@@ -1,0 +1,20 @@
+{
+    "hi": "Hi",
+    "hello": "Hello",
+    "message-task": "You have {{msg}} new message and {{task}} task" ,
+
+    "welcome-back": "Welcome Back",
+    "Project": "Project",
+    "Analytics": "Analytics",
+
+    "emp-pei": {
+        "pei": "Personal",
+        "ci":   "Contact Information",
+        "ad":   "Address"
+    },
+    "emp-woi": "Work",
+    "emp-pai": "Payroll",
+    "emp-s":   "Shift",
+    "emp-l":   "Leave",
+    "emp-O": "Others"
+}

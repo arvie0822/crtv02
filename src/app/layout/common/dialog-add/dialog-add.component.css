@@ -1,0 +1,22 @@
+.input {
+    position: relative;
+    bottom: 10px;
+    font-size: medium;
+}
+
+.icon {
+    position: relative;
+    bottom: 10px;
+}
+
+.mat-select {
+    position: relative;
+    bottom: 9px;
+    font-size: small;
+}
+
+::ng-deep .error-tip {
+    background-color: rgb(200, 69, 69) !important;
+    font-size: 12px !important;
+    white-space: pre-line;
+}

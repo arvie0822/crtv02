@@ -1,0 +1,48 @@
+<form [formGroup]="loanForm">
+    <div class="grid grid-cols-8 gap-2 h-13">
+        <mat-form-field class="w-full text-md"  appearance="outline">
+            <mat-label  class="label-font-size">Loan Code</mat-label>
+            <mat-icon class="iconsize icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+            <input formControlName="code" class="input" matInput [placeholder]="''" >
+        </mat-form-field>
+
+        <mat-form-field class="w-full text-md"  appearance="outline">
+            <mat-label  class="label-font-size">Description</mat-label>
+            <mat-icon class="iconsize icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+            <input formControlName="description" class="input" type="text" matInput [placeholder]="''" >
+        </mat-form-field>
+
+        <app-dropdown-custom [multiple]="false" [control]="loanForm.get('categoryId')"   [type]="1043" [value]="lf.categoryId"   [options]="dropdownOptions.categoryDef" [useControl]="true"></app-dropdown-custom>
+
+        <app-dropdown [control]="loanForm.get('jeAccountCodeId')"  [options]="dropdownOptions.accountCodeDef" [icon]="'mat_outline:info'" [type]="133" [useControl]="true"> </app-dropdown>
+
+        <app-dropdown [control]="loanForm.get('jeAccountId')"  [options]="dropdownOptions.accountNameDef" [icon]="'mat_outline:info'" [type]="134" [useControl]="true"> </app-dropdown>
+
+        <mat-form-field class="w-full text-md" appearance="outline">
+            <mat-label class="label-font-size">Debit/Credit</mat-label>
+            <mat-select formControlName="debitOrCredit"  [placeholder]="''">
+                <mat-option [value]="1">Debit</mat-option>
+                <mat-option [value]="0">Credit</mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field class="w-full text-md" appearance="outline">
+            <mat-label class="label-font-size">Cost or HR</mat-label>
+            <mat-select formControlName="costOrHr"  [placeholder]="''">
+                <mat-option [value]="0">Cost</mat-option>
+                <mat-option [value]="1">HR</mat-option>
+                <mat-option [value]="2">Custom</mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field class="w-full text-md" appearance="outline">
+            <mat-label class="label-font-size">Status</mat-label>
+            <mat-select formControlName="active" [placeholder]="''">
+                <mat-option [value]="true">Active</mat-option>
+                <mat-option [value]="false">Inactive</mat-option>
+            </mat-select>
+        </mat-form-field>
+
+    </div>
+</form>
+

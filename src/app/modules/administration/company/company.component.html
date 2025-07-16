@@ -1,0 +1,157 @@
+<div class="flex flex-col flex-auto min-w-0">
+    <!-- Main -->
+    <div class="flex-auto sm:p-2">
+        <mat-card>
+            <mat-card-title>
+                <app-card-title title="Company Profile" [sub]="true" [switch]="false" (switchTap)="changeOrient()"
+                    (submitTap)="submit()"></app-card-title>
+            </mat-card-title>
+            <form [formGroup]="companyForm">
+                <div class="grid grid-cols-9 gap-0 ">
+                    <mat-card class="col-span-8 mat-elevation-z0">
+                        <div class="grid grid-cols-3 gap-2 h-13">
+                            <mat-form-field class=" w-full text-md " appearance="outline">
+                                <mat-label class="label-font-size">Company Name</mat-label>
+                                <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                                <input class="input" matInput type="text" formControlName="companyName"
+                                    [placeholder]="'Company Name'">
+                            </mat-form-field>
+                            <mat-form-field class=" w-full text-md" appearance="outline">
+                                <mat-label class="label-font-size">Company Code</mat-label>
+                                <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                                <input class="input" matInput type="text" formControlName="companyCode"
+                                    [placeholder]="'Company Code'">
+                            </mat-form-field>
+                            <mat-form-field class=" w-full text-md" appearance="outline">
+                                <mat-label class="label-font-size">Email</mat-label>
+                                <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                                <input class="input" type="email" matInput formControlName="emailAddress"
+                                    [placeholder]="'@illimitado.com'">
+                                <!-- <mat-error *ngIf="companyForm.controls.email_address.hasError('email')">
+                                  Please enter a valid email address
+                                  </mat-error> -->
+                            </mat-form-field>
+                        </div>
+                        <div class="grid grid-cols-3 gap-2 h-13">
+                            <mat-form-field class=" w-full text-md" appearance="outline">
+                                <mat-label class="label-font-size">Telephone No.</mat-label>
+                                <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                                <span style="position: relative; bottom: 13px;" matPrefix>+63 &nbsp;</span>
+                                <input class="input" matInput type="text" mask="000 000 0000"
+                                    formControlName="telephone" [placeholder]="'+639xxxxxxx'">
+                            </mat-form-field>
+                            <mat-form-field class="w-full text-md" appearance="outline">
+                                <mat-label class="label-font-size">Enable Notification</mat-label>
+                                <mat-select formControlName="isEmail" [placeholder]="">
+                                    <mat-option class="label-font-size" [value]="true">Yes</mat-option>
+                                    <mat-option class="label-font-size" [value]="false">No</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                            <!-- <mat-form-field class="w-full" appearance="outline">
+                                <mat-label class="label-font-size">Company Logo</mat-label>
+                                  <input type="file"  id="imageUpload" #fileInput (change)="uploadFile($event, 'displayMe', 'companyLogo1','companyLogo')"  class="absolute top-1 z-10 h-full w-full cursor-pointer opacity-0" accept=".jpeg,.jpg,.png"/>
+                                  <input readonly matInput id="displayMe" formControlName="companyLogo" cdkFocusInitial class="z-0" />
+                                  <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:upload"></mat-icon>
+                                  <button  class="uploadbutton" (click)="fileInput.click()" matSuffix mat-button color="primary">Upload</button>
+                              </mat-form-field> -->
+
+
+                            <mat-form-field class="w-full text-md" appearance="outline">
+                                <mat-label class="label-font-size">Company Logo</mat-label>
+                                <input type="file" id="imageUpload" #fileInput
+                                    (change)="uploadFile($event ,'displayMe', 'companyLogo1','companyLogo')"
+                                    class="absolute top-1 z-10 h-full w-full cursor-pointer opacity-0"
+                                    accept=".jpeg,.jpg,.png" />
+                                <canvas #canvas style="display: none;"></canvas>
+                                <input readonly matInput id="displayMe" formControlName="companyLogo" cdkFocusInitial
+                                    class="z-0" />
+                                <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:upload"></mat-icon>
+                                <button class="uploadbutton" (click)="fileInput.click()" matSuffix mat-button
+                                    color="primary">Upload</button>
+                            </mat-form-field>
+
+                        </div>
+                    </mat-card>
+                    <!-- <mat-card class="mat-elevation-z0 px-0 py-0 h-20 max-h-full" > -->
+                    <img [src]="imageUrl" *ngIf="imageUrl"
+                        [ngStyle]="{ 'width.px': imageWidth, 'height.px': imageHeight }">
+                    <!-- </mat-card> -->
+
+                </div>
+                <div>
+                    <mat-card-title>
+                        <app-card-title title="Password Settings" [sub]="false" [switch]="false"
+                            (switchTap)="changeOrient()" (submitTap)="submit()"></app-card-title>
+                    </mat-card-title>
+                </div>
+                <div class="grid grid-cols-9 gap-0 ">
+                    <mat-card class="col-span-8 mat-elevation-z0">
+                        <div class="grid grid-cols-4 gap-2 h-13">
+                            <mat-form-field class="w-full text-md" appearance="outline">
+                                <mat-label class="label-font-size">Restrict Previous 3 Passwords</mat-label>
+                                <mat-select formControlName="restrictPreviousPw" [placeholder]="'No'">
+                                    <mat-option [value]="true">Yes</mat-option>
+                                    <mat-option [value]="false">No</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                            <mat-form-field class="w-full text-md" appearance="outline">
+                                <mat-label class="label-font-size">Password Expires</mat-label>
+                                <mat-select disableRipple value="selected" formControlName="isPwExpires"
+                                    [placeholder]="'No'">
+                                    <mat-option [value]="true">Yes</mat-option>
+                                    <mat-option [value]="false">No</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                            <mat-form-field *ngIf="companyForm.value.isPwExpires" class="w-full text-md"
+                                appearance="outline">
+                                <mat-label class="label-font-size">Password Expires (Days)</mat-label>
+                                <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                                <input class="input" matInput type="number" min="0" formControlName="daysPwExpires"
+                                    [placeholder]="">
+                            </mat-form-field>
+                            <mat-form-field *ngIf="companyForm.value.isPwExpires" class="w-full text-md"
+                                appearance="outline">
+                                <mat-label class="label-font-size">Remind password </mat-label>
+                                <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                                <input class="input" matInput type="number" min="0"
+                                    formControlName="daysRemindPwExpires" placeholder="expiration Days">
+                            </mat-form-field>
+                        </div>
+                    </mat-card>
+                </div>
+                <div>
+                    <mat-card-title>
+                        <app-card-title title="Integration API Key" [sub]="false" [switch]="false"
+                            (switchTap)="changeOrient()" (submitTap)="submit()"></app-card-title>
+                    </mat-card-title>
+                </div>
+                <div class="grid grid-cols-9 gap-0 ">
+                    <mat-card class="col-span-8 mat-elevation-z0">
+                        <div class="grid grid-cols-4 gap-2 h-13">
+                            <!-- <mat-form-field class="w-full text-md" appearance="outline">
+                                <mat-label class="label-font-size">Keys</mat-label>
+                                <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                                <input readonly class="input" formControlName="apiKeys" matInput type="Password" min="0" [placeholder]="">
+                            </mat-form-field> -->
+                            <mat-form-field class="w-full text-md" appearance="outline">
+                                <mat-label class="label-font-size">Keys</mat-label>
+                                <input readonly class="input" formControlName="apiKeys" matInput [type]="hide ? 'text' : 'password'" min="0" [placeholder]="hide ? '' : '********'">
+                                <mat-icon (click)="copyToClipboard()" class="icon-size-5 : mr-2" matPrefix svgIcon="mat_solid:content_copy"></mat-icon>
+                                <mat-icon class="ml-2" matSuffix (click)="togglePasswordVisibility()" (mouseenter)="hide = true" (mouseleave)="hide = false">
+                                    {{ hide ? 'visibility' : 'visibility_off' }}
+                                </mat-icon>
+                            </mat-form-field>
+                            <div>
+                                <button type="button" class="mt-[3px]" (click)="generate()" mat-flat-button color="primary"
+                                    matTooltip="Export">
+                                    <mat-label class="label-font-size">Generate</mat-label>
+                                    <mat-icon class="mt-3 ml-2" svgIcon="heroicons_solid:key"></mat-icon>
+                                </button>
+                            </div>
+                        </div>
+                    </mat-card>
+                </div>
+            </form>
+        </mat-card>
+    </div>
+</div>

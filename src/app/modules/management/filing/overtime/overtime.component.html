@@ -1,0 +1,221 @@
+<!-- Main -->
+<!-- Main -->
+<form [formGroup]="overtime">
+    <div class="grid grid-cols-9 gap-2 ">
+        <mat-form-field class="w-full text-md h-13"appearance="outline">
+            <mat-label class="label-font-size">Date</mat-label>
+            <input formControlName="date" matInput [matDatepicker]="df" readonly [placeholder]="'MM/DD/YYYY'" (click)="df.open()">
+            <mat-datepicker-toggle matSuffix [for]="df"></mat-datepicker-toggle>
+            <mat-datepicker  #df></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field class="w-full text-md h-5" appearance="outline">
+            <mat-label class="label-font-size">Shift</mat-label>
+            <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+            <mat-select formControlName="shift" [placeholder]="">
+                <mat-option *ngFor="let item of shiftOption" [value]="item.id">{{item.description}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field class="w-full text-md h-5" appearance="outline">
+            <mat-label class="label-font-size">Overtime Type</mat-label>
+            <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+            <mat-select formControlName="overtimeType" [placeholder]="">
+                <mat-option *ngFor="let item of ot" [value]="item.id">{{item.description}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field class="w-full text-md h-5" appearance="outline">
+            <mat-label class="label-font-size">Timing</mat-label>
+            <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+            <mat-select formControlName="timing" [placeholder]="">
+                <mat-option *ngFor="let item of timing" [value]="item.id">{{item.description}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field class="w-full text-md h-5" appearance="outline">
+            <mat-label class="label-font-size">OT Start</mat-label>
+            <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:access_time"></mat-icon>
+            <input formControlName="otstart" readonly [strict]="false" mode="12h" type="text" matTimepicker #t="matTimepicker">
+        </mat-form-field>
+
+        <mat-form-field class="w-full text-md h-5" appearance="outline">
+            <mat-label class="label-font-size">OT End</mat-label>
+            <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:access_time"></mat-icon>
+            <input formControlName="otend" class="timeout" readonly [strict]="false" mode="12h" type="text" matTimepicker #t="matTimepicker">
+        </mat-form-field>
+
+        <div class="dark:hidden" style=" border-style: solid; border-color: rgb(189, 187, 187); border-width: 1px; margin-top: 3px; border-radius: 3px; height: 40px; width:100%;">
+            <textarea class="area mt-2 " formControlName="reason"  matInput ></textarea>
+        </div>
+        <div class="hidden dark:flex" style=" border-style: solid; border-color: rgb(231, 231, 231); border-width: 1px; margin-top: 3px; border-radius: 3px; height: 40px; width:100%;">
+            <textarea class="area mt-2" formControlName="reason"  matInput ></textarea>
+        </div>
+
+        <mat-form-field class="w-full text-md h-5" appearance="outline">
+            <input type="file" formControlName="upload" #fileInput3 (change)="uploadFile($event, 'displayOT','upload',-1)" class=" absolute top-1 z-0 h-full w-full cursor-pointer opacity-0" accept=".jpeg,.jpg,.png,.doc,.docx,.pdf,.xls,.xlsx"/>
+            <input class="sample"  readonly matInput id="displayOT" cdkFocusInitial />
+            <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:upload"></mat-icon>
+            <button  class="upbo" (click)="fileInput3.click($event)" matSuffix mat-button color="primary">Upload</button>
+        </mat-form-field>
+
+        <div>
+            <button class="mt-[3px]" mat-flat-button (click)="addfield()"
+                [color]="'primary'">
+                <mat-icon class="icon-size-5 mt-6" [svgIcon]="'heroicons_solid:plus-circle'"></mat-icon>
+                <span class="hidden sm:inline-block ml-2">Add</span>
+            </button>
+        </div>
+    </div>
+    </form>
+    <!-- <form [formGroup]="otform"> -->
+        <div >
+            <table #OTTable mat-table [dataSource]="datasource" class="mat-elevation-z0 border">
+
+                <ng-container matColumnDef="otaction">
+                    <th class="pl-6" mat-header-cell *matHeaderCellDef>Actions</th>
+                    <td class="pl-1" mat-cell  *matCellDef="let element; let i = index">
+                        <!-- <button type="button" class="pl-5" (click)="handleDeleteBreak(i)" mat-button [color]="'warn'">
+                            <mat-icon class="icon-size-6 : mt-5" matSuffix svgIcon="mat_outline:delete"></mat-icon>
+                        </button> -->
+                        <button class="ml-5 mt-2" mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+                            <mat-icon class="icon-size-6 : mt-6">more_vert</mat-icon>
+                        </button>
+                        <mat-menu #menu="matMenu">
+                        <button mat-menu-item (click)="handleDeleteBreak(i)">
+                            <mat-icon class="icon-size-6 : mt-5" color="warn" >delete</mat-icon>
+                            <span>Delete</span>
+                        </button>
+                        <button mat-menu-item>
+                            <mat-icon class="icon-size-6 : mt-5" color="primary">edit</mat-icon>
+                            <span>Edit</span>
+                        </button>
+                        </mat-menu>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="otdate" class="mat-column">
+                    <th class="pr-5" mat-header-cell *matHeaderCellDef> Date </th>
+                    <td mat-cell class="" *matCellDef="let element">
+                        <mat-form-field class="w-40 text-md h-5" appearance="outline">
+                            <mat-label class="label-font-size"></mat-label>
+                            <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                            <input class="input" [(ngModel)]="element.otdate" matInput type="text" [placeholder]="" readonly>
+                        </mat-form-field>
+                    </td>
+                </ng-container>
+
+                <ng-container class="w-20" matColumnDef="otshift" class="mat-column">
+                    <th class="w-10 pl-[4.5%]" mat-header-cell *matHeaderCellDef> Shift Code </th>
+                    <td mat-cell class="pr-2" *matCellDef="let element">
+                        <mat-form-field class="w-40 text-md h-5" appearance="outline">
+                            <mat-label class="label-font-size"></mat-label>
+                            <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                            <mat-select [(ngModel)]="element.otshift" [placeholder]="">
+                                <mat-option *ngFor="let item of shiftOption" [value]="item.id">{{item.description}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="overtime_type" class="w-50 mr-2 text-md h-10">
+                    <th class="head pl-[5%] " mat-header-cell *matHeaderCellDef> Type </th>
+                    <td mat-cell class="p-1" *matCellDef="let element">
+                        <mat-form-field class="w-40 text-md h-5" appearance="outline">
+                            <mat-label class="label-font-size"></mat-label>
+                            <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                            <mat-select [(ngModel)]="element.overtime_type" [placeholder]="">
+                            <mat-option *ngFor="let item of ot" [value]="item.id">{{item.description}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="ottiming">
+                    <th class="head pl-[4%]" mat-header-cell *matHeaderCellDef> Timing </th>
+                    <td mat-cell class=" " *matCellDef="let element">
+                        <mat-form-field class="w-40 text-md h-5" appearance="outline">
+                            <mat-label class="label-font-size"></mat-label>
+                            <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                            <mat-select [(ngModel)]="element.ottiming" [placeholder]="">
+                            <mat-option *ngFor="let item of timing" [value]="item.id">{{item.description}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="ot_start">
+                    <th class="head pl-[3%]" mat-header-cell *matHeaderCellDef> Start Time </th>
+                    <td mat-cell class="" *matCellDef="let element">
+                        <mat-form-field class="w-40 text-md h-5" appearance="outline">
+                            <mat-label class="label-font-size"></mat-label>
+                            <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:access_time"></mat-icon>
+                            <input  [(ngModel)]="element.ot_start"  readonly [strict]="false" mode="12h" type="text" matTimepicker #t="matTimepicker">
+                        </mat-form-field>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="ot_end">
+                    <th class="head pl-[4%]" mat-header-cell *matHeaderCellDef> End Time </th>
+                    <td mat-cell class="" *matCellDef="let element;let i = index;">
+                        <mat-form-field class="w-40 text-md h-5" appearance="outline">
+                            <mat-label class="label-font-size"></mat-label>
+                            <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:access_time"></mat-icon>
+                            <input class="timeout1" (timeChange)="timevalidatorsOT(i)" [(ngModel)]="element.ot_end"  readonly [strict]="false" mode="12h" type="text" matTimepicker #t="matTimepicker">
+                        </mat-form-field>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="otreason">
+                    <th class="head pl-[4.5%]" mat-header-cell *matHeaderCellDef> Reason </th>
+                    <td class="w-40 pr-2" mat-cell  *matCellDef="let element">
+
+
+                        <div class="dark:hidden" style=" border-style: solid; border-color: rgb(189, 187, 187); border-width: 1px; margin-top: 2px; border-radius: 3px; height: 38px; width:100%;">
+                            <textarea class="area mt-2"  matInput  [(ngModel)]="element.otreason" ></textarea>
+                        </div>
+                        <div class="hidden dark:flex" style=" border-style: solid; border-color: rgb(231, 231, 231); border-width: 1px; margin-top: 2px; border-radius: 3px; height: 38px; width:100%;">
+                            <textarea class="w-full area mt-2"  matInput  [(ngModel)]="element.otreason" ></textarea>
+                        </div>
+
+                        <!-- <div class="dark:hidden" style=" border-style: solid; border-color: rgb(189, 187, 187); border-width: 1px; margin-top: 3px; border-radius: 40px; height: 30px; width:100%;">
+                            <textarea class="area mt-2"  matInput [(ngModel)]="element.otreason" ></textarea>
+                        </div>
+                        <div class="hidden dark:flex" style=" border-style: solid; border-color: rgb(231, 231, 231); border-width: 1px; border-radius: 40px; height: 39px; width:100%;">
+                            <textarea class="area mt-2"  matInput [(ngModel)]="element.otreason" ></textarea>
+                        </div> -->
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="uploadFileot">
+                    <th class="pl-[3%]" mat-header-cell *matHeaderCellDef> Upload File </th>
+                    <td mat-cell class="" *matCellDef="let element; let i = index">
+                        <!-- <mat-form-field class="w-40 text-md h-5" appearance="outline">
+                            <input type="file"  #fileInput2 (change)="uploadFile($event,'displayUH')"  class=" absolute top-1 z-0 h-full w-full cursor-pointer opacity-0" accept=".jpeg,.jpg,.png,.doc,.docx,.pdf,.xls,.xlsx"/>
+                            <input class="sample" id="displayUH" [(ngModel)]="element.uploadFileot" readonly matInput  cdkFocusInitial />
+                            <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:upload"></mat-icon>
+                            <button  class="upb" (click)="fileInput2.click($event)" matSuffix mat-button color="primary">Upload</button>
+                        </mat-form-field> -->
+                        <!-- <mat-form-field class="w-[94%] h-15 ml-2" appearance="outline"> -->
+                        <mat-form-field class="w-40 text-md h-5" appearance="outline">
+                            <!-- <mat-label class="label-font-size">Company Logo</mat-label> -->
+                            <input type="file" id="imageUpload" #fileInput4 (change)="uploadFile($event ,'displayMe'+i, 'uploadFileot',i)"  class="absolute top-1 z-0 h-full w-full cursor-pointer opacity-0" accept=".jpeg,.jpg,.png"/>
+                            <input class="sample" readonly matInput [(ngModel)]="element.uploadFileot" [id]="'displayMe'+i"  cdkFocusInitial />
+                            <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:upload"></mat-icon>
+                            <button  class="upb" (click)="fileInput4.click()" matSuffix mat-button color="primary">Upload</button>
+                        </mat-form-field>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="status" >
+                    <th class="body" mat-header-cell *matHeaderCellDef> Status </th>
+                    <td mat-cell class="w-40 pl-1 pr-1" *matCellDef="let element">{{element.status}}</td>
+                </ng-container>
+
+
+                <tr mat-header-row *matHeaderRowDef="otColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: otColumns;"></tr>
+            </table>
+        </div>
+
+<!-- </form> -->
+

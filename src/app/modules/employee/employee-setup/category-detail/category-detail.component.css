@@ -1,0 +1,37 @@
+.label-font-size{
+    font-size: 15px;
+}
+.mat-icon{
+    position: relative;
+    bottom: 8px;
+}
+input{
+    position: relative;
+    bottom: 10px;
+    font-size: medium;
+}
+.mat-select{
+position: relative;
+bottom: 11px;
+font-size: medium;
+}
+.mat-divider {
+    border-top-color: rgb(172, 172, 172) !important;
+}
+table{
+    width: 50%;
+    height: 100%;
+}
+.mat-cell {
+    /* vertical-align: top; */
+    padding-right: 5px;
+    justify-content: center;
+}
+.example-container {
+    max-height: 600px;
+    overflow: auto;
+    position: relative; /* needed for z-index header issue*/
+}
+.scroll-container {
+    overflow: auto;
+}

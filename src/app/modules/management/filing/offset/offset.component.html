@@ -1,0 +1,157 @@
+<!-- Main -->
+<div class="flex-auto p-2 sm:p-2 overflow-y-auto">
+    <!-- Main -->
+    <div class="flex-auto  sm:p-2  w-full min-w-0 sm:absolute sm:inset-0 sm:overflow-auto text-md">
+        <div >
+            <table #OTable mat-table [dataSource]="OSource" class="mat-elevation-z0 border w-full">
+                <!-- <ng-container matColumnDef="include_expired" >
+                    <th class="head text-center" mat-header-cell *matHeaderCellDef> Include Expiry </th>
+                    <td mat-cell class="body" *matCellDef="let element">{{element.include_expired}}</td>
+                </ng-container> -->
+                <ng-container matColumnDef="overtime_code" >
+                    <th class="head text-center" mat-header-cell *matHeaderCellDef> Overtime Code </th>
+                    <td mat-cell class="body"  *matCellDef="let element">{{element.overtime_code}}</td>
+                </ng-container>
+                <ng-container matColumnDef="overtime" >
+                    <th class="head text-center" mat-header-cell *matHeaderCellDef> Overtime (in Mins) </th>
+                    <td mat-cell class="body" *matCellDef="let element">{{element.overtime}}</td>
+                </ng-container>
+                <ng-container matColumnDef="offset_used" >
+                    <th class="head text-center" mat-header-cell *matHeaderCellDef> Offset Used (in Mins) </th>
+                    <td mat-cell class="body" *matCellDef="let element">{{element.offset_used}}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="offset_field" >
+                    <th class="head text-center" mat-header-cell *matHeaderCellDef> Offset Filed (in Mins) </th>
+                    <td mat-cell class="body" *matCellDef="let element">{{element.offset_field}}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="available" >
+                    <th class="head text-center" mat-header-cell *matHeaderCellDef> Available (in Mins) </th>
+                    <td mat-cell class="body" *matCellDef="let element">{{element.available}}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="expiration" >
+                    <th class="head text-center" mat-header-cell *matHeaderCellDef> Expiration </th>
+                    <td mat-cell class="body" *matCellDef="let element">{{element.expiration}}</td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="oColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: oColumns;"></tr>
+            </table>
+        </div>
+        <div class="m-10"></div>
+        <form [formGroup]="offsetForm">
+            <div class="grid grid-cols-6 gap-2 h-13">
+                <mat-form-field class="w-full text-md" appearance="outline">
+                    <mat-label class="label-font-size"> Offset Date </mat-label>
+                    <input formControlName="dateo"  matInput [matDatepicker]="od" readonly [placeholder]="'MM/DD/YYYY'" (click)="od.open()">
+                    <mat-datepicker-toggle matSuffix [for]="od"></mat-datepicker-toggle>
+                    <mat-datepicker #od></mat-datepicker>
+                </mat-form-field>
+                <mat-form-field class="w-full text-md" appearance="outline">
+                    <mat-label class="label-font-size"> Offset Minutes </mat-label>
+                    <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                    <input (change)="convertMins()" class="input" type="number" formControlName="off_mino" matInput [placeholder]="'Offset minutes'"/>
+                </mat-form-field>
+                <mat-form-field class="w-full text-md" appearance="outline">
+                    <mat-label class="label-font-size"> Offset Hour(s) </mat-label>
+                    <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                    <input readonly class="input" type="number" formControlName="off_hrso" matInput [placeholder]="'Offset hour(s)'"/>
+                </mat-form-field>
+                <div class="dark:hidden" style=" border-style: solid; border-color: rgb(189, 187, 187); border-width: 1px; margin-top: 3px; border-radius: 4px; height: 40px; width: 100%;">
+                    <textarea class="area mt-2 pl-1"  matInput formControlName="reasono" ></textarea>
+                </div>
+                <div class="hidden dark:flex" style=" border-style: solid; border-color: rgb(231, 231, 231); border-width: 1px; margin-top: 3px; border-radius: 4px; height: 40px; width: 100%;">
+                    <textarea class="area mt-2 pl-1"  matInput formControlName="reasono" ></textarea>
+                </div>
+                <!-- <mat-form-field class="w-full text-md" appearance="outline">
+                    <mat-label class="label-font-size"> Reason </mat-label>
+                    <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                    <input class="input" formControlName="reasono" matInput [placeholder]="'Reason'"/>
+                </mat-form-field> -->
+                <mat-form-field class="w-full text-md" appearance="outline">
+                    <input type="file" formControlName="upload_fileo" #fileInput2 (change)="uploadFile($event, 'displayOT')"  class=" absolute top-1 z-0 h-full w-full cursor-pointer opacity-0" accept=".jpeg,.jpg,.png,.doc,.docx,.pdf,.xls,.xlsx"/>
+                    <input class="sample" readonly matInput id="displayOT" cdkFocusInitial />
+                    <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:upload"></mat-icon>
+                    <button  class="upb" (click)="fileInput2.click($event)" matSuffix mat-button color="primary">Upload</button>
+                </mat-form-field>
+                <!-- <mat-form-field class="w-full text-md" appearance="outline">
+                    <mat-label class="label-font-size">Upload File</mat-label>
+                    <mat-icon class="icon-size-5 : mr-2"matSuffix svgIcon="mat_outline:upload"></mat-icon>
+                    <input formControlName="upload_fileo" matInput type="text" [placeholder]="'Upload File'" readonly>
+                </mat-form-field> -->
+                <div class="button-margin-top">
+                    <mat-label class=""></mat-label>
+                    <button (click)="addOFF()" class="text-md" mat-flat-button color="primary" aria-label="example icon">
+                        <mat-icon class="mr-1 mt-5" svgIcon="mat_outline:post_add"></mat-icon>Add
+                    </button>
+                </div>
+            </div>
+        </form>
+        <div></div>
+        <div>
+            <table #OFFTable mat-table [dataSource]="OFFSource" class="mat-elevation-z0 border w-full">
+                <!-- <ng-container matColumnDef="action" >
+                    <th class="head text-center" mat-header-cell *matHeaderCellDef> Action </th>
+                    <td class="body" mat-cell  *matCellDef="let element; let i = index">
+                        <button type="button" class="" (click)="offDelete(i)" mat-icon-button color="warn">
+                            <mat-icon class="" matSuffix svgIcon="mat_outline:delete"></mat-icon>
+                        </button>
+                    </td>
+                </ng-container> -->
+
+                <ng-container matColumnDef="action">
+                    <th class="pl-6" mat-header-cell *matHeaderCellDef>Actions</th>
+                    <td class="pt-1 pl-2" mat-cell  *matCellDef="let element; let i = index">
+                        <!-- <button type="button" class="pl-5" (click)="handleDeleteBreak(i)" mat-button [color]="'warn'">
+                            <mat-icon class="icon-size-6 : mt-5" matSuffix svgIcon="mat_outline:delete"></mat-icon>
+                        </button> -->
+                        <button class="ml-5" mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+                            <mat-icon class="icon-size-6 : mt-5">more_vert</mat-icon>
+                        </button>
+                        <mat-menu #menu="matMenu">
+                        <button mat-menu-item (click)="offDelete(i)">
+                            <mat-icon class="icon-size-6 : mt-5" color="warn" >delete</mat-icon>
+                            <span>Delete</span>
+                        </button>
+                        <button mat-menu-item>
+                            <mat-icon class="icon-size-6 : mt-5" color="primary">edit</mat-icon>
+                            <span>Edit</span>
+                        </button>
+                        </mat-menu>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="date" >
+                    <th class="text-center" mat-header-cell *matHeaderCellDef> Offset Date </th>
+                    <td mat-cell class="body h-4" *matCellDef="let element">{{element.date | date: 'MM-dd-yy'}}</td>
+                </ng-container>
+                <ng-container matColumnDef="off_min" >
+                    <th class="text-center" mat-header-cell *matHeaderCellDef> Offset Minutes </th>
+                    <td mat-cell class="body h-4"  *matCellDef="let element">{{element.off_min}}</td>
+                </ng-container>
+                <ng-container matColumnDef="off_hrs" >
+                    <th class="text-center" mat-header-cell *matHeaderCellDef> Offset Hour(s) </th>
+                    <td mat-cell  class="body h-4" *matCellDef="let element">{{element.off_hrs}}</td>
+                </ng-container>
+                <ng-container matColumnDef="reason" >
+                    <th class="text-center" mat-header-cell *matHeaderCellDef> Reason </th>
+                    <td mat-cell class="body h-4"  *matCellDef="let element">{{element.reason}}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="uploadFile" >
+                    <th class="text-center" mat-header-cell *matHeaderCellDef> Upload File </th>
+                    <td mat-cell class="body h-4" *matCellDef="let element">{{element.uploadFile}}</td>
+                </ng-container>
+
+
+
+                <tr mat-header-row *matHeaderRowDef="offColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: offColumns;"></tr>
+            </table>
+        </div>
+        <!-- Official Business -->
+
+    </div>
+</div>

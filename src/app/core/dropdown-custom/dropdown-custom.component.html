@@ -1,0 +1,42 @@
+<mat-form-field *ngIf="useControl" class="w-full text-md" appearance="outline">
+  <mat-label class="label-font-size">{{placeholder}}</mat-label>
+  <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+  <mat-select [disabled]="disabled"  [formControl]="control" [id]="id" [multiple]="multiple" (selectionChange)="selectedEvent($event)" [placeholder]="placeholder" (infiniteScroll)="getNextBatch()" msInfiniteScroll [complete]="complete" [threshold]="'10%'" (openedChange)="onSelectOpen($event)">
+    <mat-option class="border-2 first-option">
+      <input type="input" class="border-2 pr-4 pl-4 search-field" (click)="$event.stopPropagation()"
+      [placeholder]="'Find ' + placeholder + ' ..'" [formControl]="inputChange">
+    </mat-option>
+    <mat-option [value]="0" (click)="selectAll()" #allSelected *ngIf="all">All</mat-option>
+    <mat-option [value]="0" *ngIf="except">Exception</mat-option>
+    <mat-option [disabled]="enable"  *ngFor="let option of data | async" [id]="option?.encryptID" [value]="option[dropdownValue] ? option[dropdownValue] : option" (click)="selectItem(option.dropdownID, control.value)">
+      {{option[dropdownLabel]}}
+    </mat-option>
+    <mat-select-trigger> {{selDisplayNgModel(control.value)}}
+        <span *ngIf="multiple && control.value?.length > 1 && isALL(control.value)" class="example-additional-selection">
+          (+{{(control.value?.length || 0) - 1}} {{control.value?.length === 2 ? 'other' : 'others'}})
+        </span>
+    </mat-select-trigger>
+  </mat-select>
+</mat-form-field>
+
+
+<mat-form-field *ngIf="!useControl" class="w-full text-md" appearance="outline">
+  <mat-label class="label-font-size">{{placeholder}}</mat-label>
+  <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+  <mat-select [id]="id" [disabled]="disabled" [multiple]="multiple" [(ngModel)]="value" (selectionChange)="selectedEvent($event)" [placeholder]="placeholder" (infiniteScroll)="getNextBatch()" msInfiniteScroll [complete]="complete" [threshold]="'10%'" (openedChange)="onSelectOpen($event)">
+    <mat-option class="border-2 first-option">
+      <input type="input" class="border-2 pr-4 pl-4 search-field" (click)="$event.stopPropagation()"
+      [placeholder]="'Find ' + placeholder + ' ..'" [formControl]="inputChange">
+    </mat-option>
+    <mat-option [value]="0" (click)="selectAll()" #allSelected *ngIf="all">All</mat-option>
+    <mat-option [value]="0" *ngIf="except">Exception</mat-option>
+    <mat-option [disabled]="disableOpt(option.dropdownID)" *ngFor="let option of data | async" [id]="option?.encryptID" [value]="option[dropdownValue] ? option[dropdownValue] : option" (click)="selectItem(option.dropdownID, value)">
+      {{option[dropdownLabel]}}
+    </mat-option>
+    <mat-select-trigger *ngIf="allDisplay"> {{selDisplayNgModel(value)}}
+        <span *ngIf="multiple && value?.length > 1 && isALL(value)" class="example-additional-selection">
+            (+{{(value?.length || 0) - 1}} {{value?.length === 2 ? 'other' : 'others'}})
+        </span>
+    </mat-select-trigger>
+  </mat-select>
+</mat-form-field>

@@ -1,0 +1,282 @@
+<!-- Main -->
+<!-- Main -->
+<form>
+    <div class="grid grid-cols-9 gap-2 ">
+    </div>
+</form>
+<div>
+    <table #OTTable mat-table [dataSource]="datasource" class="mat-elevation-z0 border">
+        <ng-container matColumnDef="otaction">
+            <th class="no-wrap" mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let element; let i = index">
+                <div class="h-13" *ngFor="let child of element.otaction; let x = index">
+                    <button [disabled]="disabledbutton" class="ml-4" mat-icon-button [matMenuTriggerFor]="menu"
+                        aria-label="Example icon-button with a menu">
+                        <mat-icon class="icon-size-6 : mt-5">more_vert</mat-icon>
+                    </button>
+                    <mat-menu #menu="matMenu">
+                        <button (click)="add(x,i,element,'ottiming')" mat-menu-item>
+                            <mat-icon class="icon-size-6 : mt-5" color="primary">add</mat-icon>
+                            <span>Add</span>
+                        </button>
+                        <button mat-menu-item
+                            (click)="getShiftOT(element.shiftId);samedate(i, x) ;isEdit(i,x,true) ; element.disable = false  "
+                            *ngIf="element.status =='First Level Approval' || element.status[x].id =='First Level Approval'  ">
+                            <mat-icon class="icon-size-6 : mt-5" color="primary">edit</mat-icon>
+                            <span>Edit</span>
+                        </button>
+                        <button mat-menu-item (click)="handleDeleteBreak(i,x)">
+                            <mat-icon class="icon-size-6 : mt-5" color="warn">delete</mat-icon>
+                            <span>Delete</span>
+                        </button>
+                        <button mat-menu-item (click)="cancel(element.encryptedId)" *ngIf="element.status[x].id !=''">
+                            <mat-icon class="icon-size-6 : mt-5" color="primary">cancel</mat-icon>
+                            <span>Cancel</span>
+                        </button>
+                    </mat-menu>
+                </div>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="otdate" class="mat-column">
+            <th class="no-wrap" mat-header-cell *matHeaderCellDef> Date </th>
+            <td class="pl-5" mat-cell *matCellDef="let element ; let i = index">
+                <div class="h-13" *ngFor="let child of element.otdate; let x = index">
+                    <mat-form-field class="w-40 text-md h-5" appearance="outline" [disabled]="true">
+                        <mat-label class="label-font-size"></mat-label>
+                        <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                        <input [disabled]="true" class="input" [(ngModel)]="child.id" matInput type="text"
+                            [placeholder]="" readonly>
+                    </mat-form-field>
+                </div>
+            </td>
+        </ng-container>
+
+
+        <ng-container class="w-20" matColumnDef="otshift" class="mat-column">
+            <th class="no-wrap" mat-header-cell *matHeaderCellDef> Shift Code </th>
+            <td class="pl-5" mat-cell *matCellDef="let element ; let i = index">
+                <div class="h-13" *ngFor="let child of element.otshift; let x = index">
+                    <!-- <mat-form-field class="w-52 text-md h-3" appearance="outline">
+                                <mat-label class="label-font-size"></mat-label>
+                                <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                                <mat-select [disabled]="element.disable" [(ngModel)]="child.id"  [placeholder]="">
+                                    <mat-option *ngFor="let item of shiftOption" [value]="item.id">{{item.description}}</mat-option>
+                                </mat-select>
+                            </mat-form-field> -->
+
+                    <mat-form-field class="w-40 text-md h-5" appearance="outline">
+                        <mat-icon class="icon-size-5 mr-2 mt-5" matPrefix [svgIcon]="'mat_outline:info'"></mat-icon>
+                        <mat-select [disabled]="child.disable || disabledbutton" [(ngModel)]="child.id"
+                            [placeholder]="''" (infiniteScroll)="getNextBatchParent()" msInfiniteScroll
+                            [complete]="complete" threshold="{{systemSettings.infinitScrollThreshold}}">
+                            <mat-option>
+                                <ngx-mat-select-search [formControl]="inputChangeParent"
+                                    [placeholderLabel]="'Find ' + placeholder + ' ..'"
+                                    [noEntriesFoundLabel]="'No ' + placeholder + ' found'"></ngx-mat-select-search>
+                            </mat-option>
+                            <mat-option *ngFor="let option of returnList(i ,'shiftCodeDef')"
+                                [value]="option.dropdownID">
+                                {{option.description}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <!-- <mat-form-field class="w-full text-md h-3" appearance="outline">
+                                <mat-label class="label-font-size"></mat-label>
+                                <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                                <input class="input" [(ngModel)]="child.id" matInput type="text" [placeholder]="" readonly>
+                            </mat-form-field> -->
+                </div>
+            </td>
+        </ng-container>
+        <!-- overtimeTypeId -->
+        <ng-container matColumnDef="overtime_type">
+            <th class="no-wrap" mat-header-cell *matHeaderCellDef> Type </th>
+            <td class="pl-5" mat-cell *matCellDef="let element ; let i = index">
+                <div class="h-13 w-30" *ngFor="let child of element.overtime_type; let x = index">
+                    <mat-form-field class="w-full text-md h-5" appearance="outline">
+                        <mat-label class="label-font-size"></mat-label>
+                        <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                        <mat-select [disabled]="child.disable || disabledbutton" [(ngModel)]="child.id"
+                            [placeholder]="">
+                            <mat-option *ngFor="let item of returnList(i ,'overtimeTypeDef')"
+                                [value]="item.dropdownID">{{item.description}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <!-- <app-dropdown  [useControl]="false" [all]="false" [multiple]="false" (selected)="child.id=$event"  [value]="child.id"  [options]="returnList(i ,'overtimeTypeDef')" [icon]="'mat_outline:info'" [type]="52"></app-dropdown> -->
+                </div>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="ottiming">
+            <th class="no-wrap" mat-header-cell *matHeaderCellDef> Filing Type </th>
+            <td class="pl-5" mat-cell *matCellDef="let element ; let i = index">
+                <div class="h-13" *ngFor="let child of element.ottiming; let x = index">
+                    <mat-form-field class="w-50 text-md h-5" appearance="outline" >
+                        <mat-label class="label-font-size"></mat-label>
+                        <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                        <mat-select (selectionChange)="validation(element,i,x,false) ;restdayDate(element,i,x,'ottime')" [disabled]="child.disable || disabledbutton" [(ngModel)]="child.id"
+                            [placeholder]="">
+                            <mat-option *ngFor="let item of returnList(i ,'overtimeTimingDef')"
+                                [value]="item.dropdownID">{{item.description}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <!-- <app-dropdown  [useControl]="false" [all]="false" [multiple]="false" (selected)="child.id=$event ; valid(x , i)" [value]="child.id"  [options]="returnList(i ,'overtimeTimingDef')" [icon]="'mat_outline:info'" [type]="70"></app-dropdown> -->
+                </div>
+                <!-- <div *ngFor="let child of element.ottiming; let x = index">
+                            <mat-form-field class="w-full text-md h-5" appearance="outline">
+                                <mat-label class="label-font-size"></mat-label>
+                                <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                                <mat-select [(ngModel)]="child.id" [placeholder]="">
+                                <mat-option *ngFor="let item of timing" [value]="item.id">{{item.description}}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div> -->
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="ot_start">
+            <th class="no-wrap" mat-header-cell *matHeaderCellDef> Start Time </th>
+            <td class="pl-5" mat-cell *matCellDef="let element let i = index">
+                <div class="h-13" *ngFor="let child of element.ot_start; let x = index">
+                    <mat-form-field class="w-50 text-md h-5" appearance="outline">
+                        <input matInput [ngxMatDatetimePicker]="picker"
+                            (click)="picker.open()" placeholder="Choose a date"  [min]="date_min_max(element,x,true)" [max]="date_min_max(element,x,false)"
+                            [(ngModel)]="child.id" [disabled]="child.disable || disabledbutton" (dateChange)="otvalidation(element,i,x,'df') ;restdayDate(element,i,x,'dt')">
+                            <mat-datepicker-toggle matSuffix [for]="picker" >
+                        </mat-datepicker-toggle>
+                        <ngx-mat-datetime-picker disabled [disabled]="child.disable || disabledbutton" #picker
+                            [showSpinners]="showSpinners" [showSeconds]="showSeconds" [stepHour]="stepHour"
+                            [stepMinute]="stepMinute" [stepSecond]="false" [touchUi]="touchUi" [color]="color"
+                            [enableMeridian]="true" >
+                        </ngx-mat-datetime-picker>
+                    </mat-form-field>
+                </div>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="ot_end">
+            <th class="no-wrap" mat-header-cell *matHeaderCellDef> End Time </th>
+            <td class="pl-5" mat-cell *matCellDef="let element;let i = index;">
+                <div class="h-13" *ngFor="let child of element.ot_end; let x = index">
+                    <mat-form-field class="w-50 text-md h-5" appearance="outline">
+                        <input  matInput [ngxMatDatetimePicker]="picker1"
+                            (click)="picker1.open()" placeholder="Choose a date" [min]="date_min_max(element,x,true)" [max]="date_min_max(element,x,false)"
+                            [(ngModel)]="child.id" [disabled]="child.disable || disabledbutton" (dateChange)="otvalidation(element,i,x,'dt')">
+                        <mat-datepicker-toggle  matSuffix [for]="picker1" >
+                        </mat-datepicker-toggle>
+                        <ngx-mat-datetime-picker  [disabled]="child.disable || disabledbutton" #picker1
+                            [showSpinners]="showSpinners" [showSeconds]="showSeconds" [touchUi]="touchUi"
+                            [color]="color" [enableMeridian]="true">
+                        </ngx-mat-datetime-picker>
+                    </mat-form-field>
+                </div>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="otreason">
+            <th class="no-wrap" class="no-wrap" mat-header-cell *matHeaderCellDef> Reason </th>
+            <td class="w-full pl-5" mat-cell *matCellDef="let element let i = index">
+                <div class="h-13 pt-[1px]" *ngFor="let child of element.otreason; let x = index">
+                    <div class="dark:hidden flex w-full "
+                        style=" border-style: solid; border-color: rgb(189, 187, 187); border-width: 1px; margin-top: 3px; border-radius: 3px; height: 39px;">
+                        <textarea [disabled]="child.disable" (blur)="reasonmodal($event,i)" class="area  w-full mt-1"
+                            matInput [(ngModel)]="child.id"></textarea>
+                    </div>
+                    <div class="hidden dark:flex flex w-full "
+                        style=" border-style: solid; border-color: rgb(231, 231, 231); border-width: 1px; margin-top: 3px; border-radius: 3px; height: 39px;">
+                        <textarea [disabled]="child.disable" (blur)="reasonmodal($event,i)" class="area w-full mt-1"
+                            matInput [(ngModel)]="child.id"></textarea>
+                    </div>
+                </div>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="status">
+            <th class="no-wrap" mat-header-cell *matHeaderCellDef> Status </th>
+            <td class="pl-5" mat-cell *matCellDef="let element let i = index">
+                <div class="h-13" *ngFor="let child of element.status; let x = index">
+                    <!-- <p class="mt-2 mb-2">{{child.id}}</p> -->
+                    <mat-form-field class="w-[92px] text-md h-5" appearance="outline" [disabled]="true">
+                        <mat-label class="label-font-size"></mat-label>
+                        <input [disabled]="true" class="input" [(ngModel)]="child.id" matInput type="text"
+                            [placeholder]="" readonly>
+                    </mat-form-field>
+                </div>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="uploadFileot">
+            <th class="no-wrap" mat-header-cell *matHeaderCellDef>Upload</th>
+            <td class="pl-5" mat-cell *matCellDef="let element; let i = index">
+                <div class="w-[40px] h-13" *ngFor="let child of element.uploadFileot; let x = index">
+                    <mat-form-field class="w-[40px] text-md h-5" appearance="outline">
+                        <input [disabled]="child.disable" type="file" id="imageUpload" #fileInput4
+                            (change)="uploadFile($event ,'displayMe'+i, 'uploadFileot',i,x)"
+                            class="absolute top-1 z-0 h-full w-full cursor-pointer opacity-0"
+                            accept=".jpeg,.jpg,.png,.doc,.docx,.pdf,.xls,.xlsx" />
+                        <input class="sample" readonly matInput [(ngModel)]="child.id" [id]="'displayMe'+i"
+                            cdkFocusInitial />
+                        <mat-icon [disabled]="child.disable" class="icon-size-5 : mr-2" matPrefix matTooltip={{child.id}}
+                            svgIcon="mat_outline:upload" (click)="fileInput4.click()"></mat-icon>
+                        <button [disabled]="child.disable" class="upb hidden" (click)="fileInput4.click()" matSuffix
+                            mat-button color="primary"></button>
+                    </mat-form-field>
+                </div>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="otColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: otColumns;"></tr>
+    </table>
+</div>
+
+<div>
+    <!-- <table #shiftTable mat-table [dataSource]="dt"  class=" mat-elevation-z0 border">
+
+                <ng-container matColumnDef="action">
+                    <th class="head" mat-header-cell *matHeaderCellDef>
+
+                    </th>
+                    <td mat-cell *matCellDef="let element; let i = index">
+                        <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+                            <mat-icon>more_vert</mat-icon>
+                          </button>
+                          <mat-menu #menu="matMenu">
+                            <button mat-menu-item (click)="add(i)">
+                              <mat-icon>add</mat-icon>
+                              <span>add</span>
+                            </button>
+                          </mat-menu>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="monday">
+                    <th class="head" mat-header-cell *matHeaderCellDef> Monday </th>
+                    <td mat-cell *matCellDef="let element ; let i = index">
+                        <div *ngFor="let child of element.monday; let x = index">
+                            <mat-form-field class="w-full text-md hover:text-base">
+                                <mat-icon class="icon-size-5 mr-2" matPrefix [svgIcon]="'mat_outline:info'"></mat-icon>
+                                <mat-select [(ngModel)]="child.id"  [placeholder]=""
+                                    msInfiniteScroll [complete]="complete" >
+                                    <mat-option>
+                                        <ngx-mat-select-search
+                                            [placeholderLabel]="'Find ' + placeholder + ' ..'"
+                                            [noEntriesFoundLabel]="'No ' + placeholder + ' found'"></ngx-mat-select-search>
+                                    </mat-option>
+                                    <mat-option *ngFor="let option of dataChild | async" [value]="option.dropdownID">
+                                        {{option.description}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                    </td>
+                </ng-container>
+
+
+
+                <tr mat-header-row *matHeaderRowDef="columns"></tr>
+                <tr mat-row *matRowDef="let row; columns: columns;"></tr>
+            </table> -->
+</div>
+<!-- </form> -->

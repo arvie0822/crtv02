@@ -1,0 +1,203 @@
+<div class="flex flex-col flex-auto min-w-0">
+    <!-- Main -->
+    <div class="flex-auto  sm:p-2  w-full min-w-0 sm:inset-0 sm:overflow-auto text-md {{view?'':''}}">
+        <mat-card>
+        <mat-card-title *ngIf="!hidebuttons">
+            <app-card-title title="Payroll Category" [sub]="true" [back]="!view" (submitTap)="submit()"></app-card-title>
+        </mat-card-title>
+        <mat-card-title *ngIf="hidebuttons">
+            <app-card-title title="Payroll Category" [sub]="false" [back]="!view"></app-card-title>
+            <div class="grid place-items-end">
+                <button *ngIf="hidebuttons" (click)="confirm()" class="text-md" mat-flat-button color="primary" aria-label="example icon">
+                    Confirm
+                </button>
+            </div>
+        </mat-card-title>
+            <mat-card-content>
+                <form [formGroup]="payrollCategoryForm">
+                    <div *ngIf="hide" class="grid grid-cols-5 gap-2 h-14">
+
+                        <mat-form-field *ngIf="tkVisib" class="w-full text-md mt-1" appearance="outline">
+                            <mat-label class="label-font-size">Timekeeping Category</mat-label>
+                            <mat-select formControlName="tkCat" [placeholder]="'No'">
+                                <mat-option *ngFor="let item of tkcat"
+                                    [value]="item.id">{{item.description}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+
+                        <mat-form-field *ngIf="hide" class="w-full text-md" appearance="outline">
+                            <mat-label class="label-font-size">Name</mat-label>
+                            <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                            <input class="input" formControlName="name" matInput [placeholder]="'Name'" />
+                        </mat-form-field>
+
+                        <mat-form-field *ngIf="hide"  class="w-full text-md" appearance="outline">
+                        <mat-label class="label-font-size">Description</mat-label>
+                            <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                            <input class="input" formControlName="description" matInput [placeholder]="'Description'" />
+                        </mat-form-field>
+
+                        <mat-form-field *ngIf="hide" class="w-full text-md" appearance="outline">
+                            <mat-label class="label-font-size">Status</mat-label>
+                            <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                            <mat-select formControlName="active">
+                                <mat-option [value]="true">Active</mat-option>
+                                <mat-option [value]="false">Inactive</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+
+                    </div>
+
+                    <div class="mt-5">
+                        <mat-card-title>
+                            <app-card-title title="Settings" [sub]="false" [switch]="false"></app-card-title>
+                        </mat-card-title>
+                    </div>
+
+                    <div class="grid grid-cols-5 gap-2 h-14">
+
+                        <mat-form-field class="w-full text-md" appearance="outline">
+                            <mat-label class="label-font-size">Payroll Cut-off</mat-label>
+                            <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                            <mat-select formControlName="payrollCutoff">
+                                <mat-option *ngFor="let item of cutoff"
+                                    [value]="item.dropdownID">{{item.description}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <!-- <app-dropdown-custom [control]="payrollCategoryForm.get('payrollCutOff')" [type]="1015"></app-dropdown-custom> -->
+
+                        <mat-form-field class="w-full text-md" appearance="outline">
+                            <mat-label class="label-font-size">Factor Rate</mat-label>
+                            <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                            <input class="input" formControlName="factorRate" type="number" matInput
+                                [placeholder]="'Factor Rate'" />
+                        </mat-form-field>
+
+                        <!-- <mat-form-field class="w-full text-md" appearance="outline">
+                            <mat-label class="label-font-size">Initial on Daily Rate</mat-label>
+                            <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                            <mat-select formControlName="InDailyEarnings" multiple>
+                                <mat-option *ngFor="let item of dailyRateList"
+                                    [value]="item.dropdownID">{{item.description}}</mat-option>
+                            </mat-select>
+                        </mat-form-field> -->
+
+                        <app-dropdown-custom [control]="payrollCategoryForm.get('inDailyEarnings')" [icon]="'mat_outline:info'"
+                        [type]="1047" [value]="paycat.inDailyEarnings" [multiple]="true"
+                        [options]="InitialDE" [all]="true" [useControl]="true"></app-dropdown-custom>
+
+                        <mat-form-field class="w-full text-md" appearance="outline">
+                            <mat-label class="label-font-size">Daily Rate</mat-label>
+                            <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                            <mat-select formControlName="dailyRate">
+                                <mat-option *ngFor="let item of dailyRateList"
+                                    [value]="item.dropdownID">{{item.description}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+
+                        <mat-form-field class="w-full text-md" appearance="outline">
+                            <mat-label class="label-font-size">Hourly Rate</mat-label>
+                            <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                            <mat-select formControlName="hourlyRate">
+                                <mat-option *ngFor="let item of hourlyRateList"
+                                    [value]="item.dropdownID">{{item.description}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+
+                    </div>
+
+                    <div class="grid grid-cols-5 gap-2 h-14">
+
+                        <mat-form-field class="w-full text-md" appearance="outline">
+                            <mat-label class="label-font-size">Hours in a day</mat-label>
+                            <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                            <input class="input" formControlName="hoursInADay" type="number" matInput
+                                [placeholder]="'Hours in a day'" />
+                        </mat-form-field>
+
+                        <mat-form-field class="w-full text-md" appearance="outline">
+                            <mat-label class="label-font-size">Wage Type</mat-label>
+                            <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                            <mat-select formControlName="wageType">
+                                <mat-option *ngFor="let item of wage"
+                                    [value]="item.dropdownID">{{item.description}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+
+                        <mat-form-field class="w-full text-md" appearance="outline">
+                            <mat-label class="label-font-size">MWE</mat-label>
+                            <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                            <mat-select formControlName="mwe">
+                                <mat-option *ngFor="let item of boolOption"
+                                    [value]="item.dropdownID">{{item.description}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+
+                        <app-dropdown-custom [multiple]="false" [control]="payrollCategoryForm.get('premiumRateType')"   [type]="1036" [value]="paycat.premiumRateType"   [options]="PremRateTypeList" [useControl]="true"></app-dropdown-custom>
+                        <app-dropdown-custom [multiple]="true" [all]="true" [control]="payrollCategoryForm.get('fixedDeductions')" [type]="1021" [value]="paycat.fixedDeductions" [options]="fixedDedList" [useControl]="true"></app-dropdown-custom>
+
+                    </div>
+
+                    <div class="grid grid-cols-5 gap-2 h-14">
+
+                        <app-dropdown-custom [multiple]="true" [all]="true" [control]="payrollCategoryForm.get('fixedEarnings')"   [type]="1022" [value]="paycat.fixedEarnings"   [options]="fixedEarList" [useControl]="true"></app-dropdown-custom>
+                        <app-dropdown-custom [multiple]="false" [control]="payrollCategoryForm.get('sss')"   [type]="1024" [value]="paycat.sss"   [options]="sssList" [useControl]="true"></app-dropdown-custom>
+                        <app-dropdown-custom [multiple]="false" [control]="payrollCategoryForm.get('hdmf')"  [type]="1025" [value]="paycat.hdmf"  [options]="hdmfList" [useControl]="true"></app-dropdown-custom>
+                        <app-dropdown-custom [multiple]="false" [control]="payrollCategoryForm.get('phic')"  [type]="1026" [value]="paycat.phic"  [options]="phicList" [useControl]="true"></app-dropdown-custom>
+                        <app-dropdown-custom [multiple]="false" [control]="payrollCategoryForm.get('tax')"   [type]="1027" [value]="paycat.tax"   [options]="taxList" [useControl]="true"></app-dropdown-custom>
+
+                    </div>
+
+                    <div class="grid grid-cols-5 gap-2 h-14">
+
+                        <mat-form-field class="w-full text-md" appearance="outline">
+                            <mat-label class="label-font-size">Deduction Hierarchy</mat-label>
+                            <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                            <mat-select formControlName="deductionHierarchy">
+                                <mat-option *ngFor="let item of dedHierList"
+                                    [value]="item.dropdownID">{{item.description}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+
+                        <mat-form-field class="w-full text-md" appearance="outline">
+                            <mat-label class="label-font-size">Report Setting</mat-label>
+                            <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                            <mat-select formControlName="reportSetting">
+                                <mat-option *ngFor="let item of repSettingList"
+                                    [value]="item.dropdownID">{{item.description}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+
+                        <mat-form-field class="w-full text-md" appearance="outline">
+                            <mat-label class="label-font-size">SSS Maternity</mat-label>
+                            <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                            <mat-select formControlName="sssMaternity">
+                                <mat-option *ngFor="let item of sssMatList"
+                                    [value]="item.dropdownID">{{item.description}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+
+                        <app-dropdown-custom [multiple]="false" [control]="payrollCategoryForm.get('_13thMonthPay')"   [type]="1037" [value]="paycat._13thMonthPay"   [options]="_13MonthList" [useControl]="true"></app-dropdown-custom>
+                        <app-dropdown-custom [multiple]="false" [control]="payrollCategoryForm.get('_14thMonthPay')"   [type]="1038" [value]="paycat._14thMonthPay"   [options]="_14MonthList" [useControl]="true"></app-dropdown-custom>
+
+                    </div>
+
+                    <div class="grid grid-cols-5 gap-2 h-14">
+                        <app-dropdown-custom [multiple]="false" [control]="payrollCategoryForm.get('_15thMonthPay')"   [type]="1039" [value]="paycat._15thMonthPay"   [options]="_15MonthList" [useControl]="true"></app-dropdown-custom>
+                        <app-dropdown-custom [multiple]="false" [control]="payrollCategoryForm.get('_16thMonthPay')"   [type]="1040" [value]="paycat._16thMonthPay"   [options]="_16MonthList" [useControl]="true"></app-dropdown-custom>
+
+                        <mat-form-field class="w-full text-md" appearance="outline">
+                            <mat-label class="label-font-size">Retroactive Salary Adjustment</mat-label>
+                            <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                            <mat-select formControlName="retroactiveSalaryAdj">
+                                <mat-option *ngFor="let item of boolOption2"
+                                    [value]="item.dropdownID">{{item.description}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+
+                </form>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>

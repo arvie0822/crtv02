@@ -1,0 +1,90 @@
+<div class="flex-auto p-6 sm:p-6 overflow-y-auto">
+    <!-- Main -->
+    <div class="flex-auto  sm:p-2  w-full min-w-0 sm:absolute sm:inset-0 sm:overflow-auto text-md">
+       <div class="">
+            <table mat-table [dataSource]="dataSource" class="mat-elevation-z0 border">
+
+                <ng-container matColumnDef="newhirerequirments">
+                    <th mat-header-cell *matHeaderCellDef >New Hire Requirments</th>
+                    <td mat-cell *matCellDef="let element"> {{element.newhirerequirments}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="documentsubmitted">
+                    <th mat-header-cell *matHeaderCellDef> Documents Submitted </th>
+                    <td mat-cell *matCellDef="let element">
+                        <mat-form-field class="w-40 text-md h-10" appearance="outline">
+                            <mat-label class="label-font-size"></mat-label>
+                            <mat-select [placeholder]="" >
+                                <mat-option [value]="true">Yes</mat-option>
+                                <mat-option [value]="false">No</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="datesubmitted">
+                    <th mat-header-cell *matHeaderCellDef> Date Submitted </th>
+                    <td mat-cell *matCellDef="let element">
+                        <mat-form-field class="w-40 text-md h-10" appearance="outline">
+                            <mat-label class="label-font-size"></mat-label>
+                            <input matInput [matDatepicker]="df" readonly [placeholder]="" (click)="df.open()">
+                            <mat-datepicker-toggle matSuffix [for]="df"></mat-datepicker-toggle>
+                            <mat-datepicker #df></mat-datepicker>
+                        </mat-form-field>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="issueddate">
+                    <th mat-header-cell *matHeaderCellDef> Issued Date </th>
+                    <td mat-cell *matCellDef="let element">
+                        <mat-form-field class="w-40 text-md h-10" appearance="outline">
+                            <mat-label class="label-font-size"></mat-label>
+                            <input matInput [matDatepicker]="df" readonly [placeholder]="" (click)="df.open()">
+                            <mat-datepicker-toggle matSuffix [for]="df"></mat-datepicker-toggle>
+                            <mat-datepicker #df></mat-datepicker>
+                        </mat-form-field>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="Expirationdate">
+                    <th mat-header-cell *matHeaderCellDef> Expiration Date </th>
+                    <td mat-cell *matCellDef="let element">
+                        <mat-form-field class="w-40 text-md h-10" appearance="outline">
+                            <mat-label class="label-font-size"></mat-label>
+                            <input matInput [matDatepicker]="df" readonly [placeholder]="" (click)="df.open()">
+                            <mat-datepicker-toggle matSuffix [for]="df"></mat-datepicker-toggle>
+                            <mat-datepicker #df></mat-datepicker>
+                        </mat-form-field>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="deadlineofsubmition">
+                    <th mat-header-cell *matHeaderCellDef> Deadline Of Submission </th>
+                    <td mat-cell *matCellDef="let element">
+                        <mat-form-field class=" w-60 text-md h-10" appearance="outline">
+                            <mat-label class="label-font-size"></mat-label>
+                            <!-- <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon> -->
+                            <input  matInput type="text" [placeholder]="''">
+                        </mat-form-field>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="uploaddocuments">
+                    <th mat-header-cell *matHeaderCellDef> Upload Documents </th>
+                    <td mat-cell *matCellDef="let element">
+                        <mat-form-field class="w-60 text-md h-10" appearance="outline">
+                            <input (invalid)="true"  type="file" #fileInput2 (change)="uploadFile($event, '')"  class=" absolute top-1 z-0 h-full w-full cursor-pointer opacity-0 upload" accept=".jpeg,.jpg,.png,.doc,.docx,.pdf,.xls,.xlsx"/>
+                            <input class="sample upload" readonly matInput id="displayLeave" cdkFocusInitial/>
+                            <mat-icon class="icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:upload"></mat-icon>
+                            <button (invalid)="true"  class="upb" (click)="fileInput2.click($event)" matSuffix mat-button color="primary">Upload</button>
+                        </mat-form-field>
+                    </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+            <mat-paginator [length]="20"  #paginator [pageSizeOptions]="[8, 20]" showFirstLastButtons
+            aria-label="Select page of periodic elements"> </mat-paginator>
+        </div>
+    </div>
+</div>

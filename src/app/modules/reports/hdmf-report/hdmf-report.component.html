@@ -1,0 +1,49 @@
+<div class="flex flex-col flex-auto min-w-0">
+    <!-- Main -->
+    <div class="flex-auto  sm:p-2  w-full min-w-0 sm:absolute sm:inset-0 sm:overflow-auto text-md">
+        <!-- Content -->
+        <mat-card class="h-full">
+            <mat-card-title>
+                <app-card-title title="HDMF" [sub]="false" [back]="true" [switch]="false"></app-card-title>
+                <!-- (submitTap)="" -->
+            </mat-card-title><br>
+            <form [formGroup]="hdmfForm">
+                <div class="grid grid-cols-10 gap-2">
+
+                    <app-dropdown [control]="hdmfForm.get('month')"  [options]="dropdownOptions.monthlydef" [icon]="'mat_outline:info'" [type]="54"></app-dropdown>
+
+                    <mat-form-field class="field" appearance="outline">
+                        <mat-label class="label-font-size">Year</mat-label>
+                        <mat-icon class="uploadbutton icon-size-5 : mr-2" matPrefix
+                            svgIcon="mat_outline:info"></mat-icon>
+                        <mat-select formControlName="year">
+                            <mat-option *ngFor="let item of year" [value]="item.description">
+                                {{item.description}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <mat-form-field class="field" appearance="outline">
+                        <mat-label class="label-font-size">Report Type</mat-label>
+                        <mat-icon class="uploadbutton icon-size-5 : mr-2" matPrefix
+                            svgIcon="mat_outline:info"></mat-icon>
+                        <mat-select formControlName="reportType">
+                            <mat-option *ngFor="let item of report" [value]="item.id">
+                                {{item.description}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <div class="w-48 h-13 mr-3"><app-dropdown-custom [control]="hdmfForm.get('company')" [type]="1001" [value]="this.hdmf.company" [options]="dropdownOptions.subCompanyDef" [useControl]="true" ></app-dropdown-custom></div>
+
+                    <button class="mb-5 mt-0.5 w-10" (click)="exportHDMF()" mat-flat-button [color]="'primary'" matTooltip="Export">
+                        <mat-icon class="icon-size-5 mt-5"
+                            [svgIcon]="'mat_outline:file_upload'">
+                        </mat-icon>
+                    </button>
+
+                </div>
+            </form>
+        </mat-card>
+    </div>
+</div>

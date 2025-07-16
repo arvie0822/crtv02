@@ -1,0 +1,28 @@
+table {
+    width: 100%;
+}
+.label-font-size{
+    font-size: 15px;
+   }
+   .mat-icon{
+       position: relative;
+       bottom: 8px;
+   }
+   input{
+     position: relative;
+     bottom: 10px;
+     font-size: medium;
+   }
+
+.mat-cell{
+    padding-left: 0%;
+}
+.mat-header-cell{
+    padding-left: 0%;
+    padding-top: 1%;
+}
+.put-border{
+    margin-top: 5%;
+}
+
+

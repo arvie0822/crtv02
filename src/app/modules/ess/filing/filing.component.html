@@ -1,0 +1,132 @@
+<!-- Main -->
+<div class="flex-auto p-6 sm:p-6 overflow-y-auto">
+    <!-- Main -->
+    <div class="flex-auto  sm:p-2  w-full min-w-0 sm:absolute sm:inset-0 sm:overflow-auto text-md">
+        <!-- Content -->
+        <mat-card class="pt-1">
+            <mat-card-title>
+                <app-card-title title="Filing" [sub]="!disabledbutton && !disabledbuttonOT" [back]="true" (submitTap)="submit()"></app-card-title>
+            </mat-card-title>
+            <mat-card-content class="h-[85%] mb-1">
+                <form [formGroup]="filingForm">
+                    <div class="flex space-x-4 mb-1 mt-1 h-10">
+                        <!-- <mat-form-field class="w-full text-md " appearance="outline">
+                            <mat-label class="label-font-size">Filing Types</mat-label>
+                            <mat-icon class="uploadbutton icon-size-5 : mr-2" matPrefix svgIcon="mat_outline:info"></mat-icon>
+                            <mat-select (selectionChange)="clear($event)" formControlName="filingTypes">
+                            <mat-option *ngFor="let item of filing" [value]="item.id">{{item.description}}</mat-option>
+                            </mat-select>
+                        </mat-form-field> -->
+                        <app-dropdown-custom *ngIf="globalmoduleId" [control]="filingForm.get('employeeId')" (selected)="empdropdown() ; validation()"
+                            [icon]="'mat_outline:info'" [type]="1035" [all]="false" [multiple]="false" [options]="dropdownOptions.employeedef"
+                            [useControl]="true">
+                        </app-dropdown-custom>
+
+                        <app-dropdown-custom *ngIf="(this.filingForm.value.employeeId !=0 && globalmoduleId)||(globalmoduleId ==false)" (selected)="validation(); leaves()" [control]="filingForm.get('filingTypes')"
+                            [type]="1028" [value]="this.filingForm.value.filingTypes"
+                            [options]="dropdownOptions.filingdef" [useControl]="true"></app-dropdown-custom>
+
+                        <mat-form-field *ngIf="filingtypeid==34" class="w-50 text-md" appearance="outline">
+                            <mat-label>Shift Type</mat-label>
+                            <mat-select formControlName="shiftType">
+                                <mat-option *ngFor="let item of shiftTypeList" [value]="item.dropdownID">{{item.description}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+
+                        <mat-form-field *ngIf="filingForm.value.filingTypes == 37" appearance="outline">
+                            <mat-label class="label-font-size">Include expired</mat-label>
+                            <mat-icon class="uploadbutton icon-size-5 : mr-2" matPrefix
+                                svgIcon="mat_outline:info"></mat-icon>
+                            <mat-select  (selectionChange)="isexpire()" formControlName="includeExpiry">
+                                <mat-option *ngFor="let item of application"
+                                    [value]="item.id">{{item.description}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <mat-form-field
+                            *ngIf="filingForm.value.filingTypes == 32 || filingForm.value.filingTypes == 33 || filingForm.value.filingTypes == 36 || filingForm.value.filingTypes == 35 || filingForm.value.filingTypes == 114"
+                            class="w-50 text-md" appearance="outline">
+                            <mat-label class="label-font-size">Date From</mat-label>
+                            <input (change)="edit()" (dateChange)="filingtype()" formControlName="dateFrom" [min]="min"  matInput
+                                [matDatepicker]="df" readonly [placeholder]="'MM/DD/YYYY'" (click)="df.open()">
+                            <mat-datepicker-toggle matSuffix [for]="df"></mat-datepicker-toggle>
+                            <mat-datepicker #df></mat-datepicker>
+                        </mat-form-field>
+                        <mat-form-field *ngIf="filingForm.value.filingTypes == 33 || filingForm.value.filingTypes == 32 || filingForm.value.filingTypes == 35 ||
+                            filingForm.value.filingTypes == 36 || filingForm.value.filingTypes == 114" class="w-50 text-md" appearance="outline">
+                            <mat-label class="label-font-size">Date To</mat-label>
+                            <input (change)="edit()" (dateChange)="filingtype()" formControlName="dateTo" [min]="min" matInput
+                                [matDatepicker]="dt" readonly [placeholder]="'MM/DD/YYYY'" (click)="dt.open()">
+                            <mat-datepicker-toggle matSuffix [for]="dt"></mat-datepicker-toggle>
+                            <mat-datepicker #dt></mat-datepicker>
+                        </mat-form-field>
+
+                        <div *ngIf="filingForm.value.filingTypes == 33 || filingForm.value.filingTypes == 32 || filingForm.value.filingTypes == 35 || filingForm.value.filingTypes == 36 || filingForm.value.filingTypes == 114"
+                            class="flex mt-1">
+                            <div>
+                                <button [disabled]="disabledbutton" (click)="search($event) ; edit() ; validation()" class="ml-1 px-1 sm:px-4 min-w-10" mat-flat-button
+                                    [color]="'primary'" matTooltip="Search">
+                                    <mat-icon class="icon-size-5 mt-5"
+                                        [svgIcon]="'heroicons_outline:search'"></mat-icon>
+                                </button>
+                            </div>
+                            <div></div>
+                        </div>
+                    </div>
+                </form>
+                <!-- ===============================================Change Schedule========================================= -->
+
+                <mat-card class="scroll-container h-[100%] mat-elevation-z0 mt-1" *ngIf="(filingtypeid==32 && module == '81')  || (filingtypeid==32 && filingForm.value.employeeId > 0 && module == '68')">
+                    <app-change-schedule (validate)="edit($event)" [cssubmit]="cssubmit"  [datasource]="CSSource" [selectedemployee]="ecnrypeemployee"></app-change-schedule>
+                </mat-card>
+                <!-- ================================================Change Log============================================== -->
+
+                <mat-card class="scroll-container h-[100%] mat-elevation-z0" *ngIf="(filingtypeid==33 && module == '81')  || (filingtypeid==33 && filingForm.value.employeeId > 0 && module == '68')">
+                    <app-change-log (validate)="edit($event)" [clsubmit]="clsubmit" [datasource]="CLSource" [selectedemployee]="ecnrypeemployee"></app-change-log>
+                </mat-card>
+
+                <!-- ======================================================Leave============================================= -->
+
+                <mat-card class="h-[100%] mat-elevation-z0" *ngIf="(filingtypeid==34 && filingForm.value.shiftType != null) && (filingtypeid==34 && module == '81') || (filingtypeid==34 && filingForm.value.employeeId > 0 && module == '68')">
+                    <app-leave [selectedemployee]="ecnrypeemployee" [isMultiShift]="filingForm.value.shiftType" (ismultiple)="sample($event)" ></app-leave>
+                </mat-card>
+
+                <!-- ========================================================Overtime======================================== -->
+
+                <mat-card class="scroll-container h-[100%]  mat-elevation-z0" *ngIf="(filingtypeid==36 && module == '81') || (filingtypeid==36 && filingForm.value.employeeId > 0 && module == '68')">
+                    <app-overtime [datasource]="OTSource" [moduleid]="filingForm.value.filingTypes" (pushEvent)="disabledbuttonOT=$event" [selectedemployee]="ecnrypeemployee" ></app-overtime>
+                </mat-card>
+
+                <!-- ============================================= Offset==================================================== -->
+
+                <mat-card class="h-[100%] mat-elevation-z0" *ngIf="(filingtypeid==37 && module == '81' && this.filingForm.value.includeExpiry != null) || (filingtypeid==37 && filingForm.value.employeeId > 0 && module == '68'  && this.filingForm.value.includeExpiry != null)">
+                    <app-offset [datasource]="OFFSource" [selectedemployee]="ecnrypeemployee" [expirations]="filingForm.value.includeExpiry"></app-offset>
+                </mat-card>
+
+                <!-- ============================================= Official Business========================================= -->
+
+                <mat-card class="scroll-container h-[100%] mat-elevation-z0" *ngIf="filingtypeid==35">
+                    <app-official-business [selectedemployee]="ecnrypeemployee" (pushEvent)="disabledbuttonOT=$event" [datasource]="OBSource"></app-official-business>
+                </mat-card>
+
+                <!-- ==============================================Unpaid Hours============================================== -->
+
+                <mat-card class="scroll-container h-[100%] mat-elevation-z0" *ngIf="filingtypeid==64">
+                    <app-unpaid-hours [datasource]="UHSource"></app-unpaid-hours>
+                </mat-card>
+
+                <!-- ================================================ COE =================================================== -->
+
+                <mat-card class="scroll-container h-[100%] mat-elevation-z0" *ngIf="filingtypeid==52">
+                    <app-coe></app-coe>
+                </mat-card>
+
+                <!-- ================================================ Change Location =================================================== -->
+
+                <mat-card class="scroll-container h-[100%] mat-elevation-z0" *ngIf="filingtypeid==114">
+                    <app-change-location [selectedemployee]="ecnrypeemployee" [datasource]="CLocSource"></app-change-location>
+                </mat-card>
+
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>
